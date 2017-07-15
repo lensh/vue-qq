@@ -1,0 +1,247 @@
+<template>
+ <!--  添加 -->
+ <div class="wrapper">
+    <div class="header">
+      <div class="item left" @click="back">联系人</div>
+      <div class="item center">添加</div>
+      <div class="item"></div>
+    </div>
+    <div class="tab" @click="changeTab">
+      <div class="item" :class="{'cur':curTab==1}">找人</div>
+      <div class="item" :class="{'cur':curTab==2}">找群</div>
+      <div class="item" :class="{'cur':curTab==3}">找公众号</div>
+    </div>
+    <div class="searchbox">
+      <input type="text" class="text" readonly placeholder="QQ号/手机号/群/公众号">
+    </div> 
+
+    <!--  找人 -->
+    <div class="people" v-show="curTab==1">
+        <div class="item">
+          <img src="/static/icon/4/conversation_options_addmember.png" class="left">
+          <span>添加手机联系人</span>
+          <img src="/static/icon/4/nqj.9.png" class="right">
+        </div>
+        <div class="item">
+          <img src="/static/icon/4/conversation_options_qr.png" class="left">
+          <span>扫一扫添加好友</span>
+          <img src="/static/icon/4/nqj.9.png" class="right">
+        </div>
+        <div class="item">
+          <img src="/static/icon/4/conversation_options_multichat.png" class="left">
+          <span>面对面发起多人聊天</span>
+          <img src="/static/icon/4/nqj.9.png" class="right">
+        </div>
+        <div class="item">
+          <img src="/static/icon/4/qb_group_menu_search_group.png" class="left">
+          <span>按条件查找陌生人</span>
+          <img src="/static/icon/4/nqj.9.png" class="right">
+        </div>
+        <div class="item">
+          <img src="/static/icon/4/oui.png" class="left">
+          <span>查看附近的人</span>
+          <img src="/static/icon/4/nqj.9.png" class="right">
+        </div>
+    </div>
+    
+    <!--  找公众号 -->
+    <div class="offical" v-show="curTab==3">
+        <p class="title">精品推荐</p>
+          <ul>
+              <li>  
+                  <img src="" data-src="/static/icon/4/qol.png" class="user">
+                  <div class="info">
+                     <p class="name"> QQ音乐 </p>
+                     <p class="intro">家事国事天下事,事事关心</p>
+                  </div>
+              </li>
+              <li>
+                  <img src="" data-src="/static/icon/4/phb.png" class="user">
+                  <div class="info">
+                     <p class="name">QQ团队</p>
+                     <p class="intro">QQ团队所有成员感谢您一路相伴</p>
+                  </div>
+              </li>
+              <li>
+                  <img src="" data-src="/static/icon/4/rfc.png" class="user">
+                  <div class="info">
+                     <p class="name">好友动态</p>
+                     <p class="intro">好友动态为你每日推送QQ空间好友未读动态请求</p>
+                  </div>
+              </li>
+          </ul>
+    </div>
+ </div>
+</template>
+
+<script>
+export default {
+  name: 'friendAdd',
+  data(){
+    return {
+      curTab:1
+    }
+  },
+  beforeCreate(){
+    //如果没有登陆,则跳到登陆页面
+    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+  },
+  methods:{
+    back(){
+      this.$router.go(-1)
+    },
+    changeTab(e){
+      const target=e.target||e.srcElement
+      const tabIndex=$(target).index()+1
+      this.curTab=tabIndex
+      if(tabIndex==3){
+          const $img=$('.offical').find('img.user')
+          $img.each(function(){
+            $(this).attr('src',$(this).attr('data-src'))
+          })
+      }
+    }
+  }
+}
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss" type="text/css">
+.wrapper{
+  background:#FFFDFD;
+}
+.header{
+	  display:flex;
+    padding:0 20px;
+    height:50px;
+    line-height:50px;
+    background: #1E90FF;
+    color: white;
+    font-size:18px;
+    letter-spacing:2px;
+    position:absolute;
+    top:0;
+    width:100%;
+    z-index:3;
+    .item{
+      flex:1;
+    }
+    .item.left{
+      background:url(/static/icon/4/flc.png) no-repeat left center;
+      margin-left:-10px;
+      padding-left:20px;
+      background-size:26px 26px;
+      cursor:pointer
+    }
+    .item.center{
+      text-align:center
+    }
+}
+.tab{
+  margin-top:50px;
+  border-bottom:1px solid #eee;
+  background:#fff;
+  height:40px;
+  line-height:40px;
+  display:flex;
+  .item{
+    flex:1;
+    cursor:pointer;
+    text-align:center;
+  }
+  .item.cur{
+    border-bottom:4px solid #9cf;
+  }
+}
+.searchbox{
+  margin-top:14px;
+  background:#fff;
+  border-top:1px solid #eee;
+  border-bottom:1px solid #eee;
+  font-size:12px;
+  input{
+    cursor:pointer;
+    border:none;
+    padding-left:10%;
+    background:url(/static/icon/4/okh.png) no-repeat 6% center;
+    background-size:16px
+  }
+}
+.people{
+  background:#fff;
+  margin-top:30px;
+  .item{
+    border-top:1px solid #eee;
+    height:50px;
+    line-height:50px;
+    cursor:pointer;
+    img.left{
+      transform:scale(0.7);
+      margin-left:3%
+    }
+    span{
+      margin-left:14px
+    }
+    img.right{
+      float:right;
+      margin-right:2%;
+      margin-top:10px;
+      transform:scale(0.7);
+    }    
+  }
+  .item:last-child{
+     border-bottom:1px solid #eee
+  }
+}
+.offical{
+  margin-top:4px;
+  p.title{
+    color:#666;
+    margin-left:2%;
+    font-size:14px;
+    line-height:30px
+  }
+}
+.offical ul{
+   width:100%;
+   li{
+      border-bottom:1px solid #eee;
+      height:50px;
+      line-height:50px;
+      padding:0 10px;
+      cursor:pointer;
+      img.user{
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        float:left;
+        margin-left:2%;
+        margin-top:5px
+      }
+      .info{
+        font-size:16px;
+        width:100%;
+        margin-left:7%;
+        height:50px;
+        padding-left:30px;
+        p{
+          height:26px;
+          line-height:26px;
+        }
+        p.name{
+           letter-spacing:1px;
+           float:left;
+        }
+        p.intro{
+          clear:both;
+          color:#666;
+          font-size:14px;
+          position:relative;
+          bottom:24px
+        }   
+      }     
+    }
+    li:first-child{
+       border-top:1px solid #eee;
+    }
+}
+</style>

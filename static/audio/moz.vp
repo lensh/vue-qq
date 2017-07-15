@@ -1,0 +1,13 @@
+precision highp float;
+
+attribute vec4 position;
+attribute vec2 textureCoordinate;
+
+varying vec2 coordinate;
+uniform mat4 transformMatrix;
+
+void main()
+{
+	coordinate = textureCoordinate;
+	gl_Position = transformMatrix * position;
+}
