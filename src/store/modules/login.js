@@ -5,19 +5,14 @@ import {
 
 // init state
 const state = {
-    'loginStatus': JSON.parse(window.localStorage.getItem("loginStatus")),
+    'loginStatus': JSON.parse(window.localStorage.getItem("loginStatus"))
 }
 
 // mutations
 const mutations = {
-    [SET_LOGIN](state,{type,value}) {
-        let loginStatus = JSON.stringify({
-            'isLogin': 1,
-            'type': type,
-            'value': value
-        })
-        localStorage.setItem("loginStatus", loginStatus)
-        state.loginStatus = loginStatus
+    [SET_LOGIN](state, loginStatus) {
+    	state.loginStatus = loginStatus
+        localStorage.setItem("loginStatus", JSON.stringify(loginStatus))
     }
 }
 

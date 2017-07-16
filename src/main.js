@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios';
-import VueAxios from 'vue-axios';
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import App from './App'
 import router from './router'
 import store from './store'
@@ -13,10 +13,10 @@ import 'vueg/css/transition-min.css'
 Vue.config.productionTip = false
 
 // 用 axios 进行 Ajax 请求
-Vue.use(VueAxios, axios);
+Vue.use(VueAxios, axios)
 
 // Vuex 进行状态管理
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 // vueg转场动画
 const options = {

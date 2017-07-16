@@ -11,7 +11,7 @@
             :data-id="item.id">
                 <img :src="item.imgUrl">
                 <div class="info">
-                   <p class="from">{{item.from}}<span>{{item.time}}</span></p>
+                   <p class="from">{{item.from_user}}<span>{{item.time}}</span></p>
                    <p class="message">{{item.message}}
                       <span v-if="item.unread!=0">{{item.unread}}</span>
                    </p>
@@ -35,95 +35,20 @@ export default {
   name: 'message',
   data () {
     return {
-      currentTab:1,
-      dataList:[
-        {
-           type:'group',
-           id:'1',
-           from:'牛客网IT笔试面试讨论群9',
-           time:'22:26',
-           message:'勇者:有没有谁会nodejs',
-           imgUrl:'/static/user/face/1.jpg',
-           unread:'5'
-        },
-        {
-           type:'group',
-           id:'2',
-           from:'ThinkPHP技术交流中心',
-           time:'22:06',
-           message:'所在地-工匠:我装了啊',
-           imgUrl:'/static/user/face/2.jpg',
-           unread:'1'
-        },
-        {
-           type:'group',
-           id:'3',
-           from:'江师14级网工二班',
-           time:'19:30',
-           message:'熊白鸽:男生的材料我现在看不到,你们走心...',
-           imgUrl:'/static/user/face/3.jpg',
-           unread:'1'
-        },
-        {
-           type:'group',
-           id:'4',
-           from:'英语四六级自动查询',
-           time:'14:58',
-           message:'冷眸least:你看一下绝对能看出来',
-           imgUrl:'/static/user/face/4.jpg',
-           unread:'1'
-        },
-        {
-           type:'single',
-           id:'5',
-           from:'王勇平',
-           time:'昨天',
-           message:'点了外卖',
-           imgUrl:'/static/user/face/6.jpg',
-           unread:'0'
-        },
-        {
-           type:'single',
-           id:'6',
-           from:'简相杰',
-           time:'星期五',
-           message:'技术栈会多一些',
-           imgUrl:'/static/user/face/7.jpg',
-           unread:'0'
-        },
-        {
-           type:'group',
-           id:'7',
-           from:'心理电影周日8-9W7306',
-           time:'星期五',
-           message:'91 周楠:填问卷的人最帅',
-           imgUrl:'/static/user/face/8.jpg',
-           unread:'0'
-        },
-        {
-           type:'single',
-           id:'8',
-           from:'魏瑞',
-           time:'星期五',
-           message:'我到教室了',
-           imgUrl:'/static/user/face/9.jpg',
-           unread:'1'
-        },
-        {
-           type:'single',
-           id:'10',
-           from:'郭雅杰',
-           time:'星期二',
-           message:'好的啊',
-           imgUrl:'/static/user/face/11.jpg',
-           unread:'0'
-        }
-      ]
+      currentTab:1
+    }
+  },
+  computed:{
+    dataList(){
+      return this.$store.state.message.allMessage
     }
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
     !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+  },
+  created(){
+    this.getAllMessage()
   },
   components:{
   	VHeader,
@@ -177,6 +102,14 @@ export default {
             id:id
           }
       })
+    },
+    getAllMessage(){
+      //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
+      //新消息通过socket来获取
+      if(this.$store.state.message.hasGetAllMessage==0){
+        const user_id=this.$store.state.login.loginStatus.userId
+        this.$store.dispatch('getAllMessage',user_id)
+      }
     }
   }
 }

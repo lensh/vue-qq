@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import login from './modules/login'
 import sidebar from './modules/sidebar'
 import warn from './modules/warn'
+import message from './modules/message'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
 	modules: {
 		login,
 		sidebar,
-		warn
+		warn,
+		message
 	}
 })

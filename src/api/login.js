@@ -1,13 +1,17 @@
 import encrypt from '@/common/js/encrypt'
 import {
-	request_post
+	request_get
 } from '@/common/js/request'
 
-//验证登陆
-export function checkLogin(data) {
-	const url = '/api/login'
-		//加密登录
-	data.pwd = encrypt(data.pwd)
+/**
+ * [checkLogin 验证登录]
+ * @param  {[type]} options.user [description]
+ * @param  {[type]} options.pwd  [description]
+ * @return {[type]}              [description]
+ */
+export function checkLogin({user,pwd}) {
+	pwd = encrypt(pwd)    //加密登录
+	const url = `/api/login/${user}/${pwd}`
 
-	return request_post(url, data)
+	return request_get(url)
 }

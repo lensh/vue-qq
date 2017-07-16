@@ -30,7 +30,7 @@ export default {
     //初始化滚动条
     setTimeout(()=>{
     	this.initScroll()
-    },0)
+    },200)
   },
   methods:{
     initScroll(){

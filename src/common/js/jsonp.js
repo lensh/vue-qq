@@ -1,5 +1,12 @@
 import JSONP from 'jsonp'
 
+/**
+ * [封装jsonp]
+ * @param  {[string]} url     [请求地址]
+ * @param  {[object]} data    [数据]
+ * @param  {[object]} options [选项]
+ * @return {[object]}         [promise]
+ */
 export default (url, data, options) => {
 	url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
 	return new Promise((reslove, reject) => {
@@ -13,6 +20,11 @@ export default (url, data, options) => {
 	})
 }
 
+/**
+ * [将数据对象拼接成url]
+ * @param  {[object]} data [数据]
+ * @return {[string]}      [拼接后的url]
+ */
 function param(data) {
 	let url = ''
 	for (let k in data) {

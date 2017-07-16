@@ -2,12 +2,20 @@ import express from 'express'
 
 import login from './controller/login'
 import register from './controller/register'
+import message from './controller/message'
 
 const router = express.Router()
 
+// RESTFul API 
+// GET /tickets # 获取ticket列表
+// GET /tickets/12 # 查看某个具体的ticket
+// POST /tickets # 新建一个ticket
+// PUT /tickets/12 # 更新ticket 12.
+// DELETE /tickets/12 #删除ticekt 12
+
 router
-	.post('/login', async(req, res) => { // 登录
-		let result = await login.login(req, res)
+	.get('/login/:user/:pwd', async(req, res) => { // 登录
+		const result = await login.login(req, res)
 		res.json(result)
 	})
 	.post('/register/:type', async(req, res) => { //注册
@@ -23,5 +31,11 @@ router
 		}
 		res.json(result)
 	})
+	.get('/message/all/:userId', async(req, res) => { //获取某个用户首页的所有消息
+		const userId = req.params.userId
+		const result = await message.getAllMessage(userId)
+		res.json(result)
+	})
 
 module.exports = router
+

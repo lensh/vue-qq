@@ -12,7 +12,7 @@ export default class Login {
 		const {
 			user,
 			pwd
-		} = req.body
+		} = req.params
 
 		let type //填写的类型
 		if (/^[\d]{8,10}$/.test(user)) { //如果填写的是qq号
@@ -45,19 +45,24 @@ export default class Login {
 		}
 
 		//检查密码
-		const pwdIsValid = await this.checkPwd(user, pwd, field)
-		if (pwdIsValid == 0) { //如果密码错误则直接返回,否则保存登陆信息
+		const userId = await this.checkPwd(user, pwd, field)
+		if (userId == 0) { //如果密码错误则直接返回,否则保存登陆信息
 			return {
 				"code": 0,
 				"message": "密码错误,请检查"
 			}
 		}
 
-		//更新最后登陆时间
+		//更新用户后登陆时间
 		await this.updateLoginTime(user, field)
 
-		//保存登陆信息
-		const data = await this.saveSession(req, user, type)
+		//保存session
+		let data = await this.saveSession(req, user, type)
+
+		data.isLogin = 1 // 将登录态置为1
+		data.userId = userId //取到用户的id
+
+		//返回数据
 		return {
 			"code": 1,
 			"message": "登陆成功",
@@ -72,7 +77,7 @@ export default class Login {
 	 * @return {[Promise]}      [description]
 	 */
 	static async checkUser(user, field) {
-		const sql = `select * from user where ${field} = ? limit 1`
+		const sql = `select id from user where ${field} = ? limit 1`
 		const rows = await query(sql, user).catch((err) => {
 			console.log(err)
 		})
@@ -87,11 +92,11 @@ export default class Login {
 	 * @return {[type]}      [description]
 	 */
 	static async checkPwd(user, pwd, field) {
-		const sql = `select * from user where ${field} = ? and pwd= ? limit 1 `
+		const sql = `select id from user where ${field} = ? and pwd= ? limit 1 `
 		const rows = await query(sql, [user, pwd]).catch((err) => {
 			console.log(err)
 		})
-		return rows.length > 0 ? 1 : 0
+		return rows.length > 0 ? rows[0].id : 0
 	}
 
 	/**
@@ -120,7 +125,7 @@ export default class Login {
 	 */
 	static async saveSession(req, user, type) {
 		let data
-		//如果是qq号
+	    //如果是qq号
 		if (type == 1) {
 			req.session.qq = user
 			data = {
@@ -133,7 +138,7 @@ export default class Login {
 				"type": "phone",
 				"value": user
 			}
-		} else if (type == 3){
+		} else if (type == 3) {
 			req.session.email = user
 			data = {
 				"type": "email",
