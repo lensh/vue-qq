@@ -3,6 +3,7 @@ import express from 'express'
 import login from './controller/login'
 import register from './controller/register'
 import message from './controller/message'
+import friend from './controller/friend'
 
 const router = express.Router()
 
@@ -36,6 +37,15 @@ router
 		const result = await message.getAllMessage(userId)
 		res.json(result)
 	})
+	.get('/friend/:type/:userId', async(req, res) => { //获取某个用户的好友和群
+	    let result, type = req.params.type
+	    const userId = req.params.userId
+		if (type == 'list') {
+			result = await friend.getFriendGroup(userId)
+		} else if(type=='newfriend'){
+			result = await friend.getNewFriends(userId)
+		}
+		res.json(result)
+	})
 
 module.exports = router
-

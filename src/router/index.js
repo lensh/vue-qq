@@ -43,11 +43,11 @@ const routes = [{
     name: 'Message',
     component: Message
 }, {
-    path: '/chatOne',
+    path: '/chatOne/:id',
     name: 'chatOne',
     component: ChatOne
 }, {
-    path: '/chatGroup',
+    path: '/chatGroup/:id',
     name: 'chatGroup',
     component: ChatGroup
 }, {

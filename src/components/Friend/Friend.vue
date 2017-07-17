@@ -23,10 +23,12 @@
                  </li>
                  <li class="li-2">
                    <ul class="level-2" @dblclick="chatOne" @tap="chatOne">
-                      <li v-for="member in item.members">  
-                          <img src="" :data-src="member.face" class="user">
+                      <li v-for="member in item.members" :data-id="member.id">  
+                          <img src="" :data-src="member.face" class="user"
+                          :class="{'offline':member.status=='离线'}">
                           <div class="info">
-                             <p class="from" :class="{'vip':member.vipurl!=''}"> {{member.name}} </p>
+                             <p class="from" :class="{'vip':member.vipurl!=''
+                             && member.status!='离线'}"> {{member.name}} </p>
                              <img src="" :data-src="member.vipurl" v-if="member.vipurl!=''">
                              <p class="message">[{{member.status}}] {{member.sign}}</p>
                           </div>
@@ -43,7 +45,7 @@
                  <li class="li-1">{{item.type}}<span>{{item.groups.length}}</span></li>
                  <li class="li-2">
                    <ul class="level-2" @dblclick="chatGroup" @tap="chatGroup">
-                      <li v-for="groups in item.groups">  
+                      <li v-for="groups in item.groups" :data-id="groups.id">  
                           <img src="" :data-src="groups.url" class="user">
                           <div class="info">{{groups.name}}</div>
                       </li>     
@@ -56,7 +58,7 @@
           <div class="chats" v-show="currentTab==3">
               <p class="create">创建多人聊天</p>
               <ul class="level-2">
-                  <li v-for="item in dataList.chats">  
+                  <li v-for="item in chats">  
                       <img src="" data-src="/static/icon/4/qq_addfriend_search_group.png" class="user">
                       <div class="info">
                          {{item.name}}<span> ({{item.members}})</span>
@@ -72,7 +74,7 @@
                     <img src="" data-src="/static/icon/4/feb.png" class="user">
                     <div class="info">
                         <p> 我的电脑 </p>
-                        <p class="intro">[{{dataList.device}}] 无需数据线，手机轻松传文件到电脑</p>
+                        <p class="intro">[在线] 无需数据线，手机轻松传文件到电脑</p>
                     </div>
                 </li>  
                 <li>  
@@ -95,7 +97,7 @@
           <!-- 通讯录 -->
           <div class="address-list" v-show="currentTab==5">
             <ul class="level-2">
-                <li v-for="item in dataList.addressList">  
+                <li v-for="item in addressList">  
                     <img src="" :data-src="item.face" class="user">
                     <div class="info">
                         <p> {{item.name}} </p>
@@ -107,7 +109,7 @@
 
           <!-- 公众号 -->
           <div class="official-account" v-show="currentTab==6">
-            <div v-for="item in dataList.officialAccount">
+            <div v-for="item in officialAccount">
               <p>{{item.start}}</p>
               <ul class="level-2">
                   <li v-for="account in item.accounts">  
@@ -137,210 +139,93 @@ export default {
       currentPage:2,
       currentTab:1,
       isHeightChange:false,
-      dataList:{
-        friends:[
-          {
-            name:'特别关心',
-            online:4,
-            members:[
-              {
-                name:'程文宇',
-                face:'/static/user/face/7.jpg',
-                vipurl:'/static/icon/4/ewm.png',
-                status:'电脑在线',
-                sign:'最近忙得很'
-              },
-              {
-                name:'楚乔',
-                face:'/static/user/face/8.jpg',
-                vipurl:'/static/icon/4/vip.png',
-                status:'手机在线',
-                sign:'更新了说说'
-              },          
-              {
-                name:'魏明',
-                face:'/static/user/face/9.jpg',
-                vipurl:'/static/icon/4/vip.png',
-                status:'4G在线',
-                sign:'更新了说说'
-              },     
-              {
-                name:'许易',
-                face:'/static/user/face/10.jpg',
-                vipurl:'',
-                status:'Wifi在线',
-                sign:'未来是什么样子,我不知道'
-              }   
-            ]
-          },
-          {
-            name:'晓风残月',
-            online:4,
-            members:[
-              {
-                name:'马哲涵',
-                face:'/static/user/face/4.jpg',
-                vipurl:'/static/icon/4/vip.png',
-                status:'电脑在线',
-                sign:'哈哈,今天特别开心'
-              },
-              {
-                name:'张扬扬',
-                face:'/static/user/face/5.jpg',
-                vipurl:'/static/icon/4/vip.png',
-                status:'手机在线',
-                sign:'很久没有去影院了'
-              },          
-              {
-                name:'许志荣',
-                face:'/static/user/face/6.jpg',
-                vipurl:'/static/icon/4/vip.png',
-                status:'3G在线',
-                sign:'更新了说说'
-              },     
-              {
-                name:'李蒙',
-                face:'/static/user/face/11.jpg',
-                vipurl:'',
-                status:'Wifi在线',
-                sign:'真的很感谢大家的帮助'
-              }   
-            ]
-          }
-        ],
-        groups:[
-          {
-            type:'我创建的群',
-            groups:[
-              {
-                name:'英语四六级自动查询',
-                url:'/static/user/face/4.jpg'
-              },
-              {
-                name:'ThinkPHP技术交流中心',
-                url:'/static/user/face/2.jpg'
-              }
-            ]
-          },
-          {
-            type:'我管理的群',
-            groups:[
-              {
-                name:'丛林蜂工作室招新群',
-                url:'/static/user/face/12.jpg'
-              },
-              {
-                name:'心率手表',
-                url:'/static/user/face/13.jpg'
-              },
-              {
-                name:'心理电影赏析',
-                url:'/static/user/face/14.jpg'
-              }
-            ]
-          },
-          {
-            type:'我加入的群',
-            groups:[
-              {
-                name:'牛客网IT笔试面试讨论群',
-                url:'/static/user/face/1.jpg'
-              },
-              {
-                name:'江师14级网工二班',
-                url:'/static/user/face/3.jpg'
-              },
-              {
-                name:'心理电影周日8-9W7306',
-                url:'/static/user/face/8.jpg'
-              },
-              {
-                name:'计算机网络学习交流',
-                url:'/static/user/face/15.jpg'
-              }
-            ]
-          }
-        ],
-        chats:[
-          {
-            name:'Java课题设计',
-            members:4
-          },
-          {
-            name:'寝室长集会',
-            members:20
-          }
-        ],
-        device:'在线',
-        addressList:[
-          {
-            face:'/static/user/face/7.jpg',
-            name:'程文宇',
-            status:'手机在线'
-          },
-          {
-            face:'/static/user/face/8.jpg',
-            name:'楚乔',
-            status:'手机在线'
-          },
-          {
-            face:'/static/user/face/10.jpg',
-            name:'许易',
-            status:'Wifi在线'
-          }
-        ],
-        officialAccount:[
-          {
-            start:'B',
-            accounts:[
-              {
-                name:'部落冲突',
-                url:'/static/icon/4/iei.png'
-              }
-            ]
-          },
-          {
-            start:'D',
-            accounts:[
-              {
-                name:'地图',
-                url:'/static/icon/4/feu.png'
-              }
-            ]
-          },
-          {
-            start:'Q',
-            accounts:[
-              {
-                name:'QQ红包',
-                url:'/static/icon/4/rdz.png'
-              },
-              {
-                name:'QQ购物',
-                url:'/static/icon/4/qfw.png'
-              },
-              {
-                name:'QQ Call',
-                url:'/static/icon/4/odv.png'
-              }
-            ]
-          },
-          {
-            start:'T',
-            accounts:[
-              {
-                name:'腾讯课堂',
-                url:'/static/icon/4/ewj.png'
-              }
-            ]
-          },
-        ]
-      }
+      //多人聊天,公众号,设备,通讯录暂时不做,就直接使用假数据了
+      officialAccount:[
+        {
+          start:'B',
+          accounts:[
+            {
+              name:'部落冲突',
+              url:'/static/icon/4/iei.png'
+            }
+          ]
+        },
+        {
+          start:'D',
+          accounts:[
+            {
+              name:'地图',
+              url:'/static/icon/4/feu.png'
+            }
+          ]
+        },
+        {
+          start:'Q',
+          accounts:[
+            {
+              name:'QQ红包',
+              url:'/static/icon/4/rdz.png'
+            },
+            {
+              name:'QQ购物',
+              url:'/static/icon/4/qfw.png'
+            },
+            {
+              name:'QQ Call',
+              url:'/static/icon/4/odv.png'
+            }
+          ]
+        },
+        {
+          start:'T',
+          accounts:[
+            {
+              name:'腾讯课堂',
+              url:'/static/icon/4/ewj.png'
+            }
+          ]
+        },
+      ],
+      chats:[
+        {
+          name:'Java课题设计',
+          members:4
+        },
+        {
+          name:'寝室长集会',
+          members:20
+        }
+      ],
+      addressList:[
+        {
+          face:'/static/user/face/7.jpg',
+          name:'程文宇',
+          status:'手机在线'
+        },
+        {
+          face:'/static/user/face/8.jpg',
+          name:'楚乔',
+          status:'手机在线'
+        },
+        {
+          face:'/static/user/face/10.jpg',
+          name:'许易',
+          status:'Wifi在线'
+        }
+      ]
+    }
+  },
+  computed:{
+    dataList(){
+      return this.$store.state.friend.friendList
     }
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
     !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+  },
+  created(){
+    this.getFriendList()
   },
   components:{
   	VHeader,
@@ -387,12 +272,14 @@ export default {
     },
     chatOne(e){
       if(this.getTarget(e)){
-        this.$router.push('/chatOne')
+        const id=$(this.getTarget(e)).attr('data-id')
+        this.$router.push(`chatOne/${id}`)
       }
     },
     chatGroup(e){
       if(this.getTarget(e)){
-        this.$router.push('/chatGroup')
+        const id=$(this.getTarget(e)).attr('data-id')
+        this.$router.push(`chatGroup/${id}`)
       }  
     },
     getTarget(e){
@@ -401,6 +288,12 @@ export default {
         target=target.parentNode?target.parentNode:''
       }
       return target
+    },
+    getFriendList(){
+      if(this.$store.state.friend.hasGetFriendList==0){
+        const user_id=this.$store.state.login.loginStatus.userId
+        this.$store.dispatch('getFriendList',user_id)
+      }
     }
   }
 }
@@ -484,16 +377,18 @@ export default {
      width:100%;
      li{
         border-bottom:1px solid #eee;
-        height:50px;
-        line-height:50px;
         padding:0 10px;
+        overflow:hidden;
         img.user{
           width:40px;
           height:40px;
           border-radius:50%;
           float:left;
           margin-left:2%;
-          margin-top:5px
+          margin-top:5px;
+          &.offline{
+            opacity:0.5
+          }
         }
         .info{
           font-size:16px;

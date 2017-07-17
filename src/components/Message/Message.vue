@@ -95,13 +95,8 @@ export default {
 
       const type=$(target).attr('data-type')
       const id=$(target).attr('data-id')
-      const path= type=='single' ? 'ChatOne':'ChatGroup'
-      this.$router.push({
-          path:path,
-          query:{
-            id:id
-          }
-      })
+      const path= type=='single' ? `ChatOne/${id}`:`ChatGroup/${id}`
+      this.$router.push(path)
     },
     getAllMessage(){
       //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
@@ -155,7 +150,12 @@ export default {
        }
        p.message{
           color:#666;
+          width:64%;
           font-size:14px;
+          overflow:hidden;
+          text-overflow:ellipsis; /*当文本溢出时显示省略标记(...)*/
+          word-break:keep-all;
+          white-space:nowrap;  
           span{
             border-radius:50%;
             width:22px;

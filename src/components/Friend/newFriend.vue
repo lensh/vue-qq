@@ -15,12 +15,12 @@
                     <img :src="item.face" class="user">
                     <div class="info">
                        <template v-if="item.status!=4">
-                          <p class="name">{{item.name}}</p>
+                          <p class="name">{{item.nick_name}}</p>
                           <p class="intro">
                              <span :class="{'man':item.sex=='男','woman':item.sex=='女'}">{{item.age}}</span>
-                             {{item.info}}
+                             {{item.apply_message}}
                           </p>
-                          <p class="from">{{item.from}}</p>
+                          <p class="from">{{item.source}}</p>
                           <button class="agree" v-if="item.status==1" 
                           @click="agree(item.apply_id)">同意</button>    
                           <button class="other" v-if="item.status==2">已同意</button>

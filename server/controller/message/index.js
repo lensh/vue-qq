@@ -63,8 +63,8 @@ export default class Messge {
 	}
 
 	/**
-	 * [getGroupMessage description]
-	 * @param  {[type]} userId [description]
+	 * [getGroupMessage 获取群消息]
+	 * @param  {[number]} userId [用户id]
 	 * @return {[type]}        [description]
 	 */
 	static async getGroupMessage(userId) {

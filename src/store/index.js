@@ -4,6 +4,7 @@ import login from './modules/login'
 import sidebar from './modules/sidebar'
 import warn from './modules/warn'
 import message from './modules/message'
+import friend from './modules/friend'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
 		login,
 		sidebar,
 		warn,
-		message
+		message,
+		friend
 	}
 })
