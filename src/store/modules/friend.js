@@ -1,15 +1,20 @@
 import {
-  GET_FRIEND_LIST
+  GET_FRIEND_LIST,
+  GET_NEW_FRIENDS,
+  UPDATE_NEW_FRIENDS
 } from '../mutation-types'
 import {
-  get_friend_list
+  get_friend_list,
+  get_new_friends
 } from '@/api/friend'
 
 
 // state
 const state = {
   'hasGetFriendList': 0, //是否已经获取过好友列表
-  'friendList': {}
+  'friendList': {},
+  'hasGetNewFriends':0,
+  'newFriends':[]
 }
 
 // mutations
@@ -17,14 +22,19 @@ const mutations = {
   [GET_FRIEND_LIST](state, data) {
     state.hasGetFriendList = data.hasGetFriendList
     state.friendList = data.friendList
+  },
+  [GET_NEW_FRIENDS](state,data){
+    state.hasGetNewFriends=data.hasGetNewFriends
+    state.newFriends=data.newFriends
+  },
+  [UPDATE_NEW_FRIENDS](state,update){
+    (state.newFriends)[update.index].status=update.status
   }
 }
 
 // actions
 const actions = {
-  getFriendList: ({
-    commit
-  }, userId) => {
+  getFriendList: ({commit}, userId) => {
     get_friend_list(userId)
       .then((res) => {
         let friendData = res.data.friend,
@@ -116,6 +126,31 @@ const actions = {
         }
         commit(GET_FRIEND_LIST, data)
       })
+  },
+  getNewFriends:({commit},userId)=>{
+    get_new_friends(userId)
+      .then((res)=>{
+        const data={
+          hasGetNewFriends:1,
+          newFriends:res.data
+        }
+        commit(GET_NEW_FRIENDS,data)
+      })
+  },
+  updateNewFriends:({commit,state},data)=>{
+    let newFriends=state.newFriends,
+        indexOfNewFriends   //要更新的项的下标
+    for(let [index,value] of newFriends.entries()){
+      if(value.id==data.applyId){
+        indexOfNewFriends=index
+        break
+      }
+    }
+    const update={
+      index:indexOfNewFriends,
+      status:data.status
+    }
+    commit(UPDATE_NEW_FRIENDS,update)
   }
 }
 

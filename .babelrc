@@ -7,7 +7,7 @@
         "node": true
       }
     }],
-    "stage-2",
+    "stage-3",
     "es2015"
   ],
   "plugins": [

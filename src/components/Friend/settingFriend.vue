@@ -3,10 +3,10 @@
  <div class="wrapper">
     <!-- 第一页 -->
     <div class="first" v-show="currentTab==1">
-      <div class="header" @click="actions">
-        <div class="item first">取消</div>
+      <div class="header">
+        <div class="item first" @click="cancle">取消</div>
         <div class="item center">好友设置</div>
-        <div class="item right">完成</div>
+        <div class="item right" @click="complete">完成</div>
       </div>
       
       <div class="main">
@@ -26,16 +26,17 @@
     
     <!--第二页-->
     <div class="second" v-show="currentTab==2">
-      <div class="header" @click="actions">
-        <div class="item second">返回</div>
+      <div class="header">
+        <div class="item second" @click="back">返回</div>
         <div class="item center">移至分组</div>
       </div>
       
       <div class="main">
-          <ul @click="changeGroup">
-            <li v-for="item in dataList.groups">
-               {{item}}
-               <img src="/static/icon/4/gzb.png" :class="{'cur':item==dataList.defaulGroup}">
+          <ul>
+            <li v-for="item in dataList.groups" @click="changeGroup(item.zu_name)">
+               {{item.zu_name}}
+               <img src="/static/icon/4/gzb.png" 
+                  v-show="item.zu_name==dataList.defaulGroup">
             </li>
           </ul>
       </div>
@@ -44,68 +45,74 @@
 </template>
 
 <script>
+import{
+  get_fenzu
+} from '@/api/friend'
+
 export default {
-  name: 'newFriend',
+  name: 'settingFriend',
   data(){
     return {
       currentTab:1,
+      applyId:'',
       dataList:{
-        remark:'ThreeTree',
-        defaulGroup:'晓风残月',
-        groups:[
-          '晓风残月',
-          '梦回阑珊',
-          '柳暗花明',
-          '江南烟雨'
-        ]
-      }
+        user_id:'',   //用户自己的id
+        apply_user_id:'',  //添加方用户id
+        remark:'',  //添加方用户昵称
+        defaulGroup:'',  //用户的默认分组
+        groups:[]  //用户所有的分组
+      },
+      initGroup:'',  //初始分组名称,点击取消时会用到
+      initRemark:''  //初始备注名称,点击取消时会用到
     }
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
+  created(){
+    this.applyId=this.$route.params.apply_id
+    this.getFenzu(this.applyId)
+  }, 
   methods:{
-  	actions(e){
-  		const target=e.target||e.srcElement
-      const className=target.className
-  		if(className.match('first')){
-        //取消修改备注
-        this.$router.push('friendNew')
-  		}else if(className.match('right')){
-        //完成修改备注
-        this.$router.push('friendNew')
-  		}else if(className.match('second')){
-        this.currentTab=1
-      }
-      
-  	},
     clear(){
       this.dataList.remark=''
+    },
+    //返回
+    back(){
+      this.currentTab=1
     },
     changeTab(){
       this.currentTab=2
     },
-    changeGroup(e){
-      let target=e.target||e.srcElement
-      const className=target.className
-      if(className.match('cur')){
-        this.currentTab=1
-        return;
-      }
-      while(target.tagName!='LI'){
-        target=target.parentNode?target.parentNode:''
-      }
-      $('li img').hide()
-      $(target).find('img').show()
+    //改变分组
+    changeGroup(zu_name){
+      this.dataList.defaulGroup=zu_name
       setTimeout(()=>{
         this.currentTab=1
-      },300) 
-    }
+      },400) 
+    },
+    //得到分组情况
+    async getFenzu(applyId){
+      const res = await get_fenzu(applyId)
+      this.dataList=res.data
+      this.initRemark=res.data.remark
+      this.initGroup=res.data.defaulGroup
+    },
+    //取消修改备注
+    async cancle(){
+      //把新成员添加到默认分组里，好友表新增两条记录,且设置好备注为默认昵称
+      this.$router.push('/friend/new')
+    },
+    //完成修改备注
+    async complete(){
+      //把新成员添加到新的分组里，好友表新增两条记录,且设置好备注为新的备注
+      this.$router.push('/friend/new')
+    },
   }
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped lang="scss" type="text/css">
 .wrapper{
   background:#FFFDFD;
@@ -194,10 +201,6 @@ export default {
           top:50%;
           transform:translateY(-50%) scale(0.6);
           right:10px;
-          display:none;
-          &.cur{
-            display:block
-          }
         }
       }
     }

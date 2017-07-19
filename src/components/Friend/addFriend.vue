@@ -2,7 +2,7 @@
  <!--  添加 -->
  <div class="wrapper">
     <div class="header">
-      <div class="item left" @click="back">联系人</div>
+      <div class="item left" @click="$router.back()">联系人</div>
       <div class="item center">添加</div>
       <div class="item"></div>
     </div>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   name: 'friendAdd',
   data(){
@@ -84,12 +85,9 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   methods:{
-    back(){
-      this.$router.go(-1)
-    },
     changeTab(e){
       const target=e.target||e.srcElement
       const tabIndex=$(target).index()+1

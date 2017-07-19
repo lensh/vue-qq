@@ -3,8 +3,18 @@
    <div class="wrapper">
       <div class="header">
         <div class="item left" @click="$router.back()">返回</div>
-        <div class="item center">个人资料</div>
-        <div class="item right">更多</div>
+        <div class="item center">
+           <!-- 如果是别人 -->
+           个人资料
+           <!-- 否则 -->
+         <!--   我的资料 -->
+        </div>
+        <div class="item right">
+           <!-- 如果是别人 -->
+            更多
+            <!-- 否则 -->
+          <!--   <img src="/static/icon/4/qq_setting_me_qr_code_icon.png"> -->
+        </div>
       </div>
       
       <div class="profile">
@@ -50,8 +60,14 @@
           </div>
       </div>
       <div class="footer">
+        <!-- 如果是别人,而且是自己的好友则 -->
          <button class="phone">QQ电话</button>
-         <button class="message" @click="$router.push('chatOne')">发消息</button>
+         <button class="message" @click="sendMessage(dataList.user_id)">发消息</button>
+        <!-- 如果是别人,而且不是自己的好友则 -->
+         <!-- <button class="add_friend">加好友</button> -->
+        <!-- 如果是自己则显示编辑资料 -->
+         <!-- <button class="card">个性名片</button>
+         <button class="edit">编辑资料</button> -->
       </div>
    </div>
 </template>
@@ -64,6 +80,7 @@ export default {
   data(){
     return {
        dataList:{
+          user_id:2,
           nickname:'马哲涵',
           sign:'马哲涵',
           name:'一花一世界',
@@ -81,21 +98,22 @@ export default {
     }
   },
   computed:{
-    level(){  //QQ等级，转换成了一个对象，包含皇冠、太阳、月亮、星星的个数
+    level(){
        return calcLevel(this.dataList.level)
     }
   },
   beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
+  },
+  methods:{
+    sendMessage(user_id){
+      this.$router.push(`/chat_one/${user_id}`)
+    }
   }
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped lang="scss" type="text/css">
-.wrapper{
-  background:#FFFDFD;
-}
 .header{
 	  display:flex;
     padding:0 20px;
@@ -124,11 +142,12 @@ export default {
         &.right{
             text-align:right;
             cursor:pointer;
+            img{
+              width:30px;
+              height:30px;
+              margin-top:10px;
+            }
         }
-    }
-    &.move{
-      background: #1E90FF;
-      z-index:3;
     }
 }
 .profile{
@@ -177,7 +196,7 @@ export default {
     }
     li{
       padding-left:12%;
-      font-size:1remx;
+      font-size:1rem;
       min-height:1.6rem;
       line-height:1.6rem;
       margin-bottom:4px;
@@ -249,12 +268,19 @@ export default {
     border-radius:2px;
     font-size:16px;
     cursor:pointer;
-    &.phone{
-      background:#fff;
-    }
+    background:#fff;
+    letter-spacing:2px;
     &.message{
       background:#78B7FF;
       color:#fff;
+    }
+    &.edit{
+      background:#78B7FF;
+      color:#fff;
+    }
+    &.add_friend{
+      width:100%;
+      margin:0 10px;
     }
   }
 }

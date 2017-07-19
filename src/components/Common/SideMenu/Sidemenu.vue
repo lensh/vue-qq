@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sidemenu" @touchstart="touchStart" @touchmove="touchMove"
+    <div class="sidemenu" @touchstart.prevent="touchStart" @touchmove.prevent="touchMove"
     :class="{'show':isShowSideBar,'hide':!isShowSideBar&&!isInit}">
        <div class="top">
           <div class="userinfo">
@@ -60,8 +60,6 @@
 </template>
 
 <script>
-let startX,startY,moveEndX,moveEndY,X,Y
-
 export default {
   name: 'sidebar',
   computed:{
@@ -88,20 +86,22 @@ export default {
       },600)
     },
     touchStart(e){
-      e.preventDefault()
-      startX = e.targetTouches[0].pageX
-      startY = e.targetTouches[0].pageY
+      this.startX = this.getTouchXY(e).X
+      this.startY = this.getTouchXY(e).Y
     },
     touchMove(e){
-      e.preventDefault()
-　　　moveEndX = e.targetTouches[0].pageX
-　　　moveEndY = e.targetTouches[0].pageY
-　　　X = moveEndX - startX
-　　　Y = moveEndY - startY
-　　　if ( Math.abs(X) > 3*Math.abs(Y) && X < -30 ) {
-      //限定只能是左滑，最大限度减小倾斜的角度
+      const X = this.getTouchXY(e).X - this.startX
+      const Y = this.getTouchXY(e).Y - this.startY
+      if ( Math.abs(X) > 3*Math.abs(Y) && X <-30) {
+         //限定只能是左滑，最大限度减小倾斜的角度
 　　　　 this.hideSidebar();
-　　　}
+      }
+    },
+    getTouchXY(e){
+      return {
+        X:e.targetTouches[0].pageX,
+        Y:e.targetTouches[0].pageY
+      }
     }
   }
 }

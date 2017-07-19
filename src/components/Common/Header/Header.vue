@@ -3,7 +3,7 @@
   <div class="header">
      <div class="face" @click="showSidebar"></div>
      <div>{{title}}</div>
-     <div class="cursor" :class="{'add':currentTab==1}" @click="go">{{action}}</div>
+     <div class="cursor" :class="{'add':currentTab==1}" @click="addFriend">{{action}}</div>
   </div>
 </template>
 
@@ -20,9 +20,9 @@ export default {
     }
   },
   methods:{
-    go(){
+    addFriend(){
       if(this.currentTab==2){
-        this.$router.push('friendAdd')
+        this.$router.push('/friend/add')
       }
     },
     showSidebar(){

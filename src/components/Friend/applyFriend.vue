@@ -2,16 +2,16 @@
  <!--  好友申请 -->
  <div class="wrapper">
     <div class="header">
-      <div class="item left" @click="$router.back()">返回</div>
+      <div class="item left" @click="$router.push('/friend/new')">返回</div>
       <div class="item center">好友申请</div>
       <div class="item"></div>
     </div>
     <div class="apply">
       <ul> 
-        <li @click="$router.push('profile')">  
+        <li @click="$router.push(`${apply_id}/profile`)">  
           <img :src="dataList.face" class="user">
           <div class="info">
-             <p class="name">{{dataList.name}}</p>
+             <p class="name">{{dataList.nick_name}}</p>
              <p class="message">
                 <span class="sex">{{dataList.sex}}</span><span>{{dataList.age}}岁</span><span>{{dataList.place}}</span>
              </p>
@@ -21,16 +21,18 @@
       </ul>
       <div class="other">
          <span class="left">附加消息</span>
-         <span class="middle">{{dataList.message}}</span>
+         <span class="middle">{{dataList.apply_message}}</span>
          <button class="btn">回复</button>
       </div>
       <div class="other">
          <span class="left">来源</span>
-         <span class="middle">{{dataList.from}}</span>
+         <span class="middle">{{dataList.source}}</span>
       </div>
-      <div class="actions" @click="actions">
-         <button class="reject" v-if="dataList.status==1">拒绝</button>
-         <button class="agree" v-if="dataList.status==1">同意</button>
+      <div class="actions">
+         <button class="reject" @click="reject(apply_id)" 
+          v-if="dataList.status==1">拒绝</button>
+         <button class="agree" @click="agree(apply_id)"
+          v-if="dataList.status==1">同意</button>
          <p v-if="dataList.status==2">已同意该申请</p>
          <p v-if="dataList.status==3">已拒绝该申请</p>
       </div>
@@ -39,41 +41,54 @@
 </template>
 
 <script>
+import {
+  get_apply_detail,
+  resolve_friend_apply
+} from '@/api/friend'
+
 export default {
-  name: 'friendAdd',
+  name: 'friendApply',
   data(){
     return {
-      apply_id:'',
-      dataList:{
-        face:'/static/user/face/4.jpg',
-        name:'ThreeTree',
-        sex:'男',
-        place:'深圳',
-        age:'19',
-        message:'大哥,想请教一个问题',
-        from:'QQ群-JS讨论群',
-        status:1   //1为还未处理,2为已同意,3为已拒绝
-      }
+      apply_id:6,
+      dataList:{}
     }
   },
   beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   created(){
-  	this.apply_id=this.$route.query.apply_id
+  	this.apply_id=this.$route.params.id
+    this.getApplyDetail(this.apply_id)
   },
   methods:{
-    actions(e){
-      const target=e.target||e.srcElement
-      const className=target.className
-      if(className.match('reject')){
-        //拒绝
-        this.$router.push('friendNew')
-      }else if(className.match('agree')){
-        //同意
-        this.$router.push('friendSetting')
+    async agree(apply_id){
+      //修改数据库状态为同意
+      const res = await resolve_friend_apply(1,apply_id)
+      if(res.code==1){
+        //commit state，把指定项修改
+        this.$store.dispatch('updateNewFriends',{
+          applyId:apply_id,
+          status:2
+        })
+        this.$router.push(`/friend/setting/${apply_id}`)
       }
+    },
+    async reject(apply_id){
+      //修改数据库状态为拒绝
+      const res = await resolve_friend_apply(0,apply_id)
+      if(res.code==1){
+        //commit state，把指定项修改
+        this.$store.dispatch('updateNewFriends',{
+          applyId:apply_id,
+          status:3
+        })
+        this.$router.push('/friend/new')
+      }
+    },
+    async getApplyDetail(apply_id){
+      const res = await get_apply_detail(apply_id)
+      this.dataList=res.data
     }
   }
 }

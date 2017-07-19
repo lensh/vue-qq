@@ -24,3 +24,15 @@ export function request_post(url, data) {
 			return Promise.resolve(res.data)
 		})
 }
+
+/**
+ * [request_put 封装put请求]
+ * @param  {[string]} url  [请求地址]
+ * @return {[object]}      [promise]
+ */
+export function request_put(url) {
+	return axios.put(url)
+		.then((res) => {
+			return Promise.resolve(res.data)
+		})
+}

@@ -15,7 +15,6 @@ import FriendApply from '@/components/Friend/applyFriend'
 import FriendSetting from '@/components/Friend/settingFriend'
 import Social from '@/components/Social/Social'
 import Profile from '@/components/User/Profile'
-import MyProfile from '@/components/User/MyProfile'
 import Setting from '@/components/Setting/Setting'
 import AccontSet from '@/components/Setting/AccontSet'
 
@@ -24,7 +23,7 @@ Vue.use(Router)
 //路由
 const routes = [{
     path: '/',
-    name: 'Boot',
+    name: 'boot',
     component: Boot
 }, {
     path: '/welcome',
@@ -32,67 +31,80 @@ const routes = [{
     component: Welcome
 }, {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login
 }, {
     path: '/register',
-    name: 'Register',
+    name: 'register',
     component: Register
 }, {
     path: '/message',
-    name: 'Message',
+    name: 'message',
     component: Message
 }, {
-    path: '/chatOne/:id',
-    name: 'chatOne',
+    path: '/chat_one/:id',
+    name: 'chat_one',
     component: ChatOne
 }, {
-    path: '/chatGroup/:id',
-    name: 'chatGroup',
+    path: '/chat_one/:id/set',
+    name: 'chat_set',
+    component: ChatSetting
+}, {
+    path: '/chat_one/:id/set/profile',
+    component: Profile
+}, {
+    path: '/chat_one/:id/profile',
+    component: Profile
+}, {
+    path: '/chat_group/:id',
+    name: 'chat_group',
     component: ChatGroup
 }, {
-    path: '/chatSetting',
-    name: 'chatSetting',
-    component: ChatSetting
+    path: '/chat_group/:id/profile',
+    component: Profile
 }, {
     path: '/friend',
     name: 'friend',
     component: Friend
 }, {
-    path: '/friendAdd',
-    name: 'friendAdd',
-    component: FriendAdd
-}, {
-    path: '/friendNew',
-    name: 'friendNew',
-    component: FriendNew
-}, {
-    path: '/friendApply',
-    name: 'friendApply',
-    component: FriendApply
-}, {
-    path: '/friendSetting',
-    name: 'friendSetting',
-    component: FriendSetting
-}, {
-    path: '/social',
-    name: 'Social',
-    component: Social
-}, {
-    path: '/profile',
-    name: 'profile',
+    path: '/friend/:id/profile',
     component: Profile
 }, {
-    path: '/myProfile',
-    name: 'myProfile',
-    component: MyProfile
+    path: '/friend/add',
+    name: 'friend_add',
+    component: FriendAdd
+}, {
+    path: '/friend/new',
+    name: 'friend_new',
+    component: FriendNew
+}, {
+    path: '/friend/new/add',
+    component: FriendAdd
+}, {
+    path: '/friend/apply/:id',
+    name: 'friend_apply',
+    component: FriendApply
+}, {
+    path: '/friend/apply/:id/profile',
+    component: Profile
+}, {
+    path: '/friend/setting/:apply_id',
+    name: 'friend_setting',
+    component: FriendSetting
+}, {
+    path: '/profile/:id',
+    component: Profile
+}, {
+    path: '/social',
+    name: 'social',
+    component: Social
 }, {
     path: '/setting',
     name: 'setting',
     component: Setting
 }, {
-    path: '/accontSet',
-    name: 'accontSet',
+    path: '/accont_set',
+    name: 'accont_set',
     component: AccontSet
 }]
 

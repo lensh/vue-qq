@@ -1,6 +1,6 @@
 <template>
   <!-- 滚动条组件 -->
-  <div id="wrapper" ref="wrapper">
+  <div id="wrapper">
     <div id="scroller">
        <slot>要滚动的内容写在slot里</slot>
     </div>
@@ -21,7 +21,8 @@ export default {
       type:Array,
       default:null
     },
-    isHeightChange:{   //scroller的高度是否改变了,改变了也自动刷新(这种情况适用于无法通过data的改变来自动刷新的情况)
+    isHeightChange:{ //scroller的高度是否改变了,改变了也自动刷新(这种情况适用于无法通
+      //过data的改变来自动刷新的情况)
       type:Boolean,
       default:false
     }
@@ -35,15 +36,20 @@ export default {
   methods:{
     initScroll(){
       this.scroll = new IScroll('#wrapper')
-      if(this.isScrollToBottom){
-        this.scroll.scrollTo(0, -this.scroll.scrollerHeight,0.1)
-      }
+      this.scrollToBottom(0)
     },
     refresh(){
       //这里必须要有个延时，因为重绘页面需要时间
       setTimeout(()=>{ 
         this.scroll && this.scroll.refresh()
+        this.scrollToBottom(1000)
       }, 0)
+    },
+    scrollToBottom(time=0){
+      //自动判断是否要滑动到最底部
+      if(this.isScrollToBottom){
+        this.scroll.scrollTo(0,this.scroll.maxScrollY,time)
+      }
     }
   },
   watch:{

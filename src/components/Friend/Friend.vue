@@ -5,7 +5,7 @@
   	<VHeader :currentTab="currentPage"></VHeader>
     <VScroll :data="dataList.friends" :isHeightChange="isHeightChange">
         <VSearch placeholder="搜索"></VSearch>
-        <p class="newFriends" @click="$router.push('friendNew')">新朋友</p>
+        <p class="newFriends" @click="$router.push('/friend/new')">新朋友</p>
         <div class="tab" @click="changeTab">
            <div class="item first" :class="{'blue':currentTab==1}">好友</div>
            <div class="item" :class="{'blue':currentTab==2}">群</div>
@@ -22,8 +22,8 @@
                     <span>{{item.online}}/{{item.members.length}}</span>
                  </li>
                  <li class="li-2">
-                   <ul class="level-2" @dblclick="chatOne" @tap="chatOne">
-                      <li v-for="member in item.members" :data-id="member.id">  
+                   <ul class="level-2">
+                      <li v-for="member in item.members" @click="chatOne(member.id)">  
                           <img src="" :data-src="member.face" class="user"
                           :class="{'offline':member.status=='离线'}">
                           <div class="info">
@@ -44,8 +44,8 @@
               <ul class="level-1" v-for="item in dataList.groups">
                  <li class="li-1">{{item.type}}<span>{{item.groups.length}}</span></li>
                  <li class="li-2">
-                   <ul class="level-2" @dblclick="chatGroup" @tap="chatGroup">
-                      <li v-for="groups in item.groups" :data-id="groups.id">  
+                   <ul class="level-2">
+                      <li v-for="groups in item.groups" @click="chatGroup(groups.id)">  
                           <img src="" :data-src="groups.url" class="user">
                           <div class="info">{{groups.name}}</div>
                       </li>     
@@ -131,6 +131,7 @@ import VHeader from '../Common/Header/Header'
 import VFooter from '../Common/Footer/Footer'
 import VScroll from '@/base/Scroll/Scroll'
 import VSearch from '@/base/Search/Search'
+import $ from 'jquery'
 
 export default {
   name: 'friend',
@@ -222,10 +223,12 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
-  },
-  created(){
-    this.getFriendList()
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
+
+    if(this.$store.state.friend.hasGetFriendList==0){
+      const user_id=this.$store.state.login.loginStatus.userId
+      this.$store.dispatch('getFriendList',user_id)
+    }
   },
   components:{
   	VHeader,
@@ -270,30 +273,11 @@ export default {
           }
        }
     },
-    chatOne(e){
-      if(this.getTarget(e)){
-        const id=$(this.getTarget(e)).attr('data-id')
-        this.$router.push(`chatOne/${id}`)
-      }
+    chatOne(user_id){
+        this.$router.push(`/chat_one/${user_id}`)
     },
-    chatGroup(e){
-      if(this.getTarget(e)){
-        const id=$(this.getTarget(e)).attr('data-id')
-        this.$router.push(`chatGroup/${id}`)
-      }  
-    },
-    getTarget(e){
-      let target=$(e.target).get(0)
-      while(target.tagName!='LI'){
-        target=target.parentNode?target.parentNode:''
-      }
-      return target
-    },
-    getFriendList(){
-      if(this.$store.state.friend.hasGetFriendList==0){
-        const user_id=this.$store.state.login.loginStatus.userId
-        this.$store.dispatch('getFriendList',user_id)
-      }
+    chatGroup(group_id){
+        this.$router.push(`/chat_group/${group_id}`)
     }
   }
 }

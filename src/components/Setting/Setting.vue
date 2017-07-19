@@ -7,7 +7,7 @@
 	  </div>
 	  <div class="Sysconfig">
           <div class="first">
-          	  <p class="item" @click="$router.push('accontSet')">账号管理
+          	  <p class="item" @click="$router.push('/accont_set')">账号管理
           	     <span class="face">
           	     	<img :src="dataList.face">
           	     </span>
@@ -48,7 +48,7 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   }
 }
 </script>

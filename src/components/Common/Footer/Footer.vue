@@ -1,17 +1,17 @@
 <template>
 <!--  主页面底部 -->
   <div class="footer">
-      <div class="item" @click="change(1)">
+      <div class="item" @click="$router.push('/message')">
         <img :src="currentTab==1 ? '/static/icon/3/message_selected.png':
             '/static/icon/3/message.png' ">
         <span :class="{'blue':currentTab==1}">消息</span>
       </div>
-      <div class="item" @click="change(2)">
+      <div class="item" @click="$router.push('/friend')">
         <img :src="currentTab==2 ? '/static/icon/3/person_selected.png':
            '/static/icon/3/person.png' ">
         <span :class="{'blue':currentTab==2}">联系人</span>
       </div>
-      <div class="item" @click="change(3)">
+      <div class="item" @click="$router.push('/social')">
         <img :src="currentTab==3 ? '/static/icon/3/social_selected.png':
            '/static/icon/3/social.png' ">
         <span :class="{'blue':currentTab==3}">动态</span>
@@ -22,18 +22,7 @@
 <script>
 export default {
   name: 'footer',
-  props:['currentTab'],
-  methods:{
-    change(currentTab){
-      if(currentTab==1){
-        this.$router.push('/message')
-      }else if(currentTab==2){
-        this.$router.push('/friend')
-      }else{
-        this.$router.push('/social')
-      }
-    }
-  }
+  props:['currentTab']
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -64,10 +53,10 @@ export default {
     		position:relative;
     		bottom:60px;
 			  font-size:10px;
+        &.blue{
+          color:#9cf
+        }
     	}
-      span.blue{
-        color:#9cf
-      }
     }
     a{
       color:#666

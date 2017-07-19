@@ -4,11 +4,11 @@
     <VAsideMenu></VAsideMenu>
 	  <VHeader :currentTab="currentTab"></VHeader>
     <VScroll :data="dataList">
-        <ul @touchstart="touchStart" @touchmove="touchMove" @dblclick="chat"
-         @tap="chat">
+        <ul>
             <li><VSearch placeholder="搜索"></VSearch></li>
-            <li class="message" v-for="item in dataList" :data-type='item.type' 
-            :data-id="item.id">
+            <li class="message" v-for="item in dataList" 
+                @click="goChat(item.type,item.id)"
+                @touchstart.prevent="touchStart" @touchmove.prevent="touchMove">
                 <img :src="item.imgUrl">
                 <div class="info">
                    <p class="from">{{item.from_user}}<span>{{item.time}}</span></p>
@@ -30,7 +30,6 @@ import VFooter from '../Common/Footer/Footer'
 import VSearch from '@/base/Search/Search'
 import VScroll from '@/base/Scroll/Scroll'
 
-let startX,startY,moveEndX,moveEndY,X,Y,target
 export default {
   name: 'message',
   data () {
@@ -45,10 +44,14 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
-  },
-  created(){
-    this.getAllMessage()
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
+
+    //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
+    //新消息通过socket来获取
+    if(this.$store.state.message.hasGetAllMessage==0){
+      const user_id=this.$store.state.login.loginStatus.userId
+      this.$store.dispatch('getAllMessage',user_id)
+    }
   },
   components:{
   	VHeader,
@@ -59,22 +62,20 @@ export default {
   },
   methods:{
     touchStart(e){
-      e.preventDefault()
-      startX = e.targetTouches[0].pageX
-      startY = e.targetTouches[0].pageY
-      target=e.target||e.srcElement
-      while(target.tagName!='UL'){
-        target=target.parentNode?target.parentNode:''
-      }
+      this.startX = this.getTouchXY(e).X
+      this.startY = this.getTouchXY(e).Y
     },
     touchMove(e){
-      e.preventDefault()
-      moveEndX = e.targetTouches[0].pageX
-      moveEndY = e.targetTouches[0].pageY
-      X = moveEndX - startX
-      Y = moveEndY - startY
-      if ( Math.abs(X) > 3*Math.abs(Y) && X > 50 && target &&target.tagName=='UL') {
-        this.showSidebar();
+      const X = this.getTouchXY(e).X - this.startX
+      const Y = this.getTouchXY(e).Y - this.startY
+      if ( Math.abs(X) > 3*Math.abs(Y) && X > 50) {
+        this.showSidebar()
+      }
+    },
+    getTouchXY(e){
+      return {
+        X:e.targetTouches[0].pageX,
+        Y:e.targetTouches[0].pageY
       }
     },
     showSidebar(e){
@@ -84,27 +85,9 @@ export default {
         'isShowMask':true
       })
     },
-    chat(e){      
-      if($('#wrapper').attr('isMove')==1)  return
-        
-      let target=$(e.target).get(0)
-      while(target.tagName!='LI'){
-        target=target.parentNode?target.parentNode:''
-      }
-      if(!target) return
-
-      const type=$(target).attr('data-type')
-      const id=$(target).attr('data-id')
-      const path= type=='single' ? `ChatOne/${id}`:`ChatGroup/${id}`
+    goChat(chatType,chatId){           
+      const path = chatType =='single' ? `chat_one/${chatId}`:`chat_group/${chatId}`
       this.$router.push(path)
-    },
-    getAllMessage(){
-      //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
-      //新消息通过socket来获取
-      if(this.$store.state.message.hasGetAllMessage==0){
-        const user_id=this.$store.state.login.loginStatus.userId
-        this.$store.dispatch('getAllMessage',user_id)
-      }
     }
   }
 }

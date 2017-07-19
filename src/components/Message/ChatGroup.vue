@@ -19,7 +19,8 @@
                   'me':item.type=='message'&&item.content.from=='me',
                   'other':item.type=='message'&&item.content.from=='other'}">
                   <template v-if="item.type=='message'">
-                      <img :src="item.content.faceUrl">
+                      <img :src="item.content.faceUrl"
+                      @click="$router.push(`${item.content.user_id}/profile`)">
                       <p class="name">{{item.content.name}} :</p>
                   	  <p class="message">{{item.content.message}}</p>
       				    </template>
@@ -54,7 +55,7 @@ export default {
      return {
        isScrollToBottom:true,
        dataList:{
-          groupName:'牛客网IT笔试面试讨论群9',
+          groupName:'牛客网IT笔试面试讨论群93444444444444444444',
           message:[
             {
             	type:'time',
@@ -63,6 +64,7 @@ export default {
             {
             	type:'message',
             	content:{
+                user_id:1,
             		from:'other',
             		name:'程文宇',
   	          	faceUrl:'/static/user/face/7.jpg',
@@ -72,8 +74,9 @@ export default {
             {
             	type:'message',
             	content:{
-  	        	from:'other',
-  	        	name:'马哲涵',
+                user_id:2,
+    	        	from:'other',
+    	        	name:'马哲涵',
   	          	faceUrl:'/static/user/face/4.jpg',
   	          	message:'邮件是html格式'
             	}
@@ -81,8 +84,9 @@ export default {
             {
             	type:'message',
             	content:{
-  	        	from:'other',
-  	        	name:'程文宇',
+                user_id:3,
+    	        	from:'other',
+    	        	name:'程文宇',
   	          	faceUrl:'/static/user/face/7.jpg',
   	          	message:'嗯，那个能实现。老板给两张表就不管了，我不太清楚具体的业务流程之类'
             	}	
@@ -90,8 +94,9 @@ export default {
             {
             	type:'message',
             	content:{
-  		       	from:'other',
-  		       	name:'程文宇',
+                user_id:4,
+    		       	from:'other',
+    		       	name:'程文宇',
   	          	faceUrl:'/static/user/face/7.jpg',
   	          	message:'那你直接发html不就OK了吗'
             	}
@@ -99,7 +104,8 @@ export default {
             {  	
             	type:'message',
             	content:{
-  	        	from:'other',
+                user_id:5,
+  	        	  from:'other',
   	            name:'许易',
   	          	faceUrl:'/static/user/face/10.jpg',
   	          	message:'Java调用html模板发送html内容的邮件'
@@ -108,8 +114,9 @@ export default {
             {
             	type:'message',
             	content:{
-  		        from:'me',
-  		        name:'莫知我哀',
+                user_id:6,
+    		        from:'me',
+    		        name:'莫知我哀',
   	          	faceUrl:'/static/user/face/0.jpg',
   	          	message:'nodejs也可以的'
             	}
@@ -126,7 +133,7 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   components:{
     VScroll
@@ -136,7 +143,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
 #wrapper{
-   background:#eee !important;
+   background:#EFEFEF !important;
    bottom:70px !important
 }
 .header{
@@ -167,6 +174,11 @@ export default {
               letter-spacing:2px;
               line-height:26px;
               font-size:16px;
+              overflow:hidden;
+              margin:0 auto;
+              width:240px;
+              text-overflow:ellipsis; /*当文本溢出时显示省略标记(...)*/
+              white-space:nowrap; /*不换行*/
             }
         }
         &.right{

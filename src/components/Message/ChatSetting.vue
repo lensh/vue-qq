@@ -8,7 +8,7 @@
 	  </div>
 	  <div class="chatSetting">
       <ul> 
-        <li @click="$router.push('profile')">  
+        <li @click="$router.push(`/profile/${dataList.user_id}`)">  
           <img :src="dataList.face" class="user">
           <div class="info">
              <p class="name">{{dataList.name}}</p>
@@ -42,6 +42,7 @@ export default {
   data(){
     return {
       dataList:{
+         user_id:1,
          name:'马哲涵',
          face:'/static/user/face/4.jpg',
          sex:'女',
@@ -52,7 +53,7 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   components:{
     SwitchBtn

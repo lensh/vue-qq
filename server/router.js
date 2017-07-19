@@ -37,15 +37,36 @@ router
 		const result = await message.getAllMessage(userId)
 		res.json(result)
 	})
-	.get('/friend/:type/:userId', async(req, res) => { //获取某个用户的好友和群
-	    let result, type = req.params.type
-	    const userId = req.params.userId
-		if (type == 'list') {
+	.get('/friend/:type/:id', async(req, res) => {
+		let result, type = req.params.type
+		if (type == 'list') { //获取某个用户的好友和群
+			const userId = req.params.id
 			result = await friend.getFriendGroup(userId)
-		} else if(type=='newfriend'){
+		} else if (type == 'newfriend') { //获取新朋友
+			const userId = req.params.id
 			result = await friend.getNewFriends(userId)
+		} else if (type == 'applydetail') { //申请详情
+			const applyId = req.params.id
+			result = await friend.getApplyDetail(applyId)
+		} else if (type == 'getfenzu') { //获取所有分组和好友昵称
+			const applyId = req.params.id
+			result = await friend.getFenzu(applyId)
 		}
 		res.json(result)
+	})
+	.put('/friend/:type/:apply_id', async(req, res) => { //处理好友申请
+		const type = req.params.type
+		const applyId = req.params.apply_id
+		let result
+		if (type == 'agree') { //同意
+			result = await friend.agreeApply(applyId)
+		} else if (type == 'reject') { //拒绝
+			result = await friend.rejectApply(applyId)
+		}
+		res.json(result)
+	})
+	.post('/friend/add', async(req, res) => { //添加好友最后一步
+		const result = await friend.addFriend(req, res)
 	})
 
 module.exports = router

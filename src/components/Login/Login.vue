@@ -38,7 +38,7 @@ export default {
   },
   beforeCreate (){
     //如果已经登陆了，则进入消息页面
-    this.$store.state.login.loginStatus ? this.$router.push('message') : ''  
+    this.$store.state.login.loginStatus ? this.$router.push('/message') : ''  
   },
   methods:{
     validate({user,pwd}){

@@ -10,13 +10,13 @@
       <div class="item right">
       	<img src="/static/icon/4/skin_aio_head_twocall.png" class="phone">
       	<img src="/static/icon/4/skin_header_icon_single.png" 
-        @click="$router.push('chatSetting')" class="person">
+        @click="$router.push(`${dataList.user_id}/set`)" class="person">
       </div>
     </div>
     
     <VScroll :isScrollToBottom='isScrollToBottom' :data="dataList.message">
       <div class="chat">
-          <ul @click="showProfile">
+          <ul>
               <li v-for="item in dataList.message" :class="{
                   'time':item.type=='time',
                   'me':item.type=='message'&&item.content.from=='me',
@@ -24,7 +24,8 @@
                   <template v-if="item.type=='message'">
                       <img :src="item.content.faceUrl" :class="{
                        'me':item.content.from=='me',
-                       'other':item.content.from=='other'}">
+                       'other':item.content.from=='other'}"
+                       @click="$router.push(`${dataList.user_id}/profile`)">
                   	  <p class="message">{{item.content.message}}</p>
       				    </template>
       				    <template v-else>
@@ -58,6 +59,7 @@ export default {
      return {
        isScrollToBottom:true,
        dataList:{
+          user_id:6,
           chatWith:'马哲涵',
           status:'手机在线',
           message:[
@@ -68,6 +70,7 @@ export default {
             {
             	type:'message',
             	content:{
+                user_id:1,
             		from:'me',
   	          	faceUrl:'/static/user/face/0.jpg',
   	          	message:'腾讯'
@@ -76,7 +79,8 @@ export default {
             {
             	type:'message',
             	content:{
-  	        	from:'other',
+                user_id:2,
+  	        	  from:'other',
   	          	faceUrl:'/static/user/face/4.jpg',
   	          	message:'腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承“一切以用户价值为依归”的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。'
             	}
@@ -84,7 +88,8 @@ export default {
             {
             	type:'message',
             	content:{
-  	        	from:'me',
+                user_id:3,
+  	        	  from:'me',
   	          	faceUrl:'/static/user/face/0.jpg',
   	          	message:'百度'
             	}	
@@ -92,7 +97,8 @@ export default {
             {
             	type:'message',
             	content:{
-  		       	from:'other',
+                user_id:4,
+  		       	  from:'other',
   	          	faceUrl:'/static/user/face/4.jpg',
   	          	message:'百度，全球最大的中文搜索引擎、最大的中文网站。1999年底,身在美国硅谷的李彦宏看到了中国互联网及中文搜索引擎服务的巨大发展潜力，抱着技术改变世界的梦想，他毅然辞掉硅谷的高薪工作，携搜索引擎专利技术，于2000年1月1日在中关村创建了百度公司。'
             	}
@@ -100,7 +106,8 @@ export default {
             {  	
             	type:'message',
             	content:{
-  	        	from:'me',
+                user_id:1,
+  	        	  from:'me',
   	          	faceUrl:'/static/user/face/0.jpg',
   	          	message:'阿里巴巴'
             	}
@@ -108,7 +115,8 @@ export default {
             {
             	type:'message',
             	content:{
-  		        from:'other',
+                user_id:4,
+  		          from:'other',
   	          	faceUrl:'/static/user/face/4.jpg',
   	          	message:'阿里巴巴网络技术有限公司（简称：阿里巴巴集团）是以曾担任英语教师的马云为首的18人于1999年在杭州创立，他们相信互联网能够创造公平的竞争环境，让小企业通过创新与科技扩展业务，并在参与国内或全球市场竞争时处于更有利的位置。'
             	}
@@ -120,7 +128,7 @@ export default {
   },
   beforeCreate(){
     //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('login') :''
+    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   computed:{
     iconUrl(){
@@ -129,23 +137,13 @@ export default {
   },
   components:{
     VScroll
-  },
-  methods:{
-    showProfile(e){
-      const target=e.target||e.srcElement
-      if(target.tagName!='IMG')  return
-      const toProfile=target.className=='me'?'/myProfile':'/profile'
-      this.$router.push({
-        path:toProfile
-      })
-    }
   }
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
 #wrapper{
-   background:#eee !important;
+   background:#EFEFEF !important;
    bottom:70px !important
 }
 .header{
@@ -186,8 +184,14 @@ export default {
               letter-spacing:2px;
             }
             span.name{
+              display:block;
               line-height:22px;
               font-size:16px;
+              margin:0 auto;
+              overflow:hidden;
+              width:200px;
+              text-overflow:ellipsis; /*当文本溢出时显示省略标记(...)*/
+              white-space:nowrap; /*不换行*/
             }
             span.status{
               line-height:18px;

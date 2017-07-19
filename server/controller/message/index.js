@@ -30,31 +30,32 @@ export default class Messge {
 	 */
 	static async getSingleMessage(userId) {
 		const sql = `
-					SELECT a.id, a.time, b.face AS imgUrl, (
+			SELECT a.id, a.time, b.face AS imgUrl, (
 
-					SELECT COUNT( * ) 
-					FROM message_user c
-					WHERE c.is_read =0
-					AND c.to_user = a.to_user
-					AND c.from_user = a.from_user
-					) AS unread, (
+			SELECT COUNT( * ) 
+			FROM message_user c
+			WHERE c.is_read =0
+			AND c.to_user = a.to_user
+			AND c.from_user = a.from_user
+			) AS unread, (
 
-					SELECT d.message
-					FROM message_user d
-					WHERE d.to_user = a.to_user
-					AND d.from_user = a.from_user
-					ORDER BY TIME DESC 
-					LIMIT 1
-					) AS message, (
+			SELECT d.message
+			FROM message_user d
+			WHERE d.to_user = a.to_user
+			AND d.from_user = a.from_user
+			ORDER BY TIME DESC 
+			LIMIT 1
+			) AS message, (
 
-					SELECT beizhu
-					FROM friend e
-					WHERE e.other_user_id = a.from_user
-					) AS from_user
-					FROM message_user a
-					LEFT JOIN user_detail b ON a.from_user = b.user_id
-					AND a.to_user =${userId}
-					GROUP BY from_user`
+			SELECT beizhu
+			FROM friend e
+			WHERE e.other_user_id = a.from_user
+			) AS from_user
+			FROM message_user a
+			JOIN user_detail b ON a.to_user =?
+			AND a.from_user = b.user_id
+			GROUP BY from_user
+		`
 
 		const rows = await query(sql, [userId]).catch((err) => {
 			console.log(err)
@@ -85,10 +86,11 @@ export default class Messge {
 			LIMIT 1
 			) AS time
 			FROM group_user a
-			RIGHT JOIN message_group b ON b.to_group = a.group_id
-			AND a.user_id =${userId}
+			JOIN message_group b ON a.user_id =?
+			AND b.to_group = a.group_id
 			LEFT JOIN groups c ON c.id = a.group_id
-			GROUP BY a.group_id`
+			GROUP BY a.group_id
+		`
 
 		const rows = await query(sql, [userId]).catch((err) => {
 			console.log(err)
