@@ -1,25 +1,14 @@
 require('./check-versions')()
-/*******************个人配置开始**************************/
-require("babel-core/register")({
-     presets: ['es2015', 'stage-0']
-});
-require("babel-polyfill")
-/**********************结束******************************/
 var config = require('../config')
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
-
 var opn = require('opn')
 var path = require('path')
 var express = require('express')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
-var bodyParser = require('body-parser')
-var session = require('express-session')
-var cookieParser = require('cookie-parser')
-
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -28,21 +17,18 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
-/*******************个人配置开始**************************/
-var app = express()
-app.use(bodyParser.urlencoded({ extended: true })); 
-app.use(bodyParser.json()) 
-app.use(session({
-    secret: 'lenshen qq', //secret的值建议使用随机字符串
-    cookie: {maxAge: 60 * 1000 * 30}, // 过期时间（毫秒）
-    resave: false,
-    saveUninitialized: true,
-}));
+/**************服务端配置开始****************/
 
-// Router
-var router=require('../server/router')
-app.use('/api', router)
-/**********************结束******************************/
+//让服务端支持ES6/ES7/ES8
+require("babel-core/register")({
+  presets: ['es2015', 'stage-0']
+})
+require("babel-polyfill")
+
+//服务端入口文件
+var app=require('../server')
+
+/**************服务端配置结束****************/
 
 var compiler = webpack(webpackConfig)
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

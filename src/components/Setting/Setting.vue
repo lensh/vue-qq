@@ -12,7 +12,7 @@
           	     	<img :src="dataList.face">
           	     </span>
           	  </p>
-          	  <p class="item">手机号码<span class="phone">{{dataList.phone}}</span></p>
+          	  <p class="item">手机号码<span class="phone">{{formatPhone}}</span></p>
           	  <p class="item">QQ达人
           	    <span class="da"><img src="/static/icon/4/poa.png">{{dataList.time}}天</span></p>
           </div>
@@ -40,15 +40,17 @@ export default {
   data(){
     return {
        dataList:{
-       	 face:'/static/user/face/0.jpg',
-       	 phone:'182******76',
-       	 time:'1045'
+       	 face:this.$store.state.login.userInfo.face,
+       	 phone:this.$store.state.login.userInfo.phone,
+       	 time:this.$store.state.login.userInfo.login_day,
        }
     }
   },
-  beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
+  computed:{
+  	formatPhone(){
+  		return `${this.dataList.phone.substring(0,3)}******
+  			${this.dataList.phone.substring(9,11)}`
+  	}
   }
 }
 </script>

@@ -43,9 +43,6 @@ export default {
     }
   },
   beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-
     //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
     //新消息通过socket来获取
     if(this.$store.state.message.hasGetAllMessage==0){
@@ -86,7 +83,7 @@ export default {
       })
     },
     goChat(chatType,chatId){           
-      const path = chatType =='single' ? `chat_one/${chatId}`:`chat_group/${chatId}`
+      const path = chatType =='single' ? `/chat_one/${chatId}`:`/chat_group/${chatId}`
       this.$router.push(path)
     }
   }

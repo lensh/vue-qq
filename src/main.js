@@ -18,7 +18,7 @@ Vue.use(VueAxios, axios)
 // Vuex 进行状态管理
 Vue.use(Vuex)
 
-// vueg转场动画
+// vueg 转场动画
 const options = {
 	forwardAnim: 'fadeInRight'
 }

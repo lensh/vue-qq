@@ -12,9 +12,9 @@
       <div class="main">
         <div class="setting">
           <span class="left">备注</span>
-          <span class="middle"><input v-model="dataList.remark" class="text"/></span>
+          <span class="middle"><input v-model="dataList.beizhu" class="text"/></span>
           <img src="/static/icon/4/gyw.png" class="icon" 
-           v-show="dataList.remark!=''" @click="clear">
+           v-show="dataList.beizhu!=''" @click="clear">
         </div>
         <div class="setting" @click="changeTab">
           <span class="left">分组</span>
@@ -46,7 +46,8 @@
 
 <script>
 import{
-  get_fenzu
+  get_fenzu,
+  add_friend
 } from '@/api/friend'
 
 export default {
@@ -56,19 +57,15 @@ export default {
       currentTab:1,
       applyId:'',
       dataList:{
-        user_id:'',   //用户自己的id
-        apply_user_id:'',  //添加方用户id
-        remark:'',  //添加方用户昵称
+        userId:'',   //用户自己的id
+        applyUserId:'',  //添加方用户id
+        beizhu:'',  //添加方用户昵称
         defaulGroup:'',  //用户的默认分组
         groups:[]  //用户所有的分组
       },
-      initGroup:'',  //初始分组名称,点击取消时会用到
-      initRemark:''  //初始备注名称,点击取消时会用到
+      initZuName:'',  //初始分组名称,点击取消时会用到
+      initBeizhu:''  //初始备注名称,点击取消时会用到
     }
-  },
-  beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   created(){
     this.applyId=this.$route.params.apply_id
@@ -76,7 +73,7 @@ export default {
   }, 
   methods:{
     clear(){
-      this.dataList.remark=''
+      this.dataList.beizhu=''
     },
     //返回
     back(){
@@ -96,19 +93,35 @@ export default {
     async getFenzu(applyId){
       const res = await get_fenzu(applyId)
       this.dataList=res.data
-      this.initRemark=res.data.remark
-      this.initGroup=res.data.defaulGroup
+      this.initBeizhu=res.data.beizhu
+      this.initZuName=res.data.defaulGroup
     },
     //取消修改备注
     async cancle(){
       //把新成员添加到默认分组里，好友表新增两条记录,且设置好备注为默认昵称
-      this.$router.push('/friend/new')
+      const data={
+        applyId:this.applyId,
+        userId:this.dataList.userId,
+        applyUserId:this.dataList.applyUserId,
+        beizhu:this.initBeizhu,  
+        zuName:this.initZuName
+      }
+      const {code} = await add_friend(data)
+      code==1 && this.$router.push('/friend/new')
     },
     //完成修改备注
     async complete(){
       //把新成员添加到新的分组里，好友表新增两条记录,且设置好备注为新的备注
-      this.$router.push('/friend/new')
-    },
+      const data={
+        applyId:this.applyId,
+        userId:this.dataList.userId,
+        applyUserId:this.dataList.applyUserId,
+        beizhu:this.dataList.beizhu,  
+        zuName:this.dataList.defaulGroup
+      }
+      const {code} = await add_friend(data)
+      code==1 && this.$router.push('/friend/new')
+    }
   }
 }
 </script>

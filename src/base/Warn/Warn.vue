@@ -19,12 +19,19 @@ export default {
 <style lang="scss" type="text/css" scoped>
 p.loading{
    position:absolute;
-   top:0;
-   width:100%;
-   height:30px;
-   line-height:30px;
-   background:grey;
-   color:white;
+   top:20px;
+   left:0;
+   right:0;
+   margin:0 10px;
+   padding:0 20px;
+   height:28px;
    text-align:center;
+   line-height:28px;
+   color:white;
+   letter-spacing:1px;
+   background:#000;
+   opacity:0.6;
+   font-size:14px;
+   border-radius:2px;
 }
 </style>

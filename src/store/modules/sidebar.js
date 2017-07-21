@@ -1,7 +1,4 @@
-import {
-    SHOW_SIDEBAR,
-    SET_INIT
-} from '../mutation-types'
+import * as types from '../mutation-types'
 
 
 // init state
@@ -13,12 +10,12 @@ const state = {
 
 // mutations
 const mutations = {
-    [SHOW_SIDEBAR](state, {isShowSideBar,isInit,isShowMask}) {
+    [types.SHOW_SIDEBAR](state, {isShowSideBar,isInit,isShowMask}) {
         state.isShowSideBar = isShowSideBar
         state.isInit = isInit
         state.isShowMask = isShowMask
     },
-    [SET_INIT](state, {isInit}) {
+    [types.SET_INIT](state, {isInit}) {
         state.isInit = isInit
     }
 }

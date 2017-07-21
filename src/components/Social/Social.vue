@@ -40,10 +40,6 @@ export default {
       currentTab:3
     }
   },
-  beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-  },
   components:{
     VHeader,
     VFooter,

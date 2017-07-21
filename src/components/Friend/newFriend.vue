@@ -11,32 +11,43 @@
         <div class="notify">
             <p class="title">好友通知</p>
             <ul>
-                <li v-for="item in dataList">  
+                <li v-for="item in dataList">             
+                  <template v-if="item.to_user==userId">
                     <img :src="item.face" class="user">
                     <div class="info">
-                       <template v-if="item.status!=4">
-                          <div @click="gotoApply(item.id)">
-                            <p class="name">{{item.nick_name}}</p>
-                            <p class="intro">
-                               <span :class="{'man':item.sex=='男','woman':item.sex=='女'}">{{item.age}}</span>
-                               {{item.apply_message}}
-                            </p>
-                            <p class="from">来自:{{item.source}}</p>
-                            <button class="agree" v-if="item.status==1" 
-                            @click.stop="agree(item.id)">同意</button>    
-                            <button class="other" v-if="item.status==2">已同意</button>
-                            <button class="other" v-if="item.status==3">已拒绝</button>
-                          </div>
-                       </template>
-                       <template v-else>
-                          <div @click="gotoProfile(item.to_user)">
-                            <p class="name mes">{{item.nick_name}}</p>
-                            <p class="message"> 
-                            {{item.info}}</p>
-                            <button class="other">等待验证</button>
-                          </div>
-                       </template>
+                        <div @click="gotoApply(item.id)">
+                          <p class="name">{{item.nick_name}}</p>
+                          <p class="intro">
+                             <span :class="{'man':item.sex=='男','woman':item.sex=='女'}">{{item.age}}</span>
+                             {{item.apply_message}}
+                          </p>
+                          <p class="from">来自:{{item.source}}</p>
+                          <button class="agree" v-if="item.status==1" 
+                          @click.stop="agree(item.id)">同意</button>    
+                          <button class="other" v-if="item.status==2">已同意</button>
+                          <button class="other" v-if="item.status==3">已拒绝</button>
+                        </div>
                     </div>
+                  </template>
+                  <template v-else-if="item.status==1">
+                    <img :src="item.face" class="user">
+                    <div class="info">
+                      <div @click="gotoProfile(item.to_user)">
+                        <p class="name mes">{{item.nick_name}}</p>
+                        <p class="message">{{item.info}}</p>
+                        <button class="other">等待验证</button>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.status==3">
+                    <img :src="item.face" class="user">
+                    <div class="info">
+                      <div>
+                        <p class="name mes">{{item.nick_name}}</p>
+                        <p class="message">{{item.info}}</p>
+                      </div>
+                    </div>
+                  </template>
                 </li>
             </ul>
         </div>
@@ -52,9 +63,12 @@ import {
 
 export default {
   name: 'newFriend',
+  data(){
+    return {
+      userId:this.$store.state.login.loginStatus.userId
+    }
+  },
   beforeCreate(){
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-
     //获取数据
     if(this.$store.state.friend.hasGetNewFriends==0){
       const user_id=this.$store.state.login.loginStatus.userId

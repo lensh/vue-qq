@@ -1,5 +1,3 @@
-import query from '../../common/mysql/db'
-
 export default class Friend {
 
 	/**
@@ -10,6 +8,7 @@ export default class Friend {
 	static async getFriendGroup(userId) {
 		//先获取好友
 		const friend = await this.getFriend(userId)
+
 		//再获取群
 		const group = await this.getGroup(userId)
 
@@ -42,6 +41,7 @@ export default class Friend {
 			b.face, b.signature AS sign, c.vip_type as vip, d.device AS status
 			FROM friend a
 			JOIN user_detail b ON a.user_id =?
+			AND a.is_friend=1
 			AND b.user_id = a.other_user_id
 			LEFT JOIN vip c ON c.user_id = a.other_user_id
 			LEFT JOIN user d ON d.id = a.other_user_id
@@ -122,7 +122,7 @@ export default class Friend {
 		// 2.自己加别人
 		// id:5,
 		// to_user:6
-		// status:4,  // 1 待处理  2 已同意 3 已拒绝 4 等待验证
+		// status:1,  // 1 待处理  2 已同意 3 已拒绝
 		// time:15000000,
 		// info:'已发送验证消息',  // info根据status来动态改变
 		// face:'/static/user/face/9.jpg',
@@ -130,7 +130,7 @@ export default class Friend {
 
 		// 别人加自己
 		const sql1 = `
-	        SELECT a.id,a.source, a.apply_message, a.status, a.time, 
+	        SELECT a.id,a.to_user,a.source, a.apply_message, a.status, a.time, 
 	        b.face, b.nick_name, b.age, b.sex
 			FROM friend_apply a
 			JOIN user_detail b ON a.to_user = ?
@@ -144,15 +144,15 @@ export default class Friend {
 		const sql2 = `
 			SELECT a.id,a.to_user,a.status, a.time, b.face, b.nick_name
 			FROM friend_apply a
-			JOIN user_detail b ON a.from_user = ?
+			JOIN user_detail b ON a.from_user = ? and a.status!=2
 			AND b.user_id = a.to_user
 		`
 		const res2 = await query(sql2, [userId]).catch((err) => {
 			console.log(err)
 		})
 		for (let [index, value] of res2.entries()) {
-			const info = value.status == 4 ? '已发送验证消息' : value.status == 2 ?
-				'对方已同意' : '对方已拒绝'
+			const info = value.status == 1 ? '已发送验证消息' : value.status == 3 ?
+				'拒绝了你的好友申请' : ''
 			res2[index]['info'] = info
 		}
 
@@ -197,19 +197,18 @@ export default class Friend {
 			data: row[0]
 		}
 	}
-    
-    /**
-     * [rejectApply 拒绝申请]
-     * @param  {[type]} applyId [申请ID]
-     * @return {[type]}         [description]
-     */
+
+	/**
+	 * [rejectApply 拒绝申请]
+	 * @param  {[type]} applyId [申请ID]
+	 * @return {[type]}         [description]
+	 */
 	static async rejectApply(applyId) {
 		const sql = 'update friend_apply set status=3 where id=? limit 1'
 		const res = await query(sql, [applyId]).catch((err) => {
 			console.log(err)
 		})
-		console.log(res)
-		return res.affectedRows==1 ? {
+		return res.affectedRows == 1 ? {
 			code: 1
 		} : {
 			code: 0
@@ -217,31 +216,30 @@ export default class Friend {
 	}
 
 	/**
-     * [agreeApply 同意申请]
-     * @param  {[type]} applyId [申请ID]
-     * @return {[type]}         [description]
-     */
+	 * [agreeApply 同意申请]
+	 * @param  {[type]} applyId [申请ID]
+	 * @return {[type]}         [description]
+	 */
 	static async agreeApply(applyId) {
 		let sql = 'update friend_apply set status=2 where id=? limit 1'
 		const res = await query(sql, [applyId]).catch((err) => {
 			console.log(err)
 		})
-		console.log(res)
 		return res.affectedRows == 1 ? {
 			code: 1
 		} : {
 			code: 0
 		}
-	}    
+	}
 
-    /**
-     * [settingFriend 获取所有分组和添加方的昵称]
-     * @param  {[type]} applyId [申请ID]
-     * @return {[type]}         [description]
-     */
-	static async getFenzu(applyId){
+	/**
+	 * [settingFriend 获取所有分组和添加方的昵称]
+	 * @param  {[type]} applyId [申请ID]
+	 * @return {[type]}         [description]
+	 */
+	static async getFenzu(applyId) {
 		//先获取默认分组和添加方的昵称
-		const sql=`
+		const sql = `
 			SELECT a.to_user as user_id,b.user_id as apply_user_id,b.nick_name,c.zu_name
 			FROM friend_apply a
 			JOIN user_detail b ON a.id =?
@@ -252,28 +250,96 @@ export default class Friend {
 		const row = await query(sql, [applyId]).catch((err) => {
 			console.log(err)
 		})
-        
-        //再获取所有分组
-        const sql1=`
+
+		//再获取所有分组
+		const sql1 = `
 			SELECT b.zu_name
 			FROM friend_apply a
 			JOIN fenzu b ON a.id =?
 			AND b.user_id = a.to_user
         `
-        const row1 = await query(sql1, [applyId]).catch((err) => {
+		const row1 = await query(sql1, [applyId]).catch((err) => {
 			console.log(err)
 		})
 		return {
-			code:1,
-			data:{
-				remark:row[0].nick_name,
-				defaulGroup:row[0].zu_name,
-				groups:row1
+			code: 1,
+			data: {
+				userId: row[0].user_id,
+				applyUserId: row[0].apply_user_id,
+				beizhu: row[0].nick_name,
+				defaulGroup: row[0].zu_name,
+				groups: row1
 			}
 		}
 	}
 
-	static async addFriend(){
-		
+	/**
+	 * [addFriend 添加好友,设置好友备注和分组]
+	 * @param {[type]} req [description]
+	 * @param {[type]} res [description]
+	 */
+	static async addFriend(req, res) {
+		//好友表新增一条记录
+		let data = {
+			user_id: req.body.userId,
+			other_user_id: req.body.applyUserId,
+			special: 0,
+			beizhu: req.body.beizhu,
+			time: Date.parse(new Date()) / 1000
+		}
+
+		// data的is_friend属性的值要看friend_apply表中的status字段来取值,
+		// 如果为status为2(接收方同意了),则is_friend才为1，否则为0
+		const {applyId} = req.body
+		const sql = `select status from friend_apply where id=? limit 1`
+		const row = await query(sql, [applyId]).catch((err) => {
+			console.log(err)
+		})
+		if (row[0].status == 2) { //已同意
+			data.is_friend = 1
+		} else {
+			data.is_friend = 0
+		}
+
+		//往friend表新增记录
+		const sql1 = `insert into friend set ?`
+		const result = await query(sql1, data).catch((err) => {
+			console.log(err)
+		})
+
+		//加到指定分组里
+		if (result.affectedRows == 1) {
+			const {userId,zuName,applyUserId} = req.body
+
+			//取出组员id
+			const sql2 = 'select zu_member from fenzu where user_id=? and zu_name=? limit 1'
+			const row2 = await query(sql2, [userId, zuName]).catch((err) => {
+				console.log(err)
+			})
+			let zu_member = row2[0].zu_member.split(','),
+				zu_member_set = new Set(zu_member)
+			if (!zu_member_set.has(applyUserId)) {
+				zu_member_set.add(applyUserId)
+			}
+			zu_member = Array.from(zu_member_set).join(',')
+
+			//更新组员id
+			const data = {
+				zu_member: zu_member
+			}
+			const sql3 = 'update fenzu set ? where user_id=? and zu_name=?'
+			const row3 = await query(sql3, [data, userId, zuName]).catch((err) => {
+				console.log(err)
+			})
+			if (row3.affectedRows == 1) {
+				return {
+					code: 1
+				}
+			} else {
+				return {
+					code: 0
+				}
+			}
+		}
 	}
 }

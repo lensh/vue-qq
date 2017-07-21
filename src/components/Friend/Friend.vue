@@ -2,64 +2,80 @@
   <!-- 联系人列表 -->
   <div class="wrapper">
     <VAsideMenu></VAsideMenu>
-  	<VHeader :currentTab="currentPage"></VHeader>
+  	<VHeader :tabIndex="currentTab"></VHeader>
     <VScroll :data="dataList.friends" :isHeightChange="isHeightChange">
         <VSearch placeholder="搜索"></VSearch>
         <p class="newFriends" @click="$router.push('/friend/new')">新朋友</p>
-        <div class="tab" @click="changeTab">
-           <div class="item first" :class="{'blue':currentTab==1}">好友</div>
-           <div class="item" :class="{'blue':currentTab==2}">群</div>
-           <div class="item" :class="{'blue':currentTab==3}">多人聊天</div>
-           <div class="item" :class="{'blue':currentTab==4}">设备</div>
-           <div class="item" :class="{'blue':currentTab==5}">通讯录</div>
-           <div class="item" :class="{'blue':currentTab==6}">公众号</div>
+        <div class="tab">
+          <div class="item first" :class="{'blue':tabIndex==1}" 
+              @click="changeTab(1)">好友
+          </div>
+          <div class="item" :class="{'blue':tabIndex==2}" 
+              @click="changeTab(2)">群
+          </div>
+          <div class="item" :class="{'blue':tabIndex==3}" 
+              @click="changeTab(3)">多人聊天
+          </div>
+          <div class="item" :class="{'blue':tabIndex==4}" 
+              @click="changeTab(4)">设备
+          </div>
+          <div class="item" :class="{'blue':tabIndex==5}" 
+              @click="changeTab(5)">通讯录
+          </div>
+          <div class="item" :class="{'blue':tabIndex==6}" 
+              @click="changeTab(6)">公众号
+          </div>
         </div>
         <div class="main">
           <!-- 好友 -->
-          <div class="friends" @click="toggle" v-show="currentTab==1">
-              <ul class="level-1" v-for="item in dataList.friends">
-                 <li class="li-1">{{item.name}}
+          <div class="friends" v-show="tabIndex==1">
+              <ul class="level-1" v-for="(item,index) in dataList.friends">
+                 <li class="li-1" @click="toggle(index,1)" 
+                    :class="{'click':status.friend[index]==1}">{{item.name}}
                     <span>{{item.online}}/{{item.members.length}}</span>
                  </li>
-                 <li class="li-2">
-                   <ul class="level-2">
-                      <li v-for="member in item.members" @click="chatOne(member.id)">  
-                          <img src="" :data-src="member.face" class="user"
-                          :class="{'offline':member.status=='离线'}">
-                          <div class="info">
-                             <p class="from" :class="{'vip':member.vipurl!=''
-                             && member.status!='离线'}"> {{member.name}} </p>
-                             <img src="" :data-src="member.vipurl" v-if="member.vipurl!=''">
-                             <p class="message">[{{member.status}}] {{member.sign}}</p>
-                          </div>
-                      </li>
-                   </ul>
+                 <li class="li-2" v-show="status.friend[index]==1">
+                    <ul class="level-2">
+                        <li v-for="member in item.members" @click="chatOne(member.id)">  
+                            <img :src="status.friend[index]==1?member.face:''" class="user"
+                                 :class="{'offline':member.status=='离线'}">
+                            <div class="info">
+                               <p class="from" :class="{'vip':member.vipurl!=''
+                               && member.status!='离线'}"> {{member.name}} </p>
+                               <img :src="status.friend[index]==1?member.vipurl:'' " 
+                                    v-if="member.vipurl!=''">
+                               <p class="message">[{{member.status}}] {{member.sign}}</p>
+                            </div>
+                        </li>
+                    </ul>
                  </li>
               </ul>
           </div>
           
           <!--  群 -->
-          <div class="groups" @click="toggle" v-show="currentTab==2">
+          <div class="groups" v-show="tabIndex==2">
               <p class="create">创建群</p>
-              <ul class="level-1" v-for="item in dataList.groups">
-                 <li class="li-1">{{item.type}}<span>{{item.groups.length}}</span></li>
-                 <li class="li-2">
-                   <ul class="level-2">
+              <ul class="level-1" v-for="(item,index) in dataList.groups">
+                  <li class="li-1" @click="toggle(index,2)" 
+                      :class="{'click':status.group[index]==1}">{{item.type}}
+                      <span>{{item.groups.length}}</span></li>
+                  <li class="li-2" v-show="status.group[index]==1">
+                    <ul class="level-2">
                       <li v-for="groups in item.groups" @click="chatGroup(groups.id)">  
-                          <img src="" :data-src="groups.url" class="user">
+                          <img :src="status.group[index]==1? groups.url:'' " class="user">
                           <div class="info">{{groups.name}}</div>
                       </li>     
-                   </ul>
+                    </ul>
                  </li>
               </ul>
           </div>
 
           <!--  多人聊天 -->
-          <div class="chats" v-show="currentTab==3">
+          <div class="chats" v-show="tabIndex==3">
               <p class="create">创建多人聊天</p>
               <ul class="level-2">
                   <li v-for="item in chats">  
-                      <img src="" data-src="/static/icon/4/qq_addfriend_search_group.png" class="user">
+                      <img :src="tabIndex==3?'/static/icon/4/qq_addfriend_search_group.png':'' " class="user">
                       <div class="info">
                          {{item.name}}<span> ({{item.members}})</span>
                       </div>
@@ -68,24 +84,24 @@
           </div>
 
            <!-- 设备 -->
-          <div class="device" v-show="currentTab==4">
+          <div class="device" v-show="tabIndex==4">
             <ul class="level-2">
                 <li>  
-                    <img src="" data-src="/static/icon/4/feb.png" class="user">
+                    <img :src="tabIndex==4?'/static/icon/4/feb.png':''" class="user">
                     <div class="info">
                         <p> 我的电脑 </p>
                         <p class="intro">[在线] 无需数据线，手机轻松传文件到电脑</p>
                     </div>
                 </li>  
                 <li>  
-                    <img src="" data-src="/static/icon/4/oxy.png" class="user">
+                    <img :src="tabIndex==4?'/static/icon/4/oxy.png':''" class="user">
                     <div class="info">
                         <p>我的打印机 </p>
                         <p class="intro">将手机或照片发到电脑连接的打印机里</p>
                     </div>
                 </li>  
                 <li>  
-                    <img src="" data-src="/static/icon/4/nrg.png" class="user">
+                    <img :src="tabIndex==4?'/static/icon/4/nrg.png':''" class="user">
                     <div class="info">
                         <p> 发现新设备 </p>
                         <p class="intro"> 搜索附近的设备，用QQ轻松连接设备。</p>
@@ -95,10 +111,10 @@
           </div>
 
           <!-- 通讯录 -->
-          <div class="address-list" v-show="currentTab==5">
+          <div class="address-list" v-show="tabIndex==5">
             <ul class="level-2">
                 <li v-for="item in addressList">  
-                    <img src="" :data-src="item.face" class="user">
+                    <img :src="tabIndex==5?item.face:'' " class="user">
                     <div class="info">
                         <p> {{item.name}} </p>
                         <p class="intro">[{{item.status}}]</p>
@@ -108,12 +124,12 @@
           </div>
 
           <!-- 公众号 -->
-          <div class="official-account" v-show="currentTab==6">
+          <div class="official-account" v-show="tabIndex==6">
             <div v-for="item in officialAccount">
               <p>{{item.start}}</p>
               <ul class="level-2">
                   <li v-for="account in item.accounts">  
-                      <img src="" :data-src="account.url" class="user">
+                      <img :src="tabIndex==6?account.url:'' " class="user">
                       <div class="info">{{account.name}}</div>
                   </li> 
               </ul>
@@ -121,7 +137,7 @@
           </div>
         </div>
     </VScroll>
-	  <VFooter :currentTab="currentPage"></VFooter>
+	  <VFooter :currentTab="currentTab"></VFooter>
   </div>
 </template>
 
@@ -131,15 +147,14 @@ import VHeader from '../Common/Header/Header'
 import VFooter from '../Common/Footer/Footer'
 import VScroll from '@/base/Scroll/Scroll'
 import VSearch from '@/base/Search/Search'
-import $ from 'jquery'
 
 export default {
   name: 'friend',
   data () {
     return {
-      currentPage:2,
-      currentTab:1,
-      isHeightChange:false,
+      currentTab:2,  //当前页面的索引
+      tabIndex:1,   //当前标签页的索引
+      isHeightChange:false,  //高度是否改变
       //多人聊天,公众号,设备,通讯录暂时不做,就直接使用假数据了
       officialAccount:[
         {
@@ -219,12 +234,15 @@ export default {
   computed:{
     dataList(){
       return this.$store.state.friend.friendList
+    },
+    status(){  //通过数据来控制展开和收缩,实现图片懒加载
+      return {
+        friend:new Array(this.dataList.friends.length).fill(0),
+        group:new Array(this.dataList.groups.length).fill(0)
+      }
     }
   },
   beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-
     if(this.$store.state.friend.hasGetFriendList==0){
       const user_id=this.$store.state.login.loginStatus.userId
       this.$store.dispatch('getFriendList',user_id)
@@ -238,46 +256,22 @@ export default {
     VSearch
   },
   methods:{
-    changeTab(e){
-       let target=$(e.target).get(0)
-       const tabIndex=$(target).index()+1
-       this.currentTab=tabIndex
-       let $img   //注意,$img不能在下面的花括号里声明，块级作用域的问题
-       if(tabIndex==3){
-          $img=$('.chats').find('img.user')
-       }else if(tabIndex==4){
-          $img=$('.device').find('img.user')
-       }else if(tabIndex==5){
-          $img=$('.address-list').find('img.user')
-       }else if(tabIndex==6){
-          $img=$('.official-account').find('img.user')
-       }
-       $img && $img.each(function(){
-          $(this).attr('src',$(this).attr('data-src'))
-       })
+    changeTab(tabIndex){
+      this.tabIndex=tabIndex
     },
-    //展开和收缩
-    toggle(e){
-       this.isHeightChange= this.isHeightChange?false:true  //触发Scroll刷新
-       let target=$(e.target).get(0)
-       if(target.className.match('li-1')){
-          if($(target).hasClass('click')){
-             $(target).removeClass('click').next().hide()
-          }
-          else{
-            $(target).addClass('click').next().show()
-            const $img=$(target).next().find('img')
-            $img && $img.each(function(){
-              $(this).attr('src',$(this).attr('data-src'))
-            })
-          }
-       }
+    toggle(index,type){  //通过数据来控制展开和收缩,实现图片懒加载
+      this.isHeightChange= this.isHeightChange?false:true  //触发Scroll刷新
+      if(type==1){
+        this.status.friend[index]=this.status.friend[index]==0?1:0
+      }else if(type==2){
+        this.status.group[index]=this.status.group[index]==0?1:0
+      }
     },
     chatOne(user_id){
-        this.$router.push(`/chat_one/${user_id}`)
+      this.$router.push(`/chat_one/${user_id}`)
     },
     chatGroup(group_id){
-        this.$router.push(`/chat_group/${group_id}`)
+      this.$router.push(`/chat_group/${group_id}`)
     }
   }
 }
@@ -351,9 +345,6 @@ export default {
          background:url(/static/icon/4/nqi.9.png) no-repeat 3% center;
          background-size:18px 14px;
        }
-     }
-     li.li-2{
-       display:none;
      }
    }
 

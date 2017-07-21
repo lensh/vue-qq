@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {checkLogin} from '@/api/login'
+import {check_login} from '@/api/login'
 import VWarn from '@/base/Warn/Warn'
 
 export default {
@@ -38,7 +38,7 @@ export default {
   },
   beforeCreate (){
     //如果已经登陆了，则进入消息页面
-    this.$store.state.login.loginStatus ? this.$router.push('/message') : ''  
+    this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') :''
   },
   methods:{
     validate({user,pwd}){
@@ -60,7 +60,7 @@ export default {
       this.$store.dispatch('setShowWarn','登录中....')
       
       //登录
-      const res= await checkLogin(this.userinfo)
+      const res= await check_login(this.userinfo)
       this.callback(res)
     },
     //登陆后的回调

@@ -1,5 +1,3 @@
-import query from '../../common/mysql/db'
-
 export default class Messge {
 
 	/**
@@ -13,7 +11,6 @@ export default class Messge {
 	    //再获取群聊消息
 		const groupMessage = await this.getGroupMessage(userId)
 
-		//本应再合并,排序,但是为了减缓服务器的压力,所以让前台去做了
 		return {
 			code: 1,
 			data: {

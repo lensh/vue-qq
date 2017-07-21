@@ -126,10 +126,6 @@ export default {
        iconName:['ptt','image','ptv','camera','hongbao','flash','emotion','plus']
     }
   },
-  beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-  },
   computed:{
     iconUrl(){
       return this.iconName.map(item=>`/static/icon/4/skin_aio_panel_${item}_nor.png`)

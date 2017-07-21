@@ -26,29 +26,36 @@
          <div class="second" v-show="showPage==2">
             <h1>输入短信验证码</h1>
             <p>我们已给手机号码<span class="phone">+86 {{phone}}</span>发送了一个6位数验证码。</p>
-            <ul class="number" @keyup="autoFocus" @touchend="autoFocus">
+            <ul class="number">
                 <li> 
-                    <input type="text" class="text" ref="firstNum" v-model="code.firstNum"
-                     maxlength="1" required pattern="[0-9]">
+                    <input class="text" ref="firstNum" v-model="code.firstNum"
+                    :class="{'fill':code.firstNum!=''}" maxlength="1"
+                    @keyup="autoFocus(0)" @touchend="autoFocus(0)">
                 </li>
                 <li>
-                    <input type="text" class="text" ref="secondNum" v-model="code.secondNum" maxlength="1" required  pattern="[0-9]" >
+                    <input class="text" ref="secondNum" v-model="code.secondNum" 
+                    :class="{'fill':code.secondNum!=''}" maxlength="1"
+                    @keyup="autoFocus(1)" @touchend="autoFocus(1)">
                 </li>
                 <li>
-                    <input type="text" class="text" ref="thirdNum" v-model="code.thirdNum"
-                    maxlength="1" required pattern="[0-9]">
+                    <input class="text" ref="thirdNum" v-model="code.thirdNum"
+                    :class="{'fill':code.thirdNum!=''}" maxlength="1"
+                    @keyup="autoFocus(2)" @touchend="autoFocus(2)">
                 </li>
                 <li>
-                    <input type="text" class="text" ref="fourthNum" v-model="code.fourthNum" maxlength="1" required 
-                    pattern="[0-9]">
+                    <input class="text" ref="fourthNum" v-model="code.fourthNum"
+                    :class="{'fill':code.fourthNum!=''}" maxlength="1"
+                    @keyup="autoFocus(3)" @touchend="autoFocus(3)">
                 </li>
                 <li>
-                    <input type="text" class="text" ref="fiveNum" v-model="code.fiveNum"
-                    maxlength="1" required pattern="[0-9]">
+                    <input class="text" ref="fiveNum" v-model="code.fiveNum"
+                    :class="{'fill':code.fiveNum!=''}" maxlength="1"
+                    @keyup="autoFocus(4)" @touchend="autoFocus(4)">
                 </li>
                 <li>
-                    <input type="text" class="text" ref="sixNum" v-model="code.sixNum"
-                    maxlength="1" required pattern="[0-9]">
+                    <input class="text" ref="sixNum" v-model="code.sixNum"
+                    :class="{'fill':code.sixNum!=''}" maxlength="1"
+                    @keyup="autoFocus(5)" @touchend="autoFocus(5)">
                 </li>
             </ul>
             <p class="left" :class="{resend:time==0}" @click="reSend">重新发送
@@ -113,8 +120,8 @@ export default {
     }
   },
   beforeCreate(){
-     //如果已经登陆了，则进入消息页面
-     this.$store.state.login.loginStatus ? this.$router.push('/message') : ''  
+    //如果已经登陆了，则进入消息页面
+    this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') :''
   },
   mounted(){
      this.$refs.phone.focus()
@@ -136,8 +143,20 @@ export default {
     isClearNickName(){
       return this.nickname!==''
     },
+    //格式化手机号
     formatPhone(){
       return `${this.phone.substring(0,3)}-${this.phone.substring(3,7)}-${this.phone.substring(7,11)}`
+    },
+    //获得验证码数组
+    inputValue(){
+      return [
+        this.code.firstNum,
+        this.code.secondNum,
+        this.code.thirdNum,
+        this.code.fourthNum,
+        this.code.fiveNum,
+        this.code.sixNum
+      ]
     }
   },
   methods:{ 
@@ -160,26 +179,31 @@ export default {
     //[第二页] 展示第二页
     showSecondPage(){
       if(this.isEnable){
-         this.showPage=2 //展示第二页
-         this.sendMessage()  //发送验证码到用户的手机
-         this.startInterval()
-         //下面必须要有个延时,因为v-show切换是要时间的，在还没有显示出来时firstNum是
-         //获取不到焦点的（这个问题找了很久的原因）
-         setTimeout(()=>{
-           this.$refs.firstNum.focus()
-         },0)
+        this.showPage=2 //展示第二页
+        this.sendMessage()  //发送验证码到用户的手机
+        this.startInterval()
+        //下面必须要有个延时,因为v-show切换是要时间的，在还没有显示出来时firstNum是
+        //获取不到焦点的
+        setTimeout(()=>{
+          this.$refs.firstNum.focus()
+        },0)
       }
     },
     //[第二页] 数字框自动获得焦点
-    autoFocus(e){
-      const target=e.target
-      const prevInput=$(target).parent().prev().find('input').get(0)
-      const nextInput=$(target).parent().next().find('input').get(0)
-      if(target.value==''&&prevInput){
-        prevInput.focus()
-      }
-      if(/^[\d]$/.test(target.value)&&nextInput){
-        nextInput.focus()
+    autoFocus(index){
+      const value=this.inputValue[index]
+      if(value!=''){
+        index==0?this.$refs.secondNum.focus():
+        index==1?this.$refs.thirdNum.focus():
+        index==2?this.$refs.fourthNum.focus():
+        index==3?this.$refs.fiveNum.focus():
+        index==4?this.$refs.sixNum.focus():''
+      }else{
+        index==1?this.$refs.firstNum.focus():
+        index==2?this.$refs.secondNum.focus():
+        index==3?this.$refs.thirdNum.focus():
+        index==4?this.$refs.fourthNum.focus():
+        index==5?this.$refs.fiveNum.focus():''
       }
     },
     //[第二页] 开始计时
@@ -196,9 +220,19 @@ export default {
     //[第二页] 超时再次发送验证码到用户的手机
     reSend(){
       if(this.time==0){
+        this.clearCode()
         this.sendMessage()
         this.startInterval()
       }
+    },
+    //清空所填的验证码
+    clearCode(){
+      this.code.firstNum='',
+      this.code.secondNum=''
+      this.code.thirdNum=''
+      this.code.fourthNum=''
+      this.code.fiveNum=''
+      this.code.sixNum=''
     },
     //[第二页] 发送验证码到用户的手机
     async sendMessage(){
@@ -255,44 +289,43 @@ export default {
           this.$store.commit('SET_LOGIN',saveData)
           this.$router.push('message')
       }
+    },
+    //[第二页]限定只能是数字
+    isNumber(val){
+      return /^[\d]$/.test(val.trim())
     }
   },
   watch: {
-    //监控数字框的改变，从而改变底部边框的颜色
-    'code.firstNum': function (val,oldVal) {
-      const ele= this.$refs.firstNum
-      this.code.firstNum=val.trim()
-      ele.style.borderColor= (val=='')? '#ccc' :'#666'
-    },
-    'code.secondNum': function (val,oldVal) {
-      const ele= this.$refs.secondNum
-      this.code.secondNum=val.trim()
-      ele.style.borderColor= (val=='')? '#ccc' :'#666'
-    },
-    'code.thirdNum': function (val,oldVal) {
-      const ele= this.$refs.thirdNum
-      this.code.thirdNum=val.trim()
-      ele.style.borderColor= (val=='')? '#ccc' :'#666'
-    },
-    'code.fourthNum': function (val,oldVal) {  
-      const ele= this.$refs.fourthNum
-      this.code.fourthNum=val.trim()
-      ele.style.borderColor= (val=='')? '#ccc' :'#666'
-    },
-    'code.fiveNum': function (val,oldVal) {
-      const ele= this.$refs.fiveNum
-      this.code.fiveNum=val.trim()
-      ele.style.borderColor= (val=='')? '#ccc' :'#666'
-    },
-    'code.sixNum': function (val,oldVal) {
-      const ele= this.$refs.sixNum
-      this.code.sixNum=val.trim()
-      if(val!=''){
-        ele.style.borderColor='#666'
-        this.validate(this.validateCode)
-      }else{
-        ele.style.borderColor='#ccc'
+    'code.firstNum': function (val) {
+      if(!this.isNumber(val)){ 
+        this.code.firstNum=''
       }
+    },
+    'code.secondNum': function (val) {
+      if(!this.isNumber(val)){
+        this.code.secondNum=''
+      }
+    },
+    'code.thirdNum': function (val) {
+      if(!this.isNumber(val)){
+        this.code.thirdNum=''
+      }
+    },
+    'code.fourthNum': function (val) {  
+      if(!this.isNumber(val)){
+        this.code.fourthNum=''
+      }
+    },
+    'code.fiveNum': function (val) {
+      if(!this.isNumber(val)){
+        this.code.fiveNum=''
+      }
+    },
+    'code.sixNum': function (val) {
+      if(!this.isNumber(val)){
+        this.code.sixNum=''
+      }
+      val!=''&&this.validate(this.validateCode)
     }
   },
   components:{
@@ -380,6 +413,9 @@ export default {
         width: 100%;
         text-align: center;
         border-bottom: 2px solid #ccc;
+        &.fill{
+          border-bottom: 2px solid #666;
+        }
       }
     }
   }

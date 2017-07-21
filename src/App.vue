@@ -6,7 +6,14 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  beforeCreate(){
+    //如果不是首次启动
+    if(this.$router.currentRoute.path!='/'){  
+      //如果没有登陆,则跳到登录页面
+      !this.$store.state.login.loginStatus.isLogin ? this.$router.push('/login') :''
+    }
+  }
 }
 </script>
 

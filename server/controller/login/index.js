@@ -1,5 +1,3 @@
-import query from '../../common/mysql/db'
-
 export default class Login {
 
 	/**
@@ -53,20 +51,25 @@ export default class Login {
 			}
 		}
 
-		//更新用户后登陆时间
-		await this.updateLoginTime(user, field)
+		//更新用户登录信息
+		await this.updateLoginInfo(user, field)
 
 		//保存session
-		let data = await this.saveSession(req, user, type)
+		let loginStatus = await this.saveSession(req, user, type)
+		loginStatus.isLogin = 1 // 将登录态置为1
+		loginStatus.userId = userId //取到用户的id
 
-		data.isLogin = 1 // 将登录态置为1
-		data.userId = userId //取到用户的id
+		//取出用户的基本信息
+		const userInfo = await this.getUserDetail(userId)
 
 		//返回数据
 		return {
 			"code": 1,
 			"message": "登陆成功",
-			"data": data
+			"data": {
+				loginStatus,
+				userInfo
+			}
 		}
 	}
 
@@ -100,14 +103,16 @@ export default class Login {
 	}
 
 	/**
-	 * [updateLoginTime 修改最后登陆时间]
+	 * [updateLoginInfo 更新登录信息]
 	 * @param  {[type]} user  [字段值]
 	 * @param  {[type]} field [字段]
 	 * @return {[type]}       [description]
 	 */
-	static async updateLoginTime(user, field) {
+	static async updateLoginInfo(user, field) {
 		const update = {
-			last_login: Date.parse(new Date()) / 1000
+			last_login: Date.parse(new Date()) / 1000,
+			status: 1,
+			device: ~~(Math.random() * 4 + 1) //设备状态暂时取随机数 [1~5]
 		}
 		const sql = `update user set ? where ${field} = ? `
 		const res = await query(sql, [update, user]).catch((err) => {
@@ -125,7 +130,7 @@ export default class Login {
 	 */
 	static async saveSession(req, user, type) {
 		let data
-	    //如果是qq号
+		//如果是qq号
 		if (type == 1) {
 			req.session.qq = user
 			data = {
@@ -146,5 +151,22 @@ export default class Login {
 			}
 		}
 		return data
+	}
+
+	/**
+	 * [getUserDetail 取出用户的基本信息]
+	 * @param  {[type]} userId [description]
+	 * @return {[type]}        [description]
+	 */
+	static async getUserDetail(userId) {
+		const sql = `
+			select a.*,b.phone,b.status,b.qq from user_detail a 
+			join user b on a.user_id = ?
+			and b.id=a.user_id
+        `
+		const row = await query(sql, [userId]).catch((err) => {
+			console.log(err)
+		})
+		return row[0]
 	}
 }

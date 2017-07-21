@@ -131,10 +131,6 @@ export default {
       return this.iconName.map(item=>`/static/icon/4/skin_aio_panel_${item}_nor.png`)
     }
   },
-  beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-  },
   components:{
     VScroll
   }

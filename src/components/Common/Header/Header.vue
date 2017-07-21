@@ -1,7 +1,7 @@
 <template>
  <!--  主页面头部 -->
   <div class="header">
-     <div class="face" @click="showSidebar"></div>
+     <div class="face" @click="showSidebar" :style="style"></div>
      <div>{{title}}</div>
      <div class="cursor" :class="{'add':currentTab==1}" @click="addFriend">{{action}}</div>
   </div>
@@ -11,6 +11,15 @@
 export default {
   name: 'head',
   props:['currentTab'],
+  data(){
+    return{
+      'style':{
+        'background':`url(${this.$store.state.login.userInfo.face}) 
+          no-repeat center center`,
+        'backgroundSize':'40px'
+      } 
+    }
+  },
   computed:{
     title(){
        return this.currentTab==1?'消息':this.currentTab==2?'联系人':'动态'
@@ -56,8 +65,6 @@ export default {
     	height:40px;
     	border-radius:50%;
     	margin:auto 0;
-    	background:url(/static/user/face/0.jpg) no-repeat center center;
-    	background-size:40px;
       cursor:pointer
     }
     .add{

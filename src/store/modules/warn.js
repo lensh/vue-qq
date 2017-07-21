@@ -1,7 +1,4 @@
-import {
-    SHOW_WARN
-} from '../mutation-types'
-
+import * as types from '../mutation-types'
 
 // init state
 const state = {
@@ -11,7 +8,7 @@ const state = {
 
 // mutations
 const mutations = {
-    [SHOW_WARN](state, {isShow,message}) {
+    [types.SHOW_WARN](state, {isShow,message}) {
         state.isShow = isShow
         state.message = message
     }
@@ -24,13 +21,13 @@ const actions = {
     	  'isShow':true,
     	  'message':message
     	}
-    	commit(SHOW_WARN,warn)
+    	commit(types.SHOW_WARN,warn)
       setTimeout(()=>{
       	warn={
       		'isShow':false,
     	    'message':''
       	}
-      	commit(SHOW_WARN,warn)
+      	commit(types.SHOW_WARN,warn)
       },2000)
     }
 }

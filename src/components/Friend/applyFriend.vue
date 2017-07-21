@@ -54,9 +54,6 @@ export default {
       dataList:{}
     }
   },
-  beforeCreate(){
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-  },
   created(){
   	this.apply_id=this.$route.params.id
     this.getApplyDetail(this.apply_id)

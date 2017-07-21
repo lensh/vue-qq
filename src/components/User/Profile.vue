@@ -79,6 +79,7 @@ export default {
   name: 'profile',
   data(){
     return {
+       user_id:this.$store.state.login.loginStatus.userId,
        dataList:{
           user_id:2,
           nickname:'马哲涵',
@@ -101,9 +102,6 @@ export default {
     level(){
        return calcLevel(this.dataList.level)
     }
-  },
-  beforeCreate(){
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
   },
   methods:{
     sendMessage(user_id){

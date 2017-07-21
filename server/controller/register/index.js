@@ -1,4 +1,3 @@
-import query from '../../common/mysql/db'
 import sendMessage from './sendMessage'
 
 export default class Register {
@@ -10,12 +9,10 @@ export default class Register {
 	 * @return {[type]}     [description]
 	 */
 	static async sendMessage(req, res) {
-		const {
-			phone
-		} = req.body
+		const {phone} = req.body
 		let code = ''; //验证码
 		for (let i = 0; i < 6; i++) {
-			let number = Math.ceil(Math.random() * 9);
+			let number = ~~(Math.random() * 9)
 			code += number;
 		}
 		//设置session
@@ -51,7 +48,7 @@ export default class Register {
 	 * @return {[type]}     [description]
 	 */
 	static async checkCode(req, res) {
-		const code = req.body.code
+		const {code} = req.body
 		return code == req.session.code ? {
 			'code': 1
 		} : {
@@ -65,12 +62,12 @@ export default class Register {
 	 */
 	static createQQ() {
 		let qq = ''
-			//qq的位数
+		//qq的位数
 		let n = Math.round(Math.random() * 2 + 8) // 四舍五入
-			//第一位,随机生成1~9的数
+		//第一位,随机生成1~9的数
 		let num = Math.round(Math.random() * 8 + 1) // 四舍五入
 		qq += num
-			// 剩下n-1位
+		// 剩下n-1位
 		for (let i = 0; i < n - 1; i++) {
 			qq += Math.round(Math.random() * 9)
 		}
@@ -90,9 +87,7 @@ export default class Register {
 			"phone": req.body.phone,
 			"time": Date.parse(new Date()) / 1000
 		}
-		const {
-			nickname
-		} = req.body
+		const {nickname} = req.body
 
 		// 新增用户
 		const user_detail = await this.insert(user, nickname).catch((err) => {
@@ -157,10 +152,10 @@ export default class Register {
 	 * @return {[type]}     [description]
 	 */
 	static async login(req, res) {
-		const qq = req.body.qq
+		const {qq} = req.body
 		const update = {
 			last_login: Date.parse(new Date()) / 1000
-		};
+		}
 		const sql = `update user set ? where qq= ? `
 		const result = await query(sql, [update, qq]).catch((err) => {
 			console.log(err)

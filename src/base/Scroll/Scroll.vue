@@ -36,7 +36,7 @@ export default {
   methods:{
     initScroll(){
       this.scroll = new IScroll('#wrapper')
-      this.scrollToBottom(0)
+      this.scrollToBottom()
     },
     refresh(){
       //这里必须要有个延时，因为重绘页面需要时间

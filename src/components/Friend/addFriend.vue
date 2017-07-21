@@ -6,10 +6,10 @@
       <div class="item center">添加</div>
       <div class="item"></div>
     </div>
-    <div class="tab" @click="changeTab">
-      <div class="item" :class="{'cur':curTab==1}">找人</div>
-      <div class="item" :class="{'cur':curTab==2}">找群</div>
-      <div class="item" :class="{'cur':curTab==3}">找公众号</div>
+    <div class="tab">
+      <div class="item" :class="{'cur':curTab==1}" @click="changeTab(1)">找人</div>
+      <div class="item" :class="{'cur':curTab==2}" @click="changeTab(2)">找群</div>
+      <div class="item" :class="{'cur':curTab==3}" @click="changeTab(3)">找公众号</div>
     </div>
     <div class="searchbox">
       <input type="text" class="text" readonly placeholder="QQ号/手机号/群/公众号">
@@ -49,21 +49,21 @@
         <p class="title">精品推荐</p>
           <ul>
               <li>  
-                  <img src="" data-src="/static/icon/4/qol.png" class="user">
+                  <img :src="curTab==3?'/static/icon/4/qol.png':''" class="user">
                   <div class="info">
                      <p class="name"> QQ音乐 </p>
                      <p class="intro">家事国事天下事,事事关心</p>
                   </div>
               </li>
               <li>
-                  <img src="" data-src="/static/icon/4/phb.png" class="user">
+                  <img :src="curTab==3?'/static/icon/4/phb.png':''" class="user">
                   <div class="info">
                      <p class="name">QQ团队</p>
                      <p class="intro">QQ团队所有成员感谢您一路相伴</p>
                   </div>
               </li>
               <li>
-                  <img src="" data-src="/static/icon/4/rfc.png" class="user">
+                  <img :src="curTab==3?'/static/icon/4/rfc.png':''" class="user">
                   <div class="info">
                      <p class="name">好友动态</p>
                      <p class="intro">好友动态为你每日推送QQ空间好友未读动态请求</p>
@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 export default {
   name: 'friendAdd',
   data(){
@@ -83,21 +82,9 @@ export default {
       curTab:1
     }
   },
-  beforeCreate(){
-    //如果没有登陆,则跳到登陆页面
-    !this.$store.state.login.loginStatus ? this.$router.push('/login') :''
-  },
   methods:{
-    changeTab(e){
-      const target=e.target||e.srcElement
-      const tabIndex=$(target).index()+1
-      this.curTab=tabIndex
-      if(tabIndex==3){
-          const $img=$('.offical').find('img.user')
-          $img.each(function(){
-            $(this).attr('src',$(this).attr('data-src'))
-          })
-      }
+    changeTab(curTab){
+      this.curTab=curTab
     }
   }
 }

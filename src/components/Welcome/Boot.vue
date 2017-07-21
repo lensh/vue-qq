@@ -11,7 +11,7 @@ export default {
   beforeCreate (){
     //未登陆则切换到欢迎页面,否则进入消息页面
     setTimeout(()=>{
-      this.$store.state.login.loginStatus ? this.$router.push('/message') :
+      this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') :
        this.$router.push('/welcome')  
     },1500)
   }

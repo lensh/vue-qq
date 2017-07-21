@@ -2,19 +2,27 @@
   <div>
     <div class="sidemenu" @touchstart.prevent="touchStart" @touchmove.prevent="touchMove"
     :class="{'show':isShowSideBar,'hide':!isShowSideBar&&!isInit}">
-       <div class="top">
+       <div class="top" :style="style">
           <div class="userinfo">
-            <img src="/static/user/face/0.jpg" class="face">
-            <span class="nickname">莫知我哀</span>
+            <img :src="userinfo.face" class="face">
+            <span class="nickname">{{userinfo.nickname}}</span>
             <div class="level">
                <ul>
-                 <li><img src="/static/icon/2/hdu.png" class="level-1"></li>
-                 <li><img src="/static/icon/2/hdu.png" class="level-1"></li>
-                 <li><img src="/static/icon/2/hds.png" class="level-1"></li>
-                 <li><img src="/static/icon/2/hds.png" class="level-1"></li>
+                 <li v-for="n in userinfo.level.crown">
+                    <img src="/static/icon/2/hdr.png" class="level-1">
+                 </li>
+                 <li v-for="n in userinfo.level.sun">
+                    <img src="/static/icon/2/hdu.png" class="level-1">
+                 </li>
+                 <li v-for="n in userinfo.level.moon">
+                    <img src="/static/icon/2/hds.png" class="level-1">
+                 </li>
+                 <li v-for="n in userinfo.level.star">
+                    <img src="/static/icon/2/hdt.png" class="level-1">
+                 </li>
                </ul>
             </div>
-            <p class="sign">楚乔传</p>
+            <p class="sign">{{userinfo.signature}}</p>
           </div>
        </div>
        <div class="side">
@@ -60,8 +68,24 @@
 </template>
 
 <script>
+import calcLevel from '@/common/js/level'
+
 export default {
   name: 'sidebar',
+  data(){
+    return {
+      userinfo:{
+        nickname:this.$store.state.login.userInfo.nick_name,
+        signature:this.$store.state.login.userInfo.signature,
+        face:this.$store.state.login.userInfo.face,
+        level:calcLevel(this.$store.state.login.userInfo.level)
+      },
+      style:{
+        background:`url(${this.$store.state.login.userInfo.profile_bg}) no-repeat`,
+        backgroundSize:'100% 100%'
+      }
+    }
+  },
   computed:{
   	isShowSideBar(){
   		return this.$store.state.sidebar.isShowSideBar
@@ -145,8 +169,6 @@ export default {
 .sidemenu .top{
   width:100%;
   height:36%;
-  background:url(/static/user/bg/2.jpeg) no-repeat;
-  background-size:100% 100%;
   position:relative;
   .userinfo{
      position:absolute;
