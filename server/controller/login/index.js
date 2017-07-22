@@ -7,10 +7,7 @@ export default class Login {
 	 * @return {[type]}     [description]
 	 */
 	static async login(req, res) {
-		const {
-			user,
-			pwd
-		} = req.params
+		const {user,pwd} = req.params
 
 		let type //填写的类型
 		if (/^[\d]{8,10}$/.test(user)) { //如果填写的是qq号
@@ -160,9 +157,10 @@ export default class Login {
 	 */
 	static async getUserDetail(userId) {
 		const sql = `
-			select a.*,b.phone,b.status,b.qq from user_detail a 
-			join user b on a.user_id = ?
-			and b.id=a.user_id
+			select a.*,b.phone,b.status,b.qq,c.vip_type AS vip, c.accert
+			from user_detail a 
+			join user b on a.user_id = ? and b.id=a.user_id
+			join vip c on c.user_id=a.user_id
         `
 		const row = await query(sql, [userId]).catch((err) => {
 			console.log(err)

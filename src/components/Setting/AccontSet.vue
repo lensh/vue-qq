@@ -19,7 +19,7 @@
     	      	 	</div>
     	      	 </li>
     	      </ul>
-    	      <p class="addAccont">添加或注册账号</p>
+    	      <p class="addAccont" @click="$router.push('/accont_set/add_user')">添加或注册账号</p>
         </div>
         <div class="second">
         	  <p class="item relative">关联QQ号</p>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import * as api from '@/api/user'
 
 export default {
@@ -56,12 +57,13 @@ export default {
     }
   },
   computed:{
-  	dataList(){
-  		return this.$store.state.login.accounts.userInfo  //所有登录过的用户
-  	},
-  	userInfo(){
-  		return this.$store.state.login.userInfo  //当前登录用户
-  	}
+    ...mapGetters([
+      'userInfo',
+      'accounts'
+    ]),
+    dataList(){
+      return this.accounts.userInfo
+    }
   },
   methods:{
   	//编辑
@@ -98,7 +100,7 @@ export default {
   	},
   	//切换在线状态
   	async changeStatus(status){
-		const {code} =await api.change_status(this.userInfo.user_id,status)
+		  const {code} =await api.change_status(this.userInfo.user_id,status)
   		code==1 && this.$store.commit('UPDATE_LOGIN_STATUS',status)
   	},
   	//切换用户

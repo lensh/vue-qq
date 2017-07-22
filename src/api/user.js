@@ -1,5 +1,6 @@
 import {
-	request_put
+	request_put,
+	request_get
 } from '@/common/js/request'
 
 const API_CONFIG = '/api/user'
@@ -34,4 +35,15 @@ export function change_status(userId,status) {
 export function change_user(currentUserId,userId){
 	const url = `${API_CONFIG}/changeuser/${currentUserId}/${userId}`
 	return request_put(url)
+}
+
+/**
+ * [change_user 切换用户]
+ * @param  {[type]} currentUserId [当前用户的id]
+ * @param  {[type]} userId        [目标用户的id]
+ * @return {[type]}               [description]
+ */
+export function get_user_profile(userId,targetUserId){
+	const url = `${API_CONFIG}/profile/${userId}/${targetUserId}`
+	return request_get(url)
 }

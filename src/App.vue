@@ -5,14 +5,16 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
   name: 'app',
-  beforeCreate(){
-    //如果不是首次启动
-    if(this.$router.currentRoute.path!='/'){  
-      //如果没有登陆,则跳到登录页面
-      !this.$store.state.login.loginStatus.isLogin ? this.$router.push('/login') :''
-    }
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
+  created(){
+    //如果不是首次启动,且没有登陆,则跳到登录页面
+    this.$router.currentRoute.path!='/' && !this.isLogin && this.$router.push('/login')
   }
 }
 </script>

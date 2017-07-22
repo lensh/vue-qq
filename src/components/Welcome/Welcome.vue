@@ -10,11 +10,16 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
   name: 'welcome',
-  beforeCreate(){
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
+  created(){
     //如果已经登陆了，则进入消息页面
-    this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') : ''  
+    this.isLogin && this.$router.push('/message')
   }
 }
 </script>

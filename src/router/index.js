@@ -17,6 +17,7 @@ import Social from '@/components/Social/Social'
 import Profile from '@/components/User/Profile'
 import Setting from '@/components/Setting/Setting'
 import AccontSet from '@/components/Setting/AccontSet'
+import AddUser from '@/components/Setting/AddUser'
 
 Vue.use(Router)
 
@@ -50,24 +51,24 @@ const routes = [{
     name: 'chat_set',
     component: ChatSetting
 }, {
-    path: '/chat_one/:id/set/profile',
+    path: '/chat_one/:user_id/set/profile',
     component: Profile
 }, {
-    path: '/chat_one/:id/profile',
+    path: '/chat_one/:user_id/profile',
     component: Profile
 }, {
     path: '/chat_group/:id',
     name: 'chat_group',
     component: ChatGroup
 }, {
-    path: '/chat_group/:id/profile',
+    path: '/chat_group/:user_id/profile',
     component: Profile
 }, {
     path: '/friend',
     name: 'friend',
     component: Friend
 }, {
-    path: '/friend/:id/profile',
+    path: '/friend/:user_id/profile',
     component: Profile
 }, {
     path: '/friend/add',
@@ -85,14 +86,14 @@ const routes = [{
     name: 'friend_apply',
     component: FriendApply
 }, {
-    path: '/friend/apply/:id/profile',
+    path: '/friend/apply/:user_id/profile',
     component: Profile
 }, {
     path: '/friend/setting/:apply_id',
     name: 'friend_setting',
     component: FriendSetting
 }, {
-    path: '/profile/:id',
+    path: '/profile/:user_id',
     component: Profile
 }, {
     path: '/social',
@@ -106,6 +107,10 @@ const routes = [{
     path: '/accont_set',
     name: 'accont_set',
     component: AccontSet
+}, {
+    path: '/accont_set/add_user',
+    name: 'add_user',
+    component: AddUser
 }]
 
 export default new Router({

@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import {check_login} from '@/api/login'
 import VWarn from '@/base/Warn/Warn'
 
@@ -36,9 +37,12 @@ export default {
       }
     }
   },
-  beforeCreate (){
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
+  created(){
     //如果已经登陆了，则进入消息页面
-    this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') :''
+    this.isLogin && this.$router.push('/message')
   },
   methods:{
     validate({user,pwd}){
@@ -108,21 +112,19 @@ export default {
 
     .form{
       margin: 10% 8% 0 8%;
-      input.text{
+      input{
+        font-family:'Microsoft Yahei';
         width: 100%;
-        font-family:'Microsoft Yahei'
+        &.btn{
+          line-height: 32px;
+          background: #1E90FF;
+          color: white;
+          margin-top:50px;
+        }
       }
       a{
         margin-top: 20px;
         color: #1E90FF;
-      }
-      input.btn{
-        width: 100%;
-        line-height: 32px;
-        background: #1E90FF;
-        color: white;
-        margin-top:50px;
-        font-family:'Microsoft Yahei'
       }
       ::-webkit-input-placeholder,::-moz-placeholder,::-moz-placeholder,
       ::-ms-input-placeholder { color: #333;} 

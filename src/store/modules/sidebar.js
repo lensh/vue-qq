@@ -1,6 +1,5 @@
 import * as types from '../mutation-types'
 
-
 // init state
 const state = {
     'isShowSideBar': false,

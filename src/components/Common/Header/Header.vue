@@ -14,7 +14,7 @@ export default {
   data(){
     return{
       'style':{
-        'background':`url(${this.$store.state.login.userInfo.face}) 
+        'background':`url(${this.$store.state.userInfo.face}) 
           no-repeat center center`,
         'backgroundSize':'40px'
       } 

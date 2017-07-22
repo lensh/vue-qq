@@ -45,10 +45,7 @@
 </template>
 
 <script>
-import{
-  get_fenzu,
-  add_friend
-} from '@/api/friend'
+import {get_fenzu,add_friend} from '@/api/friend'
 
 export default {
   name: 'settingFriend',
@@ -91,10 +88,10 @@ export default {
     },
     //得到分组情况
     async getFenzu(applyId){
-      const res = await get_fenzu(applyId)
-      this.dataList=res.data
-      this.initBeizhu=res.data.beizhu
-      this.initZuName=res.data.defaulGroup
+      const {data} = await get_fenzu(applyId)
+      this.dataList=data
+      this.initBeizhu=data.beizhu
+      this.initZuName=data.defaulGroup
     },
     //取消修改备注
     async cancle(){

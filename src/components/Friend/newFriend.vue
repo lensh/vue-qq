@@ -57,28 +57,23 @@
 
 <script>
 import VScroll from '@/base/Scroll/Scroll'
-import {
-  resolve_friend_apply
-} from '@/api/friend'
+import {resolve_friend_apply} from '@/api/friend'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'newFriend',
-  data(){
-    return {
-      userId:this.$store.state.login.loginStatus.userId
-    }
-  },
-  beforeCreate(){
-    //获取数据
-    if(this.$store.state.friend.hasGetNewFriends==0){
-      const user_id=this.$store.state.login.loginStatus.userId
-      this.$store.dispatch('getNewFriends',user_id)
-    }
-  },
   computed:{
-    dataList(){
-      return this.$store.state.friend.newFriends
-    }
+    ...mapGetters([
+      'userId',
+      'hasGetNewFriends'
+    ]),
+    ...mapGetters({
+      'dataList':'newFriends'
+    })
+  },
+  created(){
+    //获取数据
+    this.hasGetNewFriends==0 && this.$store.dispatch('getNewFriends',this.userId)
   },
   components:{
     VScroll
@@ -92,8 +87,8 @@ export default {
     },
     async agree(apply_id){
       //修改数据库状态为同意
-      const res = await resolve_friend_apply(1,apply_id)
-      if(res.code==1){
+      const {code} = await resolve_friend_apply(1,apply_id)
+      if(code==1){
         //commit state，把指定项修改
         this.$store.dispatch('updateNewFriends',{
           applyId:apply_id,

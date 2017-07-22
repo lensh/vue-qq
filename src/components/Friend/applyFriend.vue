@@ -8,7 +8,7 @@
     </div>
     <div class="apply">
       <ul> 
-        <li @click="$router.push(`${apply_id}/profile`)">  
+        <li @click="$router.push(`${dataList.user_id}/profile`)">  
           <img :src="dataList.face" class="user">
           <div class="info">
              <p class="name">{{dataList.nick_name}}</p>
@@ -41,10 +41,7 @@
 </template>
 
 <script>
-import {
-  get_apply_detail,
-  resolve_friend_apply
-} from '@/api/friend'
+import {get_apply_detail,resolve_friend_apply} from '@/api/friend'
 
 export default {
   name: 'friendApply',
@@ -61,8 +58,8 @@ export default {
   methods:{
     async agree(apply_id){
       //修改数据库状态为同意
-      const res = await resolve_friend_apply(1,apply_id)
-      if(res.code==1){
+      const {code} = await resolve_friend_apply(1,apply_id)
+      if(code==1){
         //commit state，把指定项修改
         this.$store.dispatch('updateNewFriends',{
           applyId:apply_id,
@@ -73,8 +70,8 @@ export default {
     },
     async reject(apply_id){
       //修改数据库状态为拒绝
-      const res = await resolve_friend_apply(0,apply_id)
-      if(res.code==1){
+      const {code} = await resolve_friend_apply(0,apply_id)
+      if(code==1){
         //commit state，把指定项修改
         this.$store.dispatch('updateNewFriends',{
           applyId:apply_id,
@@ -84,8 +81,8 @@ export default {
       }
     },
     async getApplyDetail(apply_id){
-      const res = await get_apply_detail(apply_id)
-      this.dataList=res.data
+      const {data} = await get_apply_detail(apply_id)
+      this.dataList=data
     }
   }
 }

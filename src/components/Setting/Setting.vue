@@ -35,18 +35,21 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
   name: 'Sysconfig',
-  data(){
-    return {
-       dataList:{
-       	 face:this.$store.state.login.userInfo.face,
-       	 phone:this.$store.state.login.userInfo.phone,
-       	 time:this.$store.state.login.userInfo.login_day,
-       }
-    }
-  },
   computed:{
+  	...mapGetters([
+    	'userInfo'
+  	]),
+  	dataList(){
+  		return {
+	 		face:this.userInfo.face,
+       	 	phone:this.userInfo.phone,
+       	 	time:this.userInfo.login_day
+  		}
+  	},
   	formatPhone(){
   		return `${this.dataList.phone.substring(0,3)}******
   			${this.dataList.phone.substring(9,11)}`

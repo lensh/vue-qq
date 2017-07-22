@@ -88,4 +88,47 @@ export default class User {
 			}
 		}
 	}
+
+	/**
+	 * [getUserProfile 获取用户的名片]
+	 * @param  {[type]} userId       [当前用户id]
+	 * @param  {[type]} targetUserId [目标用户id]
+	 * @return {[type]}              [description]
+	 */
+	static async getUserProfile(userId,targetUserId){
+		//数据结构：
+		// user_id:2,
+		// nick_name:'一花一世界',
+		// signature:'马哲涵',
+		// face:'/static/user/face/4.jpg',
+		// sex:'女',
+		// place:'江西',
+		// age:19,
+		// xingzuo:'摩羯座',
+		// favor:'娱乐/艺术/表演',
+		// level:50,  // QQ等级
+		// vip:0,   // vip表取  
+		// accert:'慢速中',  // vip表取
+		// qq:'936842133',  // user表中取
+		// beizhu:'马哲涵',  // friend表中取
+		// isFriend:1  //是否是朋友  // friend表中取
+		const sql=`
+			SELECT a.*, b.vip_type AS vip, b.accert,c.qq, d.beizhu,
+			d.is_friend AS isFriend
+			FROM user_detail a
+			JOIN vip b ON a.user_id =?
+			AND b.user_id = a.user_id
+			JOIN user c ON c.id = a.user_id
+			JOIN friend d ON d.user_id =?
+			AND d.other_user_id = a.user_id
+		`
+		const row = await query(sql, [targetUserId,userId]).catch((err) => {
+			console.log(err)
+		})
+
+		return {
+			code:1,
+			data:row[0]
+		}
+	}
 }

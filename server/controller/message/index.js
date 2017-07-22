@@ -47,6 +47,7 @@ export default class Messge {
 			SELECT beizhu
 			FROM friend e
 			WHERE e.other_user_id = a.from_user
+			limit 1
 			) AS from_user
 			FROM message_user a
 			JOIN user_detail b ON a.to_user =?

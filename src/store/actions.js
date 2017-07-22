@@ -1,6 +1,6 @@
 import * as types from './mutation-types'
 
-//重置所有状态
-export const reset = ({ commit }) => {
-    commit(types.RESET)
+//登录
+export const setLogin = ({commit}, data) => {  //设置登录
+	commit(types.SET_LOGIN, data)
 }

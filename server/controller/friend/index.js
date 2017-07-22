@@ -177,6 +177,7 @@ export default class Friend {
 		// apply_message:'大哥,想请教一个问题',
 		// source:'QQ群-JS讨论群',
 		// status:1   //1为还未处理,2为已同意,3为已拒绝
+		// user_id:2,
 		// face:'/static/user/face/4.jpg',
 		// nick_name:'ThreeTree',
 		// sex:'男',
@@ -184,7 +185,7 @@ export default class Friend {
 		// age:'19'
 		const sql = `
     		SELECT a.apply_message,a.source, a.status, 
-    		b.face, b.nick_name,b.sex, b.place, b.age
+    		b.user_id,b.face, b.nick_name,b.sex, b.place, b.age
 			FROM friend_apply a
 			JOIN user_detail b ON a.id =?
 			AND b.user_id = a.from_user

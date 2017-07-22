@@ -4,33 +4,34 @@
       <div class="header">
         <div class="item left" @click="$router.back()">返回</div>
         <div class="item center">
-           <!-- 如果是别人 -->
-           个人资料
-           <!-- 否则 -->
-         <!--   我的资料 -->
+           {{isMySelf ?'我的资料':'个人资料'}}
         </div>
         <div class="item right">
-           <!-- 如果是别人 -->
+          <template v-if="isMySelf">
+            <img src="/static/icon/4/qq_setting_me_qr_code_icon.png">
+          </template>
+          <template v-else>
             更多
-            <!-- 否则 -->
-          <!--   <img src="/static/icon/4/qq_setting_me_qr_code_icon.png"> -->
+          </template>
         </div>
       </div>
       
       <div class="profile">
-          <div class="profile_bg"></div>
+          <div class="profile_bg" :style="style"></div>
           <div class="profile_face">
              <img :src="dataList.face" />
-             <p class="nickname">{{dataList.nickname}}</p>
+             <p class="nickname">
+               {{isMySelf?userInfo.nick_name:dataList.beizhu}}
+             </p>
              <p class="sign">
-               {{dataList.sign}}
+               {{dataList.signature}}
               <img src="/static/icon/4/qq_profilecard_signature_more.png">
               </p>
           </div>
           <div class="profile_info">
              <ul>
                <li class="account">
-                  {{dataList.name}}({{dataList.qq}})
+                  {{dataList.nick_name}}({{dataList.qq}})
                </li>
                <li class="information">
                   <span>{{dataList.sex}}</span>
@@ -39,9 +40,11 @@
                   <span>{{dataList.place}}</span>
                   <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
                </li>
-               <li class="profession">{{dataList.favor}}</li>
+               <li class="profession">{{dataList.favor==''?'TA还没有兴趣爱好':dataList.favor}}</li>
                <li class="rank">
                   <img src="/static/icon/4/hni.png" class="vip" v-if="dataList.vip==0">
+                  <img src="/static/icon/4/vip.png" class="vip" v-if="dataList.vip==1">
+                  <img src="/static/icon/4/ewm.png" class="vip" v-if="dataList.vip==2">  
                   <img src="/static/icon/2/hdr.png" class="level" v-for="n in level.crown">
                   <img src="/static/icon/2/hdu.png" class="level" v-for="n in level.sun">
                   <img src="/static/icon/2/hds.png" class="level" v-for="n in level.moon">
@@ -53,59 +56,91 @@
                   TA还未开通任何特权服务
                   <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
                </li>
-               <li class="qzone">{{dataList.nickname}}的空间
+               <li class="qzone">{{isMySelf?userInfo.nick_name:dataList.beizhu}}的空间
                   <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
                </li>
              </ul>
           </div>
       </div>
       <div class="footer">
-        <!-- 如果是别人,而且是自己的好友则 -->
-         <button class="phone">QQ电话</button>
-         <button class="message" @click="sendMessage(dataList.user_id)">发消息</button>
-        <!-- 如果是别人,而且不是自己的好友则 -->
-         <!-- <button class="add_friend">加好友</button> -->
-        <!-- 如果是自己则显示编辑资料 -->
-         <!-- <button class="card">个性名片</button>
-         <button class="edit">编辑资料</button> -->
+        <template v-if="!isMySelf&&dataList.isFriend">
+          <button class="phone">QQ电话</button>
+          <button class="message" @click="sendMessage(dataList.user_id)">发消息</button>
+        </template>
+        <template v-else-if="!isMySelf&&!dataList.isFriend">
+          <button class="add_friend">加好友</button>
+        </template>   
+        <template v-else-if="isMySelf">
+          <button class="card">个性名片</button>
+          <button class="edit">编辑资料</button>
+        </template>
       </div>
    </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import calcLevel from '@/common/js/level'
+import {get_user_profile} from '@/api/user'
 
 export default {
   name: 'profile',
   data(){
     return {
-       user_id:this.$store.state.login.loginStatus.userId,
        dataList:{
-          user_id:2,
-          nickname:'马哲涵',
-          sign:'马哲涵',
-          name:'一花一世界',
-          qq:'936842133',
-          face:'/static/user/face/4.jpg',
-          sex:'女',
-          place:'江西',
-          age:19,
-          xingzuo:'摩羯座',
-          favor:'娱乐/艺术/表演',
-          vip:0,   // 0为非vip，1为vip，2为svip
-          level:50,  // QQ等级
-          accert:'慢速中'
+          user_id:'',
+          beizhu:'',
+          signature:'',
+          nick_name:'',
+          profile_bg:'',
+          qq:'',
+          face:'',
+          sex:'',
+          place:'',
+          age:'',
+          xingzuo:'',
+          favor:'',
+          vip:'',   // 0为非vip，1为vip，2为svip
+          level:'',  // QQ等级
+          accert:'',
+          isFriend:''  //是否是朋友
        }
     }
   },
   computed:{
+    ...mapGetters([
+      'userId',
+      'userInfo'
+    ]),
     level(){
        return calcLevel(this.dataList.level)
+    },
+    style(){
+      return {
+        background:`url(${this.dataList.profile_bg}) no-repeat`,
+        backgroundSize:'100%'
+      }
+    },
+    isMySelf(){
+      return this.dataList.user_id==this.userId
     }
   },
+  created(){
+    this.dataList.user_id=this.$route.params.user_id
+    this.getUserProfile(this.userId,this.dataList.user_id)
+  }, 
   methods:{
     sendMessage(user_id){
       this.$router.push(`/chat_one/${user_id}`)
+    },
+    async getUserProfile(userId,targetUserId){
+      if(this.isMySelf){
+        this.dataList=this.userInfo
+        return
+      }
+      const {data} = await get_user_profile(userId,targetUserId)
+      console.log(data)
+      this.dataList = data
     }
   }
 }
@@ -155,8 +190,6 @@ export default {
     z-index:1;
     width:100%;
     height:28%;
-    background:url(/static/user/bg/3.jpg) no-repeat;
-    background-size:100%;
   }
   .profile_face{
     position:absolute;

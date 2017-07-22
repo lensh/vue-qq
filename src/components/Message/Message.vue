@@ -29,6 +29,7 @@ import VHeader from '../Common/Header/Header'
 import VFooter from '../Common/Footer/Footer'
 import VSearch from '@/base/Search/Search'
 import VScroll from '@/base/Scroll/Scroll'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'message',
@@ -38,17 +39,19 @@ export default {
     }
   },
   computed:{
-    dataList(){
-      return this.$store.state.message.allMessage
-    }
+    ...mapGetters([
+      'userId',
+      'hasGetAllMessage'
+    ]),
+    ...mapGetters({
+      'dataList':'allMessage'
+    })
   },
-  beforeCreate(){
+  created(){
     //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
     //新消息通过socket来获取
-    if(this.$store.state.message.hasGetAllMessage==0){
-      const user_id=this.$store.state.login.loginStatus.userId
-      this.$store.dispatch('getAllMessage',user_id)
-    }
+    this.hasGetAllMessage==0 && this.$store.dispatch('getAllMessage',this.userId)
+    console.log(this.dataList)
   },
   components:{
   	VHeader,

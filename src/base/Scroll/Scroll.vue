@@ -35,21 +35,21 @@ export default {
   },
   methods:{
     initScroll(){
-      this.scroll = new IScroll('#wrapper')
+      this.scroll = new IScroll('#wrapper',{
+        scrollbars: true,
+        fadeScrollbars:true
+      })
       this.scrollToBottom()
     },
     refresh(){
       //这里必须要有个延时，因为重绘页面需要时间
       setTimeout(()=>{ 
         this.scroll && this.scroll.refresh()
-        this.scrollToBottom(1000)
+        this.isScrollToBottom && this.scrollToBottom(1000)
       }, 0)
     },
     scrollToBottom(time=0){
-      //自动判断是否要滑动到最底部
-      if(this.isScrollToBottom){
-        this.scroll.scrollTo(0,this.scroll.maxScrollY,time)
-      }
+      this.scroll.scrollTo(0,this.scroll.maxScrollY,time)
     }
   },
   watch:{

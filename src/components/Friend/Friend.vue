@@ -147,6 +147,7 @@ import VHeader from '../Common/Header/Header'
 import VFooter from '../Common/Footer/Footer'
 import VScroll from '@/base/Scroll/Scroll'
 import VSearch from '@/base/Search/Search'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'friend',
@@ -232,9 +233,13 @@ export default {
     }
   },
   computed:{
-    dataList(){
-      return this.$store.state.friend.friendList
-    },
+    ...mapGetters([
+      'userId',
+      'hasGetFriendList'
+    ]),
+    ...mapGetters({
+      'dataList':'friendList'
+    }),
     status(){  //通过数据来控制展开和收缩,实现图片懒加载
       return {
         friend:new Array(this.dataList.friends.length).fill(0),
@@ -242,11 +247,8 @@ export default {
       }
     }
   },
-  beforeCreate(){
-    if(this.$store.state.friend.hasGetFriendList==0){
-      const user_id=this.$store.state.login.loginStatus.userId
-      this.$store.dispatch('getFriendList',user_id)
-    }
+  created(){
+    this.hasGetFriendList==0 && this.$store.dispatch('getFriendList',this.userId)
   },
   components:{
   	VHeader,

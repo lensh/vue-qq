@@ -6,13 +6,17 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
   name: 'boot',
-  beforeCreate (){
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
+  created(){
     //未登陆则切换到欢迎页面,否则进入消息页面
     setTimeout(()=>{
-      this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') :
-       this.$router.push('/welcome')  
+       this.isLogin ? this.$router.push('/message') : this.$router.push('/welcome')  
     },1500)
   }
 }

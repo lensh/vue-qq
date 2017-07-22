@@ -119,10 +119,6 @@ export default {
       }
     }
   },
-  beforeCreate(){
-    //如果已经登陆了，则进入消息页面
-    this.$store.state.login.loginStatus.isLogin ? this.$router.push('/message') :''
-  },
   mounted(){
      this.$refs.phone.focus()
   },
@@ -245,8 +241,8 @@ export default {
           return
        }
        //验证
-       const res = await validate({code:validateCode})
-       if(res.code==1){
+       const {code} = await validate({code:validateCode})
+       if(code==1){
           this.showThirdPage()
        }else{
           this.$store.dispatch('setShowWarn','验证码错误,请重新发送短信验证')
@@ -270,8 +266,8 @@ export default {
           'phone':this.phone,
           'nickname':this.nickname
         }
-        const res=await register(data)
-        if(res.code==1){
+        const {code}=await register(data)
+        if(code==1){
            this.qq=res.data.qq
            this.showFourthPage()
         }
@@ -283,8 +279,8 @@ export default {
     },
     //[第四页]登录
     async login(){
-      const res=await login({"qq":this.qq})
-      if(res.code==1){
+      const {code} = await login({"qq":this.qq})
+      if(code==1){
           const saveData={'type':'qq','value':this.qq }
           this.$store.commit('SET_LOGIN',saveData)
           this.$router.push('message')

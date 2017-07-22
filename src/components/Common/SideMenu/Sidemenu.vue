@@ -69,32 +69,30 @@
 
 <script>
 import calcLevel from '@/common/js/level'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'sidebar',
-  data(){
-    return {
-      userinfo:{
-        nickname:this.$store.state.login.userInfo.nick_name,
-        signature:this.$store.state.login.userInfo.signature,
-        face:this.$store.state.login.userInfo.face,
-        level:calcLevel(this.$store.state.login.userInfo.level)
-      },
-      style:{
-        background:`url(${this.$store.state.login.userInfo.profile_bg}) no-repeat`,
-        backgroundSize:'100% 100%'
-      }
-    }
-  },
   computed:{
-  	isShowSideBar(){
-  		return this.$store.state.sidebar.isShowSideBar
-  	},
-    isInit(){
-      return this.$store.state.sidebar.isInit
+    ...mapGetters([
+      'userInfo',
+      'isShowSideBar',
+      'isInit',
+      'isShowMask'
+    ]),
+    userinfo(){
+      return{
+        nickname:this.userInfo.nick_name,
+        signature:this.userInfo.signature,
+        face:this.userInfo.face,
+        level:calcLevel(this.userInfo.level)
+      }
     },
-    isShowMask(){
-      return this.$store.state.sidebar.isShowMask
+    style(){
+      return {
+        background:`url(${this.userInfo.profile_bg}) no-repeat`,
+        backgroundSize:'100% 100%'
+      } 
     }
   },
   methods:{
