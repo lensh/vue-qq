@@ -1,14 +1,13 @@
 import * as types from './mutation-types'
 
+//根级别的state
 export const state = {
 	'loginStatus': JSON.parse(localStorage.getItem("loginStatus") || '{}'), //用户登录状态
 	'userInfo': JSON.parse(localStorage.getItem("userInfo") || '{}'), //用户登录信息
-	'accounts': JSON.parse(localStorage.getItem("accounts")) || { //登录过的用户
-		ids: [],
-		userInfo: []
-	}
+	'accounts': JSON.parse(localStorage.getItem("accounts") || '[]') //登陆过的用户
 }
 
+//根级别的mutations
 export const mutations = {
 	//登录
 	[types.SET_LOGIN](state, {loginStatus,userInfo}) {
@@ -17,9 +16,8 @@ export const mutations = {
 		localStorage.setItem("loginStatus", JSON.stringify(state.loginStatus))
 		localStorage.setItem("userInfo", JSON.stringify(state.userInfo))
 
-		if (state.accounts.ids.length == 0) {
-			state.accounts.ids.unshift(userInfo.user_id)
-			state.accounts.userInfo.unshift(userInfo)
+		if (state.accounts.length == 0) {
+			state.accounts.unshift(userInfo)
 		}
 		localStorage.setItem("accounts", JSON.stringify(state.accounts))
 	},
@@ -35,7 +33,7 @@ export const mutations = {
 	//清空所有状态
 	[types.RESET](state) {
 		clear(state)
-		state.accounts = {} //登录过的用户也清空
+		state.accounts = [] //登录过的用户也清空
 		localStorage.removeItem('accounts') //清空登录过的用户
 	},
 	//切换账号
@@ -53,10 +51,10 @@ export const mutations = {
 		state.userInfo = userInfo
 
 		//设置登录过的用户
-		if (!state.accounts.ids.includes(userInfo.user_id)) {
-			state.accounts.ids.unshift(userInfo.user_id)
-			state.accounts.userInfo.unshift(userInfo)
-		}
+		const index=state.accounts.findIndex((item)=>{ 
+			return item.id==userInfo.user_id
+		})
+		if(index==-1)   state.accounts.unshift(userInfo)
 
 		localStorage.setItem("loginStatus", JSON.stringify(loginStatus))
 		localStorage.setItem("userInfo", JSON.stringify(userInfo))
@@ -64,24 +62,17 @@ export const mutations = {
 	},
 	//移除账号
 	[types.REMOVE_ACCOUNT](state, id) {
-		let indexOfAccount
-		for (let [index, value] of state.accounts.userInfo.entries()) {
-			if (value.id == id) {
-				indexOfAccount = index
-				break
-			}
-		}
-		state.accounts.ids.splice(indexOfAccount, 1)
-		state.accounts.userInfo.splice(indexOfAccount, 1)
+		const index=state.accounts.findIndex((item)=>{ 
+			return item.id==id
+		})
+		state.accounts.splice(index, 1)
 		localStorage.setItem("accounts", JSON.stringify(state.accounts))
 	}
 }
 
 function clear(state) {
-	//以下三项只需把标志初始化为0即可
 	state.friend.hasGetFriendList = 0
 	state.friend.hasGetNewFriends = 0
-	state.message.hasGetAllMessage = 0
 
 	state.sidebar = {
 		'isShowSideBar': false,

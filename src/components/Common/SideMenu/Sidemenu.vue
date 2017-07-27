@@ -116,7 +116,7 @@ export default {
       const Y = this.getTouchXY(e).Y - this.startY
       if ( Math.abs(X) > 3*Math.abs(Y) && X <-30) {
          //限定只能是左滑，最大限度减小倾斜的角度
-　　　　 this.hideSidebar();
+　　　　 this.hideSidebar()
       }
     },
     getTouchXY(e){

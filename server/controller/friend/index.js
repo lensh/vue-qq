@@ -61,10 +61,6 @@ export default class Friend {
 
 		//将res1转换成包含分组的数据
 		for (let [index, value] of res1.entries()) {
-			if (value.special == 1) {
-				res1[index]['fenzu'] = '特别关心'
-				continue
-			}
 			for (let value2 of res2.values()) {
 				let arr = value2.zu_member.split(',').map(item => item - 0)
 				if (arr.includes(value.id)) {
@@ -74,7 +70,10 @@ export default class Friend {
 			}
 		}
 
-		return res1
+		return {
+			allMember:res1,  //所有的成员
+			fenzu:res2  //所有的分组
+		}
 	}
 
 	/**
@@ -289,18 +288,14 @@ export default class Friend {
 			time: Date.parse(new Date()) / 1000
 		}
 
-		// data的is_friend属性的值要看friend_apply表中的status字段来取值,
-		// 如果为status为2(接收方同意了),则is_friend才为1，否则为0
 		const {applyId} = req.body
 		const sql = `select status from friend_apply where id=? limit 1`
 		const row = await query(sql, [applyId]).catch((err) => {
 			console.log(err)
 		})
-		if (row[0].status == 2) { //已同意
-			data.is_friend = 1
-		} else {
-			data.is_friend = 0
-		}
+		// data的is_friend属性的值要看friend_apply表中的status字段来取值,
+		// 如果为status为2(接收方同意了),则is_friend才为1，否则为0
+		data.is_friend=row[0].status == 2 ? 1 : 0
 
 		//往friend表新增记录
 		const sql1 = `insert into friend set ?`
@@ -313,16 +308,16 @@ export default class Friend {
 			const {userId,zuName,applyUserId} = req.body
 
 			//取出组员id
-			const sql2 = 'select zu_member from fenzu where user_id=? and zu_name=? limit 1'
+			const sql2 ='select zu_member from fenzu where user_id=? and zu_name=? limit 1'
 			const row2 = await query(sql2, [userId, zuName]).catch((err) => {
 				console.log(err)
 			})
-			let zu_member = row2[0].zu_member.split(','),
-				zu_member_set = new Set(zu_member)
-			if (!zu_member_set.has(applyUserId)) {
-				zu_member_set.add(applyUserId)
+			let zu_member = row2[0].zu_member.split(',').map(item => item - 0)
+
+		    if(!zu_member.includes(applyUserId)){
+				zu_member.push(applyUserId)
 			}
-			zu_member = Array.from(zu_member_set).join(',')
+			zu_member = zu_member.join(',')
 
 			//更新组员id
 			const data = {
@@ -332,14 +327,99 @@ export default class Friend {
 			const row3 = await query(sql3, [data, userId, zuName]).catch((err) => {
 				console.log(err)
 			})
-			if (row3.affectedRows == 1) {
-				return {
-					code: 1
+
+			return row3.affectedRows == 1? {code:1} :{code:0}
+		}
+	}
+    
+	/**
+	 * [deleteFriend 删除好友]
+	 * @param  {[type]} userId      [用户ID]
+	 * @param  {[type]} otherUserId [另一个用户的id]
+	 * @return {[type]}             [description]
+	 */
+	static async deleteFriend(userId,otherUserId){
+		let sql=`
+			delete from friend where (user_id=? and other_user_id=?)
+			or (other_user_id=? and user_id=?)
+		`
+		const res = await query(sql, [userId,otherUserId,userId,otherUserId])
+		  .catch((err) => {
+			console.log(err)
+		})
+
+		sql=`
+			delete from chat where (user_id=? and other_user_id=?)
+			or (other_user_id=? and user_id=?)
+		`
+		const res1 = await query(sql, [userId,otherUserId,userId,otherUserId])
+		  .catch((err) => {
+			console.log(err)
+		})
+
+		return res.affectedRows>0 && res1.affectedRows>0? {code:1}:{code:0}
+	}
+    
+    /**
+     * [searchFriend 搜索朋友]
+     * @param  {[type]} user [qq号或者是昵称]
+     * @return {[type]}      [description]
+     */
+	static async searchFriend(user){
+		let sql1,sql2
+		//要获取QQ号、头像、年龄、性别、昵称、地方
+		if(/^[\d]+$/.test(user)){  //如果是qq号
+			//先精确查询
+			sql1=`
+				select a.id,a.qq,b.face,b.age,b.sex,b.nick_name,b.place 
+				from user a,user_detail b
+				where a.qq=? and b.user_id=a.id limit 1
+			`
+			//再模糊查询
+			sql2=`
+				select a.id,a.qq,b.face,b.age,b.sex,b.nick_name,b.place 
+				from user a,user_detail b
+				where a.qq like '${user}%' and b.user_id=a.id
+			`
+	    }
+	    else{
+			//先精确查询
+			sql1=`
+				select a.id,a.qq,b.face,b.age,b.sex,b.nick_name,b.place 
+				from user a,user_detail b
+				where b.nick_name=? and b.user_id=a.id
+			`
+			//再模糊查询
+			sql2=`
+				select a.id,a.qq,b.face,b.age,b.sex,b.nick_name,b.place 
+				from user a,user_detail b
+				where b.nick_name like '${user}%' and b.user_id=a.id
+			`
+	    }
+        
+        //精确查询
+		let rows = await query(sql1,[user]).catch((err)=>{
+			console.log(err)
+		})
+		if(rows.length){ 
+			return {
+				code:1,
+				data:{
+					type:'exact',
+					users:rows
 				}
-			} else {
-				return {
-					code: 0
-				}
+			}
+		}
+        
+        //模糊查询
+		rows= await query(sql2).catch((err)=>{
+			console.log(err)
+		})
+		return {
+			code:1,
+			data:{
+				type:'like',
+				users:rows
 			}
 		}
 	}

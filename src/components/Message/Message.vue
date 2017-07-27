@@ -40,18 +40,18 @@ export default {
   },
   computed:{
     ...mapGetters([
-      'userId',
-      'hasGetAllMessage'
+      'userId'
     ]),
     ...mapGetters({
       'dataList':'allMessage'
     })
   },
   created(){
-    //判断是否获取过所有消息,没有才获取,防止重复获取,以减缓数据库的压力,
+    //获取消息
+    this.$store.dispatch('getAllMessage',this.userId)
+
     //新消息通过socket来获取
-    this.hasGetAllMessage==0 && this.$store.dispatch('getAllMessage',this.userId)
-    console.log(this.dataList)
+    this.updateBySocket()
   },
   components:{
   	VHeader,
@@ -88,6 +88,34 @@ export default {
     goChat(chatType,chatId){           
       const path = chatType =='single' ? `/chat_one/${chatId}`:`/chat_group/${chatId}`
       this.$router.push(path)
+    },
+    //通过socket来更新消息
+    updateBySocket(){
+      socket.removeAllListeners() //一定要先移除原来的事件，否则会生成重复的监听器
+
+      socket.on('receivePrivateMessage',(data)=>{
+          this.$store.commit('UPDATE_MESSAGE',{
+            from_user:data.from_user_beizhu,
+            id:data.from_user,
+            imgUrl:data.from_user_face,
+            message:data.message,
+            time:data.time,
+            type:'single'
+          })
+      })
+      socket.on('receiveGroupMessage',(data)=>{
+          //如果不包含自己，则直接丢弃这个socket消息
+          if(!data.group_member.includes(this.userId-0))  return
+
+          this.$store.commit('UPDATE_MESSAGE',{
+            from_user:data.group_name,
+            id:data.group_id,
+            imgUrl:data.group_avator,
+            message:`${data.from_user_nick_name}:${data.message}`,
+            time:data.time,
+            type:'group'
+          })
+      })
     }
   }
 }

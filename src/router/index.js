@@ -12,6 +12,7 @@ import Friend from '@/components/Friend/Friend'
 import FriendAdd from '@/components/Friend/addFriend'
 import FriendNew from '@/components/Friend/newFriend'
 import FriendApply from '@/components/Friend/applyFriend'
+import FriendSearch from '@/components/Friend/searchFriend'
 import FriendSetting from '@/components/Friend/settingFriend'
 import Social from '@/components/Social/Social'
 import Profile from '@/components/User/Profile'
@@ -43,11 +44,11 @@ const routes = [{
     name: 'message',
     component: Message
 }, {
-    path: '/chat_one/:id',
+    path: '/chat_one/:user_id',
     name: 'chat_one',
     component: ChatOne
 }, {
-    path: '/chat_one/:id/set',
+    path: '/chat_one/:user_id/set',
     name: 'chat_set',
     component: ChatSetting
 }, {
@@ -57,12 +58,9 @@ const routes = [{
     path: '/chat_one/:user_id/profile',
     component: Profile
 }, {
-    path: '/chat_group/:id',
+    path: '/chat_group/:group_id',
     name: 'chat_group',
     component: ChatGroup
-}, {
-    path: '/chat_group/:user_id/profile',
-    component: Profile
 }, {
     path: '/friend',
     name: 'friend',
@@ -92,6 +90,10 @@ const routes = [{
     path: '/friend/setting/:apply_id',
     name: 'friend_setting',
     component: FriendSetting
+}, {
+    path: '/friend/add/search',
+    name: 'friend_search',
+    component: FriendSearch
 }, {
     path: '/profile/:user_id',
     component: Profile

@@ -8,10 +8,10 @@
 	  </div>
 	  <div class="chatSetting">
       <ul> 
-        <li @click="$router.push(`/profile/${dataList.user_id}`)">  
+        <li @click="$router.push(`/profile/${dataList.other_user_id}`)">  
           <img :src="dataList.face" class="user">
           <div class="info">
-             <p class="name">{{dataList.name}}</p>
+             <p class="name">{{dataList.beizhu}}</p>
              <p class="message">
                 <span class="sex">{{dataList.sex}}</span><span>{{dataList.age}}岁</span><span>{{dataList.place}}</span>
              </p>
@@ -23,36 +23,68 @@
       	  <div class="item">聊天记录<span class="manyou">漫游7天</span></div>
       	  <div class="item">聊天文件</div>
       	  <div class="item">聊天背景</div>
-      	  <div class="item">特别关心<span class="qiyong">未启用</span></div>
-      	  <div class="item switch">屏蔽此人<SwitchBtn></SwitchBtn></div>
+      	  <div class="item">特别关心
+            <span class="qiyong">{{dataList.special==1?'已启用':'未启用'}}</span>
+          </div>
+      	  <div class="item switch">屏蔽此人
+            <SwitchBtn :isOpen="isOpen" @open="pingbi"></SwitchBtn>
+          </div>
       </div>
       <p class="addquick">添加桌面快捷方式</p>
       <div class="footer">
-      	  <button class="btn">删除好友</button>
+      	  <button class="btn" @click="deleteFriend">删除好友</button>
       </div>
 	  </div>
 	</div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import SwitchBtn from '@/base/SwitchBtn/SwitchBtn'
+import * as api from '@/api/chat'
+import {delete_friend} from '@/api/friend'
 
 export default {
   name: 'chatSetting',
   data(){
     return {
-      dataList:{
-         user_id:1,
-         name:'马哲涵',
-         face:'/static/user/face/4.jpg',
-         sex:'女',
-         age:'21',
-         place:'广东深圳'
-      }
+      isOpen:'',
+      other_user_id:'',
+      dataList:{}
     }
+  },
+  computed:{
+    ...mapGetters([
+      'userId',
+      'userInfo'
+    ])
+  },
+  mounted(){
+    this.other_user_id=this.$route.params.user_id
+    this.getUserInfo(this.userId,this.other_user_id)
   },
   components:{
     SwitchBtn
+  },
+  methods:{
+    async getUserInfo(userId, otherUserId){
+        const {data}=await api.get_userinfo(userId, otherUserId)
+        this.dataList=data
+        this.isOpen=this.dataList.is_pingbi
+    },
+    //屏蔽对方
+    async pingbi(){
+      const status=this.isOpen==0?1:0
+      const {code}= await api.update_pingbi(this.userId,this.other_user_id,status)
+      if(code==1){
+        this.isOpen=!this.isOpen
+      }
+    },
+    //删除好友
+    async deleteFriend(){
+      const {code}= await delete_friend(this.userId,this.other_user_id)
+      code==1 && this.$router.push('/message')
+    }
   }
 }
 </script>

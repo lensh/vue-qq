@@ -140,9 +140,7 @@ export default class Register {
 		const res = await query(sql, user_detail).catch((err) => {
 			console.log(err)
 		})
-		if (res.affectedRows == 1) {
-			return 1
-		}
+		return res.affectedRows
 	}
 
 	/**

@@ -11,7 +11,7 @@ const API_CONFIG = '/api/login'
  * @param  {[type]} options.pwd  [description]
  * @return {[type]}              [description]
  */
-export function check_login({user,pwd}) {
+export const check_login=({user,pwd})=>{
 	pwd = encrypt(pwd)    //加密登录
 	const url = `${API_CONFIG}/${user}/${pwd}`
 

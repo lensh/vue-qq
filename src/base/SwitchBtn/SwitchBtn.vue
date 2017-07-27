@@ -1,8 +1,8 @@
 <template>
-   <!-- 开关切换效果 -->
+   <!-- 开关切换按钮 -->
    <div class="switch" @click="switchBtn">
-	    <div id="div1" class="close1" ref="div1">
-	        <div id="div2" class="close2" ref="div2"></div>
+	    <div id="div1" :class="{'close1':!isOpen,'open1':isOpen}">
+	        <div id="div2" :class="{'close2':!isOpen,'open2':isOpen}"></div>
 	    </div>
    </div>
 </template>
@@ -10,10 +10,10 @@
 <script>
 export default {
   name: 'SwitchBtn',
+  props:['isOpen'],
   methods:{
   	switchBtn(){
-   		this.$refs.div1.className=(this.$refs.div1.className=="close1")?"open1":"close1";
-        this.$refs.div2.className=(this.$refs.div2.className=="close2")?"open2":"close2";
+  		this.$emit('open')
   	}
   }
 }

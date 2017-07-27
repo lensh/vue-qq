@@ -6,7 +6,8 @@ const state = {
   'hasGetFriendList': 0, //是否已经获取过好友列表
   'friendList': {},
   'hasGetNewFriends':0,
-  'newFriends':[]
+  'newFriends':[],
+  'friendStatus':{}
 }
 
 // mutations
@@ -14,6 +15,7 @@ const mutations = {
   [types.GET_FRIEND_LIST](state, data) {
     state.hasGetFriendList = data.hasGetFriendList
     state.friendList = data.friendList
+    state.friendStatus = data.friendStatus
   },
   [types.GET_NEW_FRIENDS](state,data){
     state.hasGetNewFriends=data.hasGetNewFriends
@@ -28,7 +30,8 @@ const mutations = {
 const actions = {
   async getFriendList({commit},userId) {
       const res = await api.get_friend_list(userId)
-      let friendData = res.data.friend,
+      let friendData = res.data.friend.allMember,
+      fenzuData=res.data.friend.fenzu,
       groupData = res.data.group
 
       //按在线状态和VIP类型降序排列
@@ -50,44 +53,38 @@ const actions = {
         return prev.role > current.role
       })
 
-      let friend_set = new Set(),
-        group_set = new Set() //保存最终结果
-
       //先将好友数据转换成指定格式
-      let fenzu_map = new Map()
-      for (let [index, value] of friendData.entries()) {
-        let fenzuName = value.fenzu
-        let friend
-        if (fenzu_map.has(fenzuName)) {
-          friend = fenzu_map.get(fenzuName)
-        } else {
-          friend = {
-            name: value.fenzu,
-            online: 0,
-            members: []
+      let friend_arr=[]
+      for(let value0 of fenzuData.values()){
+        let fenzuName=value0.zu_name
+        let friend={
+          name: fenzuName,
+          online: 0,
+          members: [] 
+        }
+        for (let [index, value] of friendData.entries()) {
+          if(value.fenzu==fenzuName){
+            friend.members.push({
+              id: value.id,
+              name: value.name,
+              face: value.face,
+              vipurl: value.vip == 0 ? '' : value.vip == 1 ? '/static/icon/4/vip.png' : 
+                      '/static/icon/4/ewm.png',
+              status: value.status == 0 ? '离线' : value.status == 1 ? '手机在线' : 
+                      value.status == 2 ? '3G在线' : value.status == 3 ? '4G在线' : 
+                      value.status == 4 ? 'WiFi在线' : '电脑在线',
+              sign: value.sign
+            })
+            if (value.status != 0) {
+              friend.online++
+            }
           }
         }
-        if (value.status != 0) {
-          friend.online++
-        }
-        friend.members.push({
-          id: value.id,
-          name: value.name,
-          face: value.face,
-          vipurl: value.vip == 0 ? '' : value.vip == 1 ? '/static/icon/4/vip.png' : 
-                  '/static/icon/4/ewm.png',
-          status: value.status == 0 ? '离线' : value.status == 1 ? '手机在线' : 
-                  value.status == 2 ? '3G在线' : value.status == 3 ? '4G在线' : 
-                  value.status == 4 ? 'WiFi在线' : '电脑在线',
-          sign: value.sign
-        })
-        fenzu_map.set(fenzuName, friend)
+        friend_arr.push(friend)
       }
-      fenzu_map.forEach((item) => {
-        friend_set.add(item)
-      })
 
       //再将群数据转换成指定格式
+      let group_set = new Set() //保存最终结果
       let group_map = new Map()
       for (let [index, value] of groupData.entries()) {
         let fenzuName = value.role
@@ -111,12 +108,17 @@ const actions = {
       group_map.forEach((item) => {
         group_set.add(item)
       })
-
+      const groups_arr = Array.from(group_set)
+      
       let data = {
         hasGetFriendList: 1,
         friendList: {
-          friends: Array.from(friend_set),
-          groups: Array.from(group_set)
+          friends:friend_arr,
+          groups:groups_arr
+        },
+        friendStatus:{
+          friend:new Array(friend_arr.length).fill(0),
+          group:new Array(groups_arr.length).fill(0)
         }
       }
       //特别关心放在最顶部

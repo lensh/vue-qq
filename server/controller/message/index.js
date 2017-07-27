@@ -27,7 +27,7 @@ export default class Messge {
 	 */
 	static async getSingleMessage(userId) {
 		const sql = `
-			SELECT a.id, a.time, b.face AS imgUrl, (
+			SELECT a.from_user as id, b.face AS imgUrl, (
 
 			SELECT COUNT( * ) 
 			FROM message_user c
@@ -38,11 +38,23 @@ export default class Messge {
 
 			SELECT d.message
 			FROM message_user d
-			WHERE d.to_user = a.to_user
-			AND d.from_user = a.from_user
-			ORDER BY TIME DESC 
+			WHERE (d.to_user = a.to_user
+			AND d.from_user = a.from_user)
+			OR (d.to_user = a.from_user
+			AND d.from_user = a.to_user)
+			ORDER BY d.time DESC 
 			LIMIT 1
 			) AS message, (
+
+			SELECT f.time
+			FROM message_user f
+			WHERE (f.to_user = a.to_user
+			AND f.from_user = a.from_user)
+			OR (f.to_user = a.from_user
+			AND f.from_user = a.to_user)
+			ORDER BY f.time DESC 
+			LIMIT 1
+			) AS time,(
 
 			SELECT beizhu
 			FROM friend e
@@ -68,7 +80,8 @@ export default class Messge {
 	 */
 	static async getGroupMessage(userId) {
 		const sql = `
-			SELECT a.id, a.unread, c.group_name AS from_user, c.group_avator AS imgUrl, (
+			SELECT a.group_id as id, a.unread, c.group_name AS from_user, 
+			c.group_avator AS imgUrl, (
 
 			SELECT d.message
 			FROM message_group d

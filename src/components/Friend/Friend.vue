@@ -2,7 +2,7 @@
   <!-- 联系人列表 -->
   <div class="wrapper">
     <VAsideMenu></VAsideMenu>
-  	<VHeader :tabIndex="currentTab"></VHeader>
+  	<VHeader :currentTab="currentTab"></VHeader>
     <VScroll :data="dataList.friends" :isHeightChange="isHeightChange">
         <VSearch placeholder="搜索"></VSearch>
         <p class="newFriends" @click="$router.push('/friend/new')">新朋友</p>
@@ -235,15 +235,17 @@ export default {
   computed:{
     ...mapGetters([
       'userId',
-      'hasGetFriendList'
+      'hasGetFriendList',
+      'friendStatus',
+      'fenzu'
     ]),
     ...mapGetters({
       'dataList':'friendList'
     }),
     status(){  //通过数据来控制展开和收缩,实现图片懒加载
       return {
-        friend:new Array(this.dataList.friends.length).fill(0),
-        group:new Array(this.dataList.groups.length).fill(0)
+        friend:this.friendStatus.friend,
+        group:this.friendStatus.group
       }
     }
   },

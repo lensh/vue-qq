@@ -12,7 +12,8 @@
       <div class="item" :class="{'cur':curTab==3}" @click="changeTab(3)">找公众号</div>
     </div>
     <div class="searchbox">
-      <input type="text" class="text" readonly placeholder="QQ号/手机号/群/公众号">
+      <input type="text" class="text" readonly placeholder="QQ号/手机号/群/公众号"
+        @click="$router.push('/friend/add/search')">
     </div> 
 
     <!--  找人 -->
@@ -148,7 +149,8 @@ export default {
     border:none;
     padding-left:10%;
     background:url(/static/icon/4/okh.png) no-repeat 6% center;
-    background-size:16px
+    background-size:16px;
+    font-family:'Microsoft Yahei'
   }
 }
 .people{

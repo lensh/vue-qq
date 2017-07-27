@@ -35,20 +35,18 @@ export default {
   },
   methods:{
     initScroll(){
-      this.scroll = new IScroll('#wrapper',{
-        scrollbars: true,
-        fadeScrollbars:true
-      })
+      this.scroll = new IScroll('#wrapper')
       this.scrollToBottom()
     },
     refresh(){
       //这里必须要有个延时，因为重绘页面需要时间
       setTimeout(()=>{ 
         this.scroll && this.scroll.refresh()
-        this.isScrollToBottom && this.scrollToBottom(1000)
+        this.scrollToBottom(500)
       }, 0)
     },
     scrollToBottom(time=0){
+      this.scroll && this.isScrollToBottom && 
       this.scroll.scrollTo(0,this.scroll.maxScrollY,time)
     }
   },
@@ -63,7 +61,7 @@ export default {
 }
 </script>
 
-<style lang="scss" type="text/css" scoped>
+<style lang="scss" type="text/css">
 #wrapper {
   position:absolute;
   z-index:1;
@@ -81,5 +79,8 @@ export default {
     width:100%;
     padding:0;
   }
+}
+.iScrollVerticalScrollbar{
+  width:6px !important;
 }
 </style>

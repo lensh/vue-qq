@@ -118,7 +118,7 @@ export default {
     style(){
       return {
         background:`url(${this.dataList.profile_bg}) no-repeat`,
-        backgroundSize:'100%'
+        backgroundSize:'cover'
       }
     },
     isMySelf(){
@@ -139,7 +139,6 @@ export default {
         return
       }
       const {data} = await get_user_profile(userId,targetUserId)
-      console.log(data)
       this.dataList = data
     }
   }
@@ -301,6 +300,7 @@ export default {
     cursor:pointer;
     background:#fff;
     letter-spacing:2px;
+    font-family:'Microsoft Yahei';
     &.message{
       background:#78B7FF;
       color:#fff;

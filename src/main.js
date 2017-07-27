@@ -9,7 +9,6 @@ import FastClick from 'fastclick'
 import vueg from 'vueg'
 import 'vueg/css/transition-min.css'
 
-
 Vue.config.productionTip = false
 
 // 用 axios 进行 Ajax 请求

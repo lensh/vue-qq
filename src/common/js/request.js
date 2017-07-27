@@ -36,3 +36,15 @@ export function request_put(url) {
 			return Promise.resolve(res.data)
 		})
 }
+
+/**
+ * [request_delete 封装delete请求]
+ * @param  {[string]} url  [请求地址]
+ * @return {[object]}      [promise]
+ */
+export function request_delete(url) {
+	return axios.delete(url)
+		.then((res) => {
+			return Promise.resolve(res.data)
+		})
+}

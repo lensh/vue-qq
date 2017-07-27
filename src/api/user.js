@@ -10,7 +10,7 @@ const API_CONFIG = '/api/user'
  * @param  {number} userId [用户id]
  * @return {[type]}        [description]
  */
-export function logout(userId) {
+export const logout = (userId) => {
 	const url = `${API_CONFIG}/logout/${userId}`
 	return request_put(url)
 }
@@ -21,7 +21,7 @@ export function logout(userId) {
  * @param  {[type]} status [新状态]
  * @return {[type]}        [description]
  */
-export function change_status(userId,status) {
+export const change_status = (userId, status) => {
 	const url = `${API_CONFIG}/changestatus/${userId}/${status}`
 	return request_put(url)
 }
@@ -32,7 +32,7 @@ export function change_status(userId,status) {
  * @param  {[type]} userId        [新用户的id]
  * @return {[type]}               [description]
  */
-export function change_user(currentUserId,userId){
+export const change_user = (currentUserId, userId) => {
 	const url = `${API_CONFIG}/changeuser/${currentUserId}/${userId}`
 	return request_put(url)
 }
@@ -43,7 +43,7 @@ export function change_user(currentUserId,userId){
  * @param  {[type]} userId        [目标用户的id]
  * @return {[type]}               [description]
  */
-export function get_user_profile(userId,targetUserId){
+export const get_user_profile = (userId, targetUserId) => {
 	const url = `${API_CONFIG}/profile/${userId}/${targetUserId}`
 	return request_get(url)
 }

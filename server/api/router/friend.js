@@ -38,5 +38,15 @@ friendRouter
 		}
 		res.json(result)
 	})
+	.delete('/delete/:userId/:otherUserId',async(req, res) => { //删除好友
+		const {userId,otherUserId} = req.params
+		const result = await friend.deleteFriend(userId,otherUserId)
+		res.json(result)
+	})
+	.get('/search/:user',async(req, res) => {   //搜索朋友
+		const {user} = req.params
+		const result = await friend.searchFriend(user)
+		res.json(result)
+	})
 
 export default friendRouter

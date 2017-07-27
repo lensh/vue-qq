@@ -6,42 +6,45 @@
 	    <div class="item center">账号管理</div>
 	    <div class="item right" @click="editAccont">{{edit.text}}</div>
 	  </div>
-	  <div class="accontSet">
-        <div class="first">
-    	      <ul class="users">
-    	      	 <li v-for="item in dataList" @click="changeUser(item.id)">
-    	      	 	<img :src="item.face" class="face">
-    	      	 	<div class="info">
-    	      	 		<p>{{item.nick_name}}</p>
-    	      	 		<p class="message">{{item.qq}}</p>
-    	      	 		<img :src="edit.imgSrc" @click="removeAccont(item.id)"
-    	      	 			:class="{'other':item.id!=userInfo.id&&edit.status==0}">
-    	      	 	</div>
-    	      	 </li>
-    	      </ul>
-    	      <p class="addAccont" @click="$router.push('/accont_set/add_user')">添加或注册账号</p>
-        </div>
-        <div class="second">
-        	  <p class="item relative">关联QQ号</p>
-        	  <p class="item info">关联QQ号后,即可代收该号的好友消息</p>
-        </div>
+    <VScroll :data="accounts">
+  	  <div class="accontSet">
+          <div class="first">
+      	      <ul class="users">
+      	      	 <li v-for="item in accounts" @click="changeUser(item.id)">
+      	      	 	<img :src="item.face" class="face">
+      	      	 	<div class="info">
+      	      	 		<p>{{item.nick_name}}</p>
+      	      	 		<p class="message">{{item.qq}}</p>
+      	      	 		<img :src="edit.imgSrc" @click="removeAccont(item.id)"
+      	      	 			:class="{'other':item.id!=userInfo.id&&edit.status==0}">
+      	      	 	</div>
+      	      	 </li>
+      	      </ul>
+      	      <p class="addAccont" @click="$router.push('/accont_set/add_user')">添加或注册账号</p>
+          </div>
+          <div class="second">
+          	  <p class="item relative">关联QQ号</p>
+          	  <p class="item info">关联QQ号后,即可代收该号的好友消息</p>
+          </div>
 
-        <div class="third">
-        	  <p class="item" @click="changeStatus(1)">在线状态
-        	    <img src="/static/icon/4/gzb.png" :class="{'cur':userInfo.status==1}">
-        	  </p>
-        	  <p class="item" @click="changeStatus(2)">隐身状态
-        	  	<img src="/static/icon/4/gzb.png" :class="{'cur':userInfo.status==2}">
-        	  </p>
-        </div>
-        <div class="fourth">
-        	  <p class="item" @click="logout">退出当前账号</p>
-        </div> 
-	  </div>
+          <div class="third">
+          	  <p class="item" @click="changeStatus(1)">在线状态
+          	    <img src="/static/icon/4/gzb.png" :class="{'cur':userInfo.status==1}">
+          	  </p>
+          	  <p class="item" @click="changeStatus(2)">隐身状态
+          	  	<img src="/static/icon/4/gzb.png" :class="{'cur':userInfo.status==2}">
+          	  </p>
+          </div>
+          <div class="fourth">
+          	  <p class="item" @click="logout">退出当前账号</p>
+          </div> 
+  	  </div>
+    </VScroll>
 	</div>
 </template>
 
 <script>
+import VScroll from '@/base/Scroll/Scroll'
 import {mapGetters} from 'vuex'
 import * as api from '@/api/user'
 
@@ -60,10 +63,10 @@ export default {
     ...mapGetters([
       'userInfo',
       'accounts'
-    ]),
-    dataList(){
-      return this.accounts.userInfo
-    }
+    ])
+  },
+  components:{
+    VScroll
   },
   methods:{
   	//编辑
@@ -83,9 +86,10 @@ export default {
   		this.$store.commit('REMOVE_ACCOUNT',id)  //移除某个账号信息
   		if(id==this.userInfo.user_id){  //如果移除的刚好的当前登录的用户,则退出
   			this.$store.commit('LOGOUT')  //登出
+        socket.emit('logout',this.userInfo.user_id)
   			this.$router.push('/login')
   		}
-  		if(this.dataList.length==0){  //如果都移除了则重置
+  		if(this.accounts.length==0){  //如果都移除了则重置
   			this.$store.commit('RESET')  //重置
   			this.$router.push('/login')
   		}
@@ -95,6 +99,7 @@ export default {
   		const {code}=await api.logout(this.userInfo.user_id)
   		if(code==1){
   			this.$store.commit('LOGOUT')  //登出
+        socket.emit('logout',this.userInfo.user_id)
   			this.$router.push('/login')
   		}
   	},
@@ -113,6 +118,8 @@ export default {
   		const {code,data}=await api.change_user(currentUserId,userId)  
   		//传两个值是因为要同时把这两个用户的登录状态改变
   		code==1 && this.$store.commit('CHANGE_USER',data)
+      socket.emit('logout',currentUserId)
+      socket.emit('login',userId)
   	}
   }
 }
@@ -122,7 +129,7 @@ export default {
 .wrapper{
 	background:#FFFDFD;
 	.header{
-		display:flex;
+		  display:flex;
 	    padding:0 20px;
 	    height:50px;
 	    line-height:50px;
@@ -153,10 +160,9 @@ export default {
 	    }
     }
     .accontSet{
-    	margin-top:70px;
     	.first,.second,.third,.fourth{
 			background:white;
-			margin-top:20px;
+			margin-top:6px;
 			border-top:1px solid #eee;
 			.item{
 				border-bottom:1px solid #eee;
@@ -229,10 +235,10 @@ export default {
     		}
     	}
     	.fourth{
-    	   margin-top:40px;
+    	   margin-top:30px;
     	}
     	.third{
-    	   .item{
+    	  .item{
 				position:relative;
 	    		img{
 		          position:absolute;

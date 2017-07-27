@@ -70,6 +70,7 @@ export default {
     //登陆后的回调
     callback({code,data,message}){ 
       if(code==1){
+        socket.emit('login',data.loginStatus.userId) 
         this.$store.commit('SET_LOGIN',data)
         this.$router.push('message')
       }else{
