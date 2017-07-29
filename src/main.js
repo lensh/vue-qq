@@ -26,8 +26,8 @@ Vue.use(vueg, router, options)
 // fastclick,解决移动端300ms延迟
 if ('addEventListener' in document) {
 	document.addEventListener('DOMContentLoaded', function() {
-		FastClick.attach(document.body);
-	}, false);
+		FastClick.attach(document.body)
+	}, false)
 }
 
 new Vue({
