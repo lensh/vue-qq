@@ -17,20 +17,22 @@
 			</div>
 			<div class="search_result" v-show="hasSearch">	
 				<p v-show="!hasResult" class="no_result">没有找到相关结果</p>
-				<ul v-show="hasResult&&hasManyResult">
-					<li v-for="item in dataList"
-						@click="$router.push(`/profile/${item.id}`)">
-					    <img :src="item.face" class="user">
-	                    <div class="info">
-	                          <p class="name">{{search}}<span>({{item.qq}})</span></p>
-	                          <p class="intro">
-	                             <span :class="{'man':item.sex=='男',
-	                             'woman':item.sex=='女'}">
-	                             {{item.age}}</span>  {{item.place}}
-	                          </p>
-	                    </div>
-					</li>
-				</ul>
+				<VScroll :data="dataList">
+					<ul v-show="hasResult&&hasManyResult">
+						<li v-for="item in dataList"
+							@click="$router.push(`/profile/${item.id}`)">
+						    <img :src="item.face" class="user">
+		                    <div class="info">
+		                          <p class="name">{{search}}<span>({{item.qq}})</span></p>
+		                          <p class="intro">
+		                             <span :class="{'man':item.sex=='男',
+		                             'woman':item.sex=='女'}">
+		                             {{item.age}}</span>  {{item.place}}
+		                          </p>
+		                    </div>
+						</li>
+					</ul>
+				</VScroll>
 			</div>
 		</div>	
 	</div>
@@ -38,6 +40,7 @@
 
 <script>
 import {search_friend} from '@/api/friend'
+import VScroll from '@/base/Scroll/Scroll'
 
 export default {
   name: 'friendSearch',
@@ -53,6 +56,9 @@ export default {
         hasManyResult:false,  // 查找后是否有很多匹配项
         dataList:[]
     }
+  },
+  components:{
+  	VScroll
   },
   methods:{
   	clear(){
@@ -88,6 +94,9 @@ export default {
   watch:{
   	search(){
   		this.hasSearch=false
+  		this.hasResult=false
+  		this.hasManyResult=false
+  		this.dataList=[]
   	}
   }
 }

@@ -15,7 +15,6 @@
           </template>
         </div>
       </div>
-      
       <div class="profile">
           <div class="profile_bg" :style="style"></div>
           <div class="profile_face">

@@ -86,7 +86,7 @@
            <div class="info">
              <p class="ptop">你的QQ号为:</p>
              <p class="qq">{{qq}}</p>
-             <p class="info">该QQ号与手机号码 <span>+86 {{formatPhone}}</span> 绑定,你可以通过短信验证登录QQ手机版。</p>
+             <p class="info">该QQ号与手机号码 <span>+86 {{formatPhone}}</span> 绑定,你可以通过短信验证登录QQ手机版(默认密码6个1)。</p>
              <input type="button" class="btn enable" value="登录" @click="login">
              <p class="warn">三天内未登陆，该QQ号将被回收</p>
            </div>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import {sendMessage,validate,register,login} from '@/api/register'
+import {sendMessage,validate,register} from '@/api/register'
 import VWarn from '@/base/Warn/Warn'
 
 export default {
@@ -266,8 +266,8 @@ export default {
           'phone':this.phone,
           'nickname':this.nickname
         }
-        const {code}=await register(data)
-        if(code==1){
+        const res=await register(data)
+        if(res.code==1){
            this.qq=res.data.qq
            this.showFourthPage()
         }
@@ -278,13 +278,8 @@ export default {
       this.showPage=4
     },
     //[第四页]登录
-    async login(){
-      const {code} = await login({"qq":this.qq})
-      if(code==1){
-          const saveData={'type':'qq','value':this.qq }
-          this.$store.commit('SET_LOGIN',saveData)
-          this.$router.push('message')
-      }
+    login(){
+      this.$router.push('/login')
     },
     //[第二页]限定只能是数字
     isNumber(val){

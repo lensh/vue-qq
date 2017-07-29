@@ -18,7 +18,6 @@ export default class Register {
 		//设置session
 		req.session.code = code
 
-		// 下面的返回信息应该放在 sendMessage函数里
 		return {
 			'code': 1,
 			'message': '短信发送成功',
@@ -95,19 +94,19 @@ export default class Register {
 		})
 
 		// 关联的表也增加相应记录
-		const afterinsert = await this.afterInsert(user_detail).catch((err) => {
+	    const affectedRows=await this.afterInsert(user_detail).catch((err) => {
 			console.log(err)
 		})
 
-		if (afterinsert == 1) {
-			return {
+	    if(affectedRows==1){
+	    	return {
 				"code": 1,
 				"message": "注册成功",
 				"data": {
 					qq: qq
 				}
 			}
-		}
+	    }
 	}
 
 	/**
@@ -136,33 +135,41 @@ export default class Register {
 	 * @return {[type]}             [description]
 	 */
 	static async afterInsert(user_detail) {
-		const sql = `insert into user_detail set ?`
-		const res = await query(sql, user_detail).catch((err) => {
+		const {user_id}=user_detail
+		//用户详情表
+		let sql = 'insert into user_detail set ?'
+		await query(sql, user_detail).catch((err) => {
+			console.log(err)
+		})
+		//分组表新增两条记录
+		let data={
+			user_id:user_id,
+			zu_name:'特别关心',
+			is_default:0
+		}
+		sql='insert into fenzu set ?'
+		await query(sql,[data]).catch((err) => {
+			console.log(err)
+		})
+		data={
+			user_id:user_id,
+			zu_name:'我的好友',
+			is_default:1	
+		}
+		await query(sql,[data]).catch((err) => {
+			console.log(err)
+		})
+		//vip表新增一条记录
+		data={
+			user_id:user_id,
+			vip_type:0,
+			accert:'慢速中',
+			vip_level:0
+		}
+		sql='insert into vip set ? '
+		const res= await query(sql,[data]).catch((err) => {
 			console.log(err)
 		})
 		return res.affectedRows
-	}
-
-	/**
-	 * [login 注册后首次登陆]
-	 * @param  {[type]} req [description]
-	 * @param  {[type]} res [description]
-	 * @return {[type]}     [description]
-	 */
-	static async login(req, res) {
-		const {qq} = req.body
-		const update = {
-			last_login: Date.parse(new Date()) / 1000
-		}
-		const sql = `update user set ? where qq= ? `
-		const result = await query(sql, [update, qq]).catch((err) => {
-			console.log(err)
-		})
-		if (result.affectedRows == 1) {
-			req.session.qq = qq
-			return {
-				"code": 1
-			}
-		}
 	}
 }

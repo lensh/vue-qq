@@ -15,7 +15,7 @@
       	      	 	<div class="info">
       	      	 		<p>{{item.nick_name}}</p>
       	      	 		<p class="message">{{item.qq}}</p>
-      	      	 		<img :src="edit.imgSrc" @click="removeAccont(item.id)"
+      	      	 		<img :src="edit.imgSrc" @click.stop="removeAccont(item.id)"
       	      	 			:class="{'other':item.id!=userInfo.id&&edit.status==0}">
       	      	 	</div>
       	      	 </li>
@@ -118,8 +118,10 @@ export default {
   		const {code,data}=await api.change_user(currentUserId,userId)  
   		//传两个值是因为要同时把这两个用户的登录状态改变
   		code==1 && this.$store.commit('CHANGE_USER',data)
-      socket.emit('logout',currentUserId)
-      socket.emit('login',userId)
+      socket.emit('changeUser',{
+        currentUserId,
+        userId
+      })
   	}
   }
 }

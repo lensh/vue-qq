@@ -64,19 +64,12 @@ io.on('connection', (socket) => {
 		//直接群发会快点，客户端只需要判断是否是发给自己的
 		io.sockets.emit('receiveGroupMessage', data)
 	})
-
-	//监听用户断开连接
-	socket.on('disconnect', () => {
-		//移除用户的id和socketid
-		socketHander.removeUserSocketId(socketId)
+    
+    //监听用户切换账号
+	socket.on('changeUser',async(data) => {
+		const {currentUserId,userId}=data
+ 		await socketHander.changeUser(currentUserId,userId,socketId)
 	})
-
-	//监听用户退出登录
-	socket.on('logout', (userId) => {
-		//移除用户
-		socketHander.removeUser(userId)
-	})
-
 })
 
 module.exports = app

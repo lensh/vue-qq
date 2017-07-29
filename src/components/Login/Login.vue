@@ -90,8 +90,7 @@ export default {
   .footer{
     color: #666;
     text-align: center;
-    position: absolute;
-    bottom: 80px;
+    margin-top:150px;
     width: 100%;
     span{
       color: #1E90FF;

@@ -35,7 +35,9 @@ export default {
   },
   methods:{
     initScroll(){
-      this.scroll = new IScroll('#wrapper')
+      this.scroll = new IScroll('#wrapper',{
+        click:true
+      })
       this.scrollToBottom()
     },
     refresh(){

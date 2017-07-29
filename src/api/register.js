@@ -34,13 +34,3 @@ export const register = (data) => {
 	const url = `${API_CONFIG}/register`
 	return request_post(url, data)
 }
-
-/**
- * [注册后首次登陆]
- * @param  {[type]} data [数据]
- * @return {[type]}      [description]
- */
-export const login = (data) => {
-	const url = `${API_CONFIG}/login`
-	return request_post(url, data)
-}

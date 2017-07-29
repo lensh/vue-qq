@@ -317,8 +317,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `device` tinyint(1) NOT NULL DEFAULT '0' COMMENT '设备状态（0离线，1手机在线，2 3G在线,3 4G在线，4 wifi在线，5 电脑在线）',
   PRIMARY KEY (`id`),
   UNIQUE KEY `qq` (`qq`),
-  UNIQUE KEY `phone` (`phone`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `phone` (`phone`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='用户表' AUTO_INCREMENT=11 ;
 
 --

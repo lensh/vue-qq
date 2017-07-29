@@ -1,15 +1,15 @@
 # Web手Q
 
-Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ ,高仿手机QQ7.1.0版本
+Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手机QQ7.1.0版本
 
 ## 预览
 
 在线预览地址：http://lenshen.com:8080/
 
 ## 技术栈
-* **Vue2.0**：实现单页SPA应用
+* **Vue2.0**：实现前端页面构建
 * **Vuex**：实现不同组件间的状态共享
-* **Vue-router**：页面路由切换
+* **Vue-router**：页面路由切换,实现单页的核心
 * **vueg**：页面复杂场景切换效果
 * **Socket.io**：实现实时消息推送
 * **axios**：一个基于 `Promise` 的 HTTP 库，向后端发起请求
@@ -17,18 +17,19 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ ,高仿手机QQ7.1
 * **ES6**、**ES7**、**ES8**：服务端和客户端均使用ES6语法，promise/async/await 处理异步
 * **localStorage**：本地保存用户信息
 * **Webpack**：模块打包，前端项目构建工具首选
-* **SASS**(**SCSS**)：用SCSS做CSS预处理语言
+* **SASS**(**SCSS**)：CSS预处理语言
 * **Flex**：flex弹性布局，简单适配手机、PC端
 * **CSS3**：CSS3过渡动画及样式
-* **IScroll5**：实现逼真的移动端滚动效果
+* **IScroll**：模拟原生app的列表滚动效果(ListView)
 * **MySQL**：MySQL关系型数据库持久化数据（考虑到表与表之间关系复杂，需要多表查询，最复杂的时候是六张表联查，用MySQL会比Mongodb好得多）
 * **jsonp**：跨域请求数据
+* **pm2**：服务端使用pm2部署，常驻进程，比forever好用得多（https://github.com/Unitech/pm2）
 
 ## 使用方式
 
-先将根目录下的qq.sql导入到你的MySQL数据库里，用户名为root，登录密码为空。启动MySQL服务。然后使用cnpm install 即可。
+先将根目录下的qq.sql导入到你的MySQL数据库里(可以使用Navicat)，用户名为root，登录密码为空。启动MySQL服务。然后使用cnpm install 安装所有依赖，最后运行npm run dev。服务器部署只需要运行npm run pm2（前提是得先全局安装pm2）。
 
-为了让大家有更好的体验效果，提供了三个测试账号，默认用户的密码都是6个1:
+尽量使用Chrome浏览器体验最佳效果。另外提供了三个测试账号，默认用户的密码都是6个1:
 
 * qq:986992484  密码:111111
 
@@ -36,27 +37,30 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ ,高仿手机QQ7.1
 
 * qq:986992482  密码:111111
 
+目前已经实现了QQ的核心功能，如消息列表、好友列表、新朋友、好友申请、实时群聊、实时私聊、聊天设置、屏蔽对方聊天、特别关心、会员等级、个性名片、添加好友、删除好友、好友分组、查找用户、登录、注销、切换用户、右滑显示滑动侧栏等等。后期会考虑增加更多功能。
+如果你想体验实时聊天的酷炫效果，那么你可以打开两个浏览器，用上面不同的账号登录即可。
+
 ## 截图
 
 * 消息页面
 
-![](https://github.com/lensh/vue-qq/tree/master/screenshot/1.png)
+![](https://github.com/lensh/vue-qq/blob/master/screenshot/1.png)
 
 * 联系人页面
 
-![](https://github.com/lensh/vue-qq/tree/master/screenshot/2.png)
-
-* 个人资料
-
-![](https://github.com/lensh/vue-qq/tree/master/screenshot/3.png)
+![](https://github.com/lensh/vue-qq/blob/master/screenshot/2.png)
 
 * 群聊
 
-![](https://github.com/lensh/vue-qq/tree/master/screenshot/4.png)
+![](https://github.com/lensh/vue-qq/blob/master/screenshot/3.png)
 
 * 私聊
 
-![](https://github.com/lensh/vue-qq/tree/master/screenshot/5.png)
+![](https://github.com/lensh/vue-qq/blob/master/screenshot/4.png)
+
+* 演示
+
+![](https://github.com/lensh/vue-qq/blob/master/screenshot/5.gif)
 
 ## 分析
 
@@ -69,7 +73,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ ,高仿手机QQ7.1
 ```javascript
 require("babel-core/register")({
 	presets: ['es2015', 'stage-0']
-});
+})
 require("babel-polyfill")
 ```
 
@@ -118,15 +122,17 @@ export default loginRouter
 服务端(结合Express/Koa):
 
 ```javascript
-// Server (app.js)
+// Server
+import express from 'express'
+import http from 'http'
+import socketio from 'socket.io'
 
-var app = require('express')()
-var server = require('http').Server(app)
-var io = require('socket.io')(server)
+const app = express()
+const server = http.createServer(app)
+const io = socketio(server)
+server.listen(3000)
 
-server.listen(80)
-
-io.on('connection', function (socket) {
+io.on('connection', (socket)=>{
   socket.emit('news', { hello: 'world' })
   socket.on('my other event', function (data) {
     console.log(data)
@@ -137,30 +143,40 @@ io.on('connection', function (socket) {
 客户端：
 
 ```javascript
-// Client (index.html)
+// Client
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
-  var socket = io.connect('http://localhost')
-  socket.on('news', function (data) {
+  const socket = io.connect('http://localhost:3000')
+  socket.on('news', (data)=>{
     socket.emit('my other event', { my: 'data' })
   })
 </script>
 ```
 
-不管是服务器还是客户端都有 `emit` 和 `on` ，通过 `emit` 和 `on` 可以轻松地实现服务器与客户
-端之间的双向通信。
+socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端都有这两个api。通过 `emit` 和 `on`可以实现服务器与客户端之间的双向通信。
 
-`emit` ：用来发射一个事件或者说触发一个事件，第一个参数为事件名，第二个参数为要发送的数据，第三个参数为回调函数（一般省略，如需对方接受到信息后立即得到确认时，则需要用到回调函数）。
-`on` ：用来监听一个 emit 发射的事件，第一个参数为要监听的事件名，第二个参数为一个匿名函数用来接收对方发来的数据，该匿名函数的第一个参数为接收的数据，若有第二个参数，则为要返回的函数。
-socket.io 提供了三种默认的事件（客户端和服务器都有）：`connect` 、`message` 、`disconnect` 。当与对方建立连接后自动触发 `connect` 事件，当收到对方发来的数据后触发 `message` 事件（通常为 `socket.send()` 触发），当对方关闭连接后触发 `disconnect` 事件。
+`emit` ：发射一个事件，参数1为事件名，参数2为要发送的数据，参数3为回调函数（如需对方接受到信息后立即得到确认时，则需要用到回调函数）。
+`on` ：监听一个 emit 发射的事件，参数1为要监听的事件名，第二个参数为回调函数，用来接收对方发来的数据，该函数的第一个参数为接收的数据。
 
-此外，socket.io 还支持自定义事件，毕竟以上三种事件应用范围有限，正是通过这些自定义的事件才实现了丰富多彩的通信。
+服务端常用API：
 
-最后，需要注意的是，在服务器端区分以下三种情况：
+`socket.emit()`：向建立该连接的客户端发送消息
 
-`socket.emit()` ：向建立该连接的客户端广播
+`socket.on()`：监听客户端发送信息
 
-`socket.broadcast.emit()` ：向除去建立该连接的客户端的所有客户端广播
+`io.to(socketid).emit()`：向指定客户端发送消息
 
-`io.sockets.emit()` ：向所有客户端广播，等同于上面两个的和
+`io.sockets.socket(socketid).emit()`：向指定客户端发送消息，新版本用
+
+`io.sockets.socket[socketid].emit()` ，数组访问
+
+`socket.broadcast.emit()`：向除去建立该连接的客户端的所有客户端广播
+
+`io.sockets.emit()`：向所有客户端广播
+
+客户端常用API：
+
+`socket.emit()`：向服务端发送消息
+
+`socket.on()`：监听服务端发来的信息

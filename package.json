@@ -8,7 +8,7 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
-    "reload": "node-dev build/dev-server.js"
+    "pm2": "pm2 start build/dev-server.js"
   },
   "dependencies": {
     "axios": "^0.16.2",

@@ -5,6 +5,7 @@
 	    <div class="item left" @click="$router.back()">返回</div>
 	    <div class="item center">设置</div>
 	  </div>
+	  <VScroll>
 	  <div class="Sysconfig">
           <div class="first">
           	  <p class="item" @click="$router.push('/accont_set')">账号管理
@@ -29,13 +30,14 @@
           <div class="fourth">
           	  <p class="item">关于QQ与帮助</p>
           </div>
-         
 	  </div>
+	  </VScroll>
 	</div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
+import VScroll from '@/base/Scroll/Scroll'
 
 export default {
   name: 'Sysconfig',
@@ -54,6 +56,9 @@ export default {
   		return `${this.dataList.phone.substring(0,3)}******
   			${this.dataList.phone.substring(9,11)}`
   	}
+  },
+  components:{
+    VScroll
   }
 }
 </script>
@@ -89,7 +94,6 @@ export default {
 	    }
     }
     .Sysconfig{
-    	margin-top:70px;
     	.first,.second,.third,.fourth{
 			background:white;
 			margin-top:20px;

@@ -8,7 +8,7 @@
             <li><VSearch placeholder="搜索"></VSearch></li>
             <li class="message" v-for="item in dataList" 
                 @click="goChat(item.type,item.id)"
-                @touchstart.prevent="touchStart" @touchmove.prevent="touchMove">
+                @touchstart="touchStart" @touchmove="touchMove">
                 <img :src="item.imgUrl">
                 <div class="info">
                    <p class="from">{{item.from_user}}<span>{{item.time}}</span></p>
@@ -163,10 +163,10 @@ export default {
           color:#666;
           width:64%;
           font-size:14px;
-          overflow:hidden;
+          overflow:hidden;  /*内容超出后隐藏*/
           text-overflow:ellipsis; /*当文本溢出时显示省略标记(...)*/
+          white-space:nowrap;  /*文本不换行*/
           word-break:keep-all;
-          white-space:nowrap;  
           span{
             border-radius:50%;
             width:22px;

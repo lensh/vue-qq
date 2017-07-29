@@ -16,10 +16,5 @@ registerRouter
 		const result = await register.register(req, res)
 		res.json(result)
 	})
-	.post('/login', async(req, res) => {
-		const result = await register.login(req, res)
-		res.json(result)
-	})
-
 
 export default registerRouter

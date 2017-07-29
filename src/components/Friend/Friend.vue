@@ -13,7 +13,7 @@
           <div class="item" :class="{'blue':tabIndex==2}" 
               @click="changeTab(2)">群
           </div>
-          <div class="item" :class="{'blue':tabIndex==3}" 
+          <div class="item third" :class="{'blue':tabIndex==3}" 
               @click="changeTab(3)">多人聊天
           </div>
           <div class="item" :class="{'blue':tabIndex==4}" 
@@ -323,7 +323,9 @@ export default {
      }
      @media screen and (max-width: 531px) {
        .item{
-          margin-left:5%
+          &.third{
+            display:none
+          }
        }
      }
    }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sidemenu" @touchstart.prevent="touchStart" @touchmove.prevent="touchMove"
+    <div class="sidemenu" @touchstart="touchStart" @touchmove="touchMove"
     :class="{'show':isShowSideBar,'hide':!isShowSideBar&&!isInit}">
        <div class="top" :style="style">
           <div class="userinfo">
@@ -51,7 +51,7 @@
        </div>
        <div class="setting">
           <ul>
-            <li @click="$router.push('setting')">
+            <li @click="$router.push('/setting')">
                 <img src="/static/icon/4/qq_setting_setting.png">
                 <span>设置</span>
             </li>
@@ -166,7 +166,7 @@ export default {
 }
 .sidemenu .top{
   width:100%;
-  height:36%;
+  height:32%;
   position:relative;
   .userinfo{
      position:absolute;
