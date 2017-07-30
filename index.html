@@ -12,7 +12,7 @@
     
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
-      const socket = io.connect('http://localhost:3000/')
+      const socket = io.connect('http://localhost:3000')
       
       //解决用户手动刷新浏览器后，原来的socketid失效的问题
       const loginStatus= JSON.parse(localStorage.getItem("loginStatus") || '{}')

@@ -10,10 +10,7 @@ import {mapGetters} from 'vuex'
 export default {
   name: 'app',
   computed: {
-    ...mapGetters([
-      'isLogin',
-      'userId'
-    ])
+    ...mapGetters(['isLogin'])
   },
   created(){
     //如果不是首次启动,且没有登陆,则跳到登录页面
@@ -38,7 +35,6 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-
   font-family: 'Microsoft Yahei' !important
 }
 #app,.wrapper{

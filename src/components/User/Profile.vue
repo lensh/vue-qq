@@ -145,8 +145,11 @@ export default {
 </script>
 
 <style scoped lang="scss" type="text/css">
+.wrapper{
+	background:#fff !important;
+}
 .header{
-	  display:flex;
+	display:flex;
     padding:0 20px;
     height:50px;
     line-height:50px;
@@ -159,7 +162,7 @@ export default {
     width:100%;
     z-index:1;
     .item{
-    	  flex:1;
+    	 flex:1;
         &.left{
             background:url(/static/icon/4/flc.png) no-repeat left center;
             margin-left:-10px;

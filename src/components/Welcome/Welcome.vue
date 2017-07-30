@@ -25,6 +25,9 @@ export default {
 </script>
 
 <style scoped lang="scss" type="text/css">
+.wrapper{
+  background:#fff !important;
+}
 .welcome{
   position:absolute;
   width:100%;

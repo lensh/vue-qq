@@ -327,6 +327,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
+.wrapper{
+  background:#fff !important;
+}
 .top{
   background: url(/static/icon/4/fas.9.png) no-repeat left center;
   width: 100%;

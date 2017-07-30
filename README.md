@@ -4,7 +4,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 
 ## 预览
 
-在线预览地址：http://lenshen.com:8080/
+在线预览地址：http://lenshen.com:8080/ （为了体验到最佳的效果，提供了3个测试账号，需要账号才能登陆哦，具体账号和密码下面有讲）
 
 ## 技术栈
 * **Vue2.0**：实现前端页面构建
@@ -27,7 +27,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 
 ## 使用方式
 
-先将根目录下的qq.sql导入到你的MySQL数据库里(可以使用Navicat)，用户名为root，登录密码为空。启动MySQL服务。然后使用cnpm install 安装所有依赖，最后运行npm run dev。服务器部署只需要运行npm run pm2（前提是得先全局安装pm2）。
+先将根目录下的qq.sql导入到你的MySQL数据库里(可以使用Navicat)，用户名为root，登录密码为空。启动MySQL服务。然后使用cnpm install 安装所有依赖(最好用cnpm安装，因为项目依赖很多，npm用的是国外的镜像，在网络不稳定的情况下很有可能会导致安装失败，而且下载速度远远慢于国内的cnpm)，最后运行npm run dev。服务器部署运行项目只需要npm run pm2，这样就可以常驻进程，不过前提是得先全局安装pm2。
 
 尽量使用Chrome浏览器体验最佳效果。另外提供了三个测试账号，默认用户的密码都是6个1:
 
@@ -179,3 +179,7 @@ socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端�
 `socket.emit()`：向服务端发送消息
 
 `socket.on()`：监听服务端发来的信息
+
+## 最后
+
+如果觉得不错，就毫不吝啬地给个star吧。后期项目还会继续更新和完善。
