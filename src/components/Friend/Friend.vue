@@ -3,7 +3,8 @@
   <div class="wrapper">
     <VAsideMenu></VAsideMenu>
   	<VHeader :currentTab="currentTab"></VHeader>
-    <VScroll :data="dataList.friends" :isHeightChange="isHeightChange">
+    <VScroll :data="dataList.friends" :isHeightChange="isHeightChange" 
+     component="friend" :tabIndex="tabIndex">
         <VSearch placeholder="搜索"></VSearch>
         <p class="newFriends" @click="$router.push('/friend/new')">新朋友</p>
         <div class="tab">
@@ -153,8 +154,7 @@ export default {
   name: 'friend',
   data () {
     return {
-      currentTab:2,  //当前页面的索引
-      tabIndex:1,   //当前标签页的索引
+      currentTab:2,  //当前页面的索引  
       isHeightChange:false,  //高度是否改变
       //多人聊天,公众号,设备,通讯录暂时不做,就直接使用假数据了
       officialAccount:[
@@ -237,7 +237,8 @@ export default {
       'userId',
       'hasGetFriendList',
       'friendStatus',
-      'fenzu'
+      'fenzu',
+      'tabIndex'
     ]),
     ...mapGetters({
       'dataList':'friendList'
@@ -261,7 +262,7 @@ export default {
   },
   methods:{
     changeTab(tabIndex){
-      this.tabIndex=tabIndex
+      this.$store.commit('TAB_INDEX',tabIndex)
     },
     toggle(index,type){  //通过数据来控制展开和收缩,实现图片懒加载
       this.isHeightChange= this.isHeightChange?false:true  //触发Scroll刷新

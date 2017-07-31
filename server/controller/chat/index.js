@@ -92,6 +92,57 @@ export default class Chat {
 	}
 
 	/**
+	 * [updateSpecial 更新特别关心状态]
+	 * @param  {[type]} userId      [用户id]
+	 * @param  {[type]} otherUserId [另一个用户id]
+	 * @param  {[type]} status      [状态]
+	 * @return {[type]}             [description]
+	 */
+	static async updateSpecial(userId, otherUserId, status) {
+		/***更改好友表***/
+		let sql = `
+			UPDATE friend SET special =?
+			WHERE user_id = ? AND other_user_id = ?
+		`
+		await query(sql, [status, userId, otherUserId])
+
+		/***更改分组表***/
+		
+		//更改特别关心分组
+		sql="select zu_member from fenzu where user_id=? and zu_name='特别关心' limit 1"
+		let row= await query(sql, [userId])
+		let zu_member=row[0].zu_member.split(',').map(item=>item-0)
+		let index=zu_member.findIndex((item)=>{
+			return item==otherUserId
+		})
+		if(status==0){  //取关
+			index!=-1 && zu_member.splice(index,1) //特别关心分组里移除该用户
+		}else{  //设关
+			index==-1 && zu_member.push(otherUserId)
+		}
+		zu_member = zu_member.join(',')
+		sql="update fenzu set zu_member=? where user_id=? and zu_name='特别关心' limit 1"
+		await query(sql, [zu_member,userId])
+
+		//更改默认分组
+	    sql="select zu_member from fenzu where user_id=? and is_default=1 limit 1"
+		row= await query(sql, [userId])
+		zu_member=row[0].zu_member.split(',').map(item=>item-0)
+		index=zu_member.findIndex((item)=>{
+			return item==otherUserId
+		})
+	    if(status==1){   //设关
+			index!=-1 && zu_member.splice(index,1) //默认分组里移除该用户
+		}else{   //取关
+			index==-1 && zu_member.push(otherUserId) //默认分组里添加该用户
+		}
+		zu_member = zu_member.join(',')
+		sql="update fenzu set zu_member=? where user_id=? and is_default=1 limit 1"
+		const res = await query(sql, [zu_member,userId])
+        return res.affectedRows==1? {code:1}:{code:0}
+	}
+
+	/**
 	 * [getStatus 得到聊天状态]
 	 * @param  {[type]} userId      [用户id]
 	 * @param  {[type]} otherUserId [另一个用户id]

@@ -126,7 +126,7 @@ export default {
     },
     //发送消息
     async sendMessage(){
-      if(this.writeMessage=='') return
+      if(this.writeMessage.trim()=='') return
 
       this.sendBySocket()  //先通过socket发送消息
     
@@ -151,6 +151,7 @@ export default {
             time:Date.parse(new Date())/1000 //发送时间
           } 
         }
+        this.writeMessage=''
         //本地追加自己发送的消息
         this.addMessageLocal(data)
       }

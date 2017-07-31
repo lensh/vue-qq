@@ -19,6 +19,11 @@ chatRouter
 		const result = await chat.updatePingbi(userId,otherUserId,status)
 		res.json(result)
 	})
+	.put('/update_special/:userId/:otherUserId/:status',async(req, res) => {
+		const {userId,otherUserId,status}=req.params
+		const result = await chat.updateSpecial(userId,otherUserId,status)
+		res.json(result)
+	})
 	.post('/sendmessage',async(req, res) => {
 		const {userId,otherUserId,message,time}=req.body
 		const result = await chat.sendMessage(userId, otherUserId, message, time)

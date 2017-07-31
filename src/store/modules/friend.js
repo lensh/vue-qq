@@ -7,7 +7,8 @@ const state = {
   'friendList': {},
   'hasGetNewFriends':0,
   'newFriends':[],
-  'friendStatus':{}
+  'friendStatus':{},
+  'tabIndex':1  //联系人页面的当前标签页
 }
 
 // mutations
@@ -23,6 +24,12 @@ const mutations = {
   },
   [types.UPDATE_NEW_FRIENDS](state,update){
     (state.newFriends)[update.index].status=update.status
+  },
+  [types.TAB_INDEX](state,tabIndex){
+    state.tabIndex=tabIndex
+  },
+  [types.UPDATE_FRIEND_LIST](state){
+    state.hasGetFriendList=0
   }
 }
 

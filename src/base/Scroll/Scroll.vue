@@ -9,6 +9,7 @@
 
 <script>
 import IScroll from 'iscroll' 
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'scroll',
@@ -25,6 +26,27 @@ export default {
       //过data的改变来自动刷新的情况)
       type:Boolean,
       default:false
+    },
+    component:{   // 是哪个组件需要滚动,该项用来处理页面返回时滚动位置还原
+      type:String,
+      default:'message'
+    },
+    tabIndex:{   //标签页的索引,只对联系人有效
+      type:Number,
+      default:1
+    }
+  },
+  computed:{
+    ...mapGetters([
+      'scrollPosition'
+    ]),
+    position(){    //获取state里滚动条的位置
+      const index=this.scrollPosition.findIndex((item)=>{
+        return item.name==this.component
+      })
+      const pos = (this.scrollPosition)[index].pos
+
+      return typeof pos ==='number' ? pos : pos[this.tabIndex-1]
     }
   },
   mounted (){
@@ -38,18 +60,39 @@ export default {
       this.scroll = new IScroll('#wrapper',{
         click:true
       })
-      this.scrollToBottom()
+      //滚动条滚动到指定位置
+      this.scrollToPosition()
+
+      //滚动结束时记录滚动位置到store里
+      this.savePosition()
+    },
+    scrollToPosition(time=0){
+      if(this.scroll){
+         //如果要滚动到底部
+         if(this.isScrollToBottom){
+            this.scroll.scrollTo(0,this.scroll.maxScrollY,time)
+         }else{
+            //否则滚动到state里的位置
+            this.scroll.scrollTo(0,this.position,time)
+         }
+      }
+    },
+    savePosition(){
+      //滚动结束时记录滚动位置到store里
+      const vm=this
+      this.scroll.on('scrollEnd',function(){
+        vm.$store.commit('SAVE_SCROLL_POSITION',{
+           component:vm.component,
+           position:this.y,
+           tabIndex:vm.tabIndex
+        })
+      })
     },
     refresh(){
       //这里必须要有个延时，因为重绘页面需要时间
       setTimeout(()=>{ 
         this.scroll && this.scroll.refresh()
-        this.scrollToBottom(500)
       }, 0)
-    },
-    scrollToBottom(time=0){
-      this.scroll && this.isScrollToBottom && 
-      this.scroll.scrollTo(0,this.scroll.maxScrollY,time)
     }
   },
   watch:{

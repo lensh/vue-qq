@@ -41,6 +41,18 @@ export const update_pingbi = (userId, otherUserId, status) => {
 }
 
 /**
+ * [update_special 屏蔽对方聊天]
+ * @param  {[type]} userId      [用户ID]
+ * @param  {[type]} otherUserId [另一个用户的id]
+ * @param  {[type]} status      [新的状态]
+ * @return {[type]}             [description]
+ */
+export const update_special = (userId, otherUserId, status) => {
+	const url = `${API_CONFIG}/update_special/${userId}/${otherUserId}/${status}`
+	return request_put(url)
+}
+
+/**
  * [send_message 发送消息]
  * @param  {[type]} data [数据]
  * @return {[type]}      [description]

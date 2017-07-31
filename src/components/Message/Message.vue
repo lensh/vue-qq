@@ -3,7 +3,7 @@
   <div class="wrapper">
     <VAsideMenu></VAsideMenu>
 	  <VHeader :currentTab="currentTab"></VHeader>
-    <VScroll :data="dataList">
+    <VScroll :data="dataList" component="message">
         <ul>
             <li><VSearch placeholder="搜索"></VSearch></li>
             <li class="message" v-for="item in dataList" 

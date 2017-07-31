@@ -7,7 +7,7 @@
         <div class="item right" @click="$router.push('/friend/new/add')">添加</div>
       </div>
       
-      <VScroll :data="dataList">
+      <VScroll :data="dataList" component="newFriend">
         <div class="notify">
             <p class="title">好友通知</p>
             <ul>

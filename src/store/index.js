@@ -7,6 +7,7 @@ import sidebar from './modules/sidebar'
 import warn from './modules/warn'
 import message from './modules/message'
 import friend from './modules/friend'
+import scroll from './modules/scroll'
 
 Vue.use(Vuex)
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
 		sidebar,
 		warn,
 		message,
-		friend
+		friend,
+		scroll
 	}
 })

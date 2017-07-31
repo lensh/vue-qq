@@ -23,11 +23,12 @@
       	  <div class="item">聊天记录<span class="manyou">漫游7天</span></div>
       	  <div class="item">聊天文件</div>
       	  <div class="item">聊天背景</div>
-      	  <div class="item">特别关心
-            <span class="qiyong">{{dataList.special==1?'已启用':'未启用'}}</span>
+      	  <div class="item switch">特别关心
+            <SwitchBtn :isOpen="isSpecial" @open="special"></SwitchBtn>
+<!--             <span class="qiyong">{{dataList.special==1?'已启用':'未启用'}}</span> -->
           </div>
       	  <div class="item switch">屏蔽此人
-            <SwitchBtn :isOpen="isOpen" @open="pingbi"></SwitchBtn>
+            <SwitchBtn :isOpen="isPingbi" @open="pingbi"></SwitchBtn>
           </div>
       </div>
       <p class="addquick">添加桌面快捷方式</p>
@@ -48,7 +49,8 @@ export default {
   name: 'chatSetting',
   data(){
     return {
-      isOpen:'',
+      isSpecial:'',
+      isPingbi:'',
       other_user_id:'',
       dataList:{}
     }
@@ -70,18 +72,30 @@ export default {
     async getUserInfo(userId, otherUserId){
         const {data}=await api.get_userinfo(userId, otherUserId)
         this.dataList=data
-        this.isOpen=this.dataList.is_pingbi
+        this.isPingbi=this.dataList.is_pingbi
+        this.isSpecial=this.dataList.special
     },
     //屏蔽对方
     async pingbi(){
-      const status=this.isOpen==0?1:0
+      const status=this.isPingbi==0?1:0
       const {code}= await api.update_pingbi(this.userId,this.other_user_id,status)
       if(code==1){
-        this.isOpen=!this.isOpen
+        this.isPingbi=!this.isPingbi
+      }
+    },
+    //特别关心
+    async special(){
+      const status=this.isSpecial==0?1:0
+      const {code}= await api.update_special(this.userId,this.other_user_id,status)
+      if(code==1){
+        this.isSpecial=!this.isSpecial
+        this.$store.commit('UPDATE_FRIEND_LIST')
       }
     },
     //删除好友
     async deleteFriend(){
+      alert('为了最佳的体验效果,不允许删除')
+      return
       const {code}= await delete_friend(this.userId,this.other_user_id)
       code==1 && this.$router.push('/message')
     }

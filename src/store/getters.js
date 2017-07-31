@@ -12,3 +12,6 @@ export const newFriends = state => state.friend.newFriends
 export const isShowSideBar = state => state.sidebar.isShowSideBar
 export const isInit = state => state.sidebar.isInit
 export const isShowMask = state => state.sidebar.isShowMask
+export const scrollPosition = state => state.scroll.position
+export const tabIndex = state => state.friend.tabIndex
+export const searchStatus = state => state.friend.searchStatus
