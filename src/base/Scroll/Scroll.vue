@@ -29,7 +29,7 @@ export default {
     },
     component:{   // 是哪个组件需要滚动,该项用来处理页面返回时滚动位置还原
       type:String,
-      default:'message'
+      default:''
     },
     tabIndex:{   //标签页的索引,只对联系人有效
       type:Number,
@@ -91,7 +91,10 @@ export default {
     refresh(){
       //这里必须要有个延时，因为重绘页面需要时间
       setTimeout(()=>{ 
-        this.scroll && this.scroll.refresh()
+        if(this.scroll){
+          this.scroll.refresh()
+          this.isScrollToBottom && this.scroll.scrollTo(0,this.scroll.maxScrollY,200)
+        }
       }, 0)
     }
   },

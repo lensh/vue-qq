@@ -25,7 +25,6 @@
       	  <div class="item">聊天背景</div>
       	  <div class="item switch">特别关心
             <SwitchBtn :isOpen="isSpecial" @open="special"></SwitchBtn>
-<!--             <span class="qiyong">{{dataList.special==1?'已启用':'未启用'}}</span> -->
           </div>
       	  <div class="item switch">屏蔽此人
             <SwitchBtn :isOpen="isPingbi" @open="pingbi"></SwitchBtn>

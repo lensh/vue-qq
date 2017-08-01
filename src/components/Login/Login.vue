@@ -72,6 +72,7 @@ export default {
       if(code==1){
         socket.emit('login',data.loginStatus.userId) 
         this.$store.commit('SET_LOGIN',data)
+        this.$store.commit('ADD_USER',data)
         this.$router.push('message')
       }else{
         this.$store.dispatch('setShowWarn',message)

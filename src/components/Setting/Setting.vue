@@ -5,7 +5,7 @@
 	    <div class="item left" @click="$router.back()">返回</div>
 	    <div class="item center">设置</div>
 	  </div>
-	  <VScroll>
+	  <VScroll component="setting">
 	  <div class="Sysconfig">
           <div class="first">
           	  <p class="item" @click="$router.push('/accont_set')">账号管理

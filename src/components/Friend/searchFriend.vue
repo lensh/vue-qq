@@ -17,7 +17,8 @@
 			</div>
 			<div class="search_result" v-show="hasSearch">	
 				<p v-show="!hasResult" class="no_result">没有找到相关结果</p>
-				<VScroll :data="dataList" v-show="hasResult&&hasManyResult">
+				<VScroll :data="dataList" v-show="hasResult&&hasManyResult"
+				 component="searchFriend">
 					<ul>
 						<li v-for="item in dataList"
 							@click="$router.push(`/profile/${item.id}`)">

@@ -1,6 +1,6 @@
 // socket具体业务逻辑
 export default class socketHander {
-
+	
 	/**
 	 * [saveUserSocketId 保存用户的id和socketid]
 	 * @param  {[type]} userId   [用户id]

@@ -31,6 +31,7 @@ export default class Chat {
 			AND a.to_user =?
 			)
 			AND b.user_id = a.from_user
+			ORDER BY TIME ASC
 		`
 		const message = await query(sql, [userId,otherUserId,userId,otherUserId])
         
@@ -118,7 +119,7 @@ export default class Chat {
 		if(status==0){  //取关
 			index!=-1 && zu_member.splice(index,1) //特别关心分组里移除该用户
 		}else{  //设关
-			index==-1 && zu_member.push(otherUserId)
+			index==-1 && zu_member.push(otherUserId) //特别关心分组里添加该用户
 		}
 		zu_member = zu_member.join(',')
 		sql="update fenzu set zu_member=? where user_id=? and zu_name='特别关心' limit 1"

@@ -41,7 +41,7 @@ export const update_pingbi = (userId, otherUserId, status) => {
 }
 
 /**
- * [update_special 屏蔽对方聊天]
+ * [update_special 更新特别关心状态]
  * @param  {[type]} userId      [用户ID]
  * @param  {[type]} otherUserId [另一个用户的id]
  * @param  {[type]} status      [新的状态]

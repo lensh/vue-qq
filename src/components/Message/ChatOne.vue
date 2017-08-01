@@ -14,7 +14,8 @@
       </div>
     </div>
     
-    <VScroll :isScrollToBottom='isScrollToBottom' :data="dataList.message">
+    <VScroll :isScrollToBottom='isScrollToBottom' :data="dataList.message"
+      component="chatOne">
       <div class="chat">
           <ul>
               <li v-for="item in dataList.message" :class="{
@@ -105,9 +106,6 @@ export default {
 
       //取消息
       if(message.length==0) return
-      message.sort((prev,current)=>{  //按时间升序排列
-        return prev.time>current.time
-      })
 
       //添加第一条时间消息，不需要经过判断
       this.isAddTimeMessage(0,message[0].time)

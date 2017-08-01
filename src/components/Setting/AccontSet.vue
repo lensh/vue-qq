@@ -6,7 +6,7 @@
 	    <div class="item center">账号管理</div>
 	    <div class="item right" @click="editAccont">{{edit.text}}</div>
 	  </div>
-    <VScroll :data="accounts">
+    <VScroll :data="accounts" component="accountSet">
   	  <div class="accontSet">
           <div class="first">
       	      <ul class="users">

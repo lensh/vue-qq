@@ -9,10 +9,24 @@ const state = {
 		}, {
 			'name': 'friend', //联系人页要保存6个位置
 			'pos': [0, 0, 0, 0, 0, 0]
-		},
-		{
-			'name':'newFriend',
-			'pos':0
+		}, {
+			'name': 'newFriend',
+			'pos': 0
+		}, {
+			'name': 'chatOne',
+			'pos': 0
+		}, {
+			'name': 'chatGroup',
+			'pos': 0
+		}, {
+			'name': 'setting',
+			'pos': 0
+		}, {
+			'name': 'accountSet',
+			'pos': 0
+		}, {
+			'name': 'searchFriend',
+			'pos': 0
 		}
 	]
 }

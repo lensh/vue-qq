@@ -20,6 +20,7 @@ export default class chatGroup {
 			FROM message_group a, user_detail b, group_user c
 			WHERE a.to_group = ? AND b.user_id = a.from_user
 			AND c.group_id = a.to_group AND c.user_id = a.from_user
+			ORDER BY TIME ASC
 		`
 		const message = await query(sql, [groupId])
 
