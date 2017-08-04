@@ -8,7 +8,7 @@
       </div>
       <div class="form">
           <input type="text" v-model="userinfo.user" class="text" 
-          placeholder="QQ号/手机号/邮箱"><br/>
+          placeholder="QQ号/手机号/邮箱" ref="user"><br/>
           <input type="password" v-model="userinfo.pwd" class="text" 
           placeholder="密码"><br/>
           <input type="button" @click="login" class="btn" value="登录">
@@ -43,6 +43,9 @@ export default {
   created(){
     //如果已经登陆了，则进入消息页面
     this.isLogin && this.$router.push('/message')
+  },
+  mounted(){
+    this.$refs.user.focus()
   },
   methods:{
     validate({user,pwd}){

@@ -66,7 +66,7 @@ export default {
       //滚动结束时记录滚动位置到store里
       this.savePosition()
     },
-    scrollToPosition(time=0){
+    scrollToPosition(time=300){
       if(this.scroll){
          //如果要滚动到底部
          if(this.isScrollToBottom){

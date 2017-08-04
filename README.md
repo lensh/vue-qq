@@ -4,7 +4,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 
 ## 预览
 
-在线预览地址：http://lenshen.com:8080/ （为了体验到最佳的效果，提供了3个测试账号，需要账号才能登陆哦，具体账号和密码下面有讲）
+在线预览地址：https://qq.lenshen.com（为了体验到最佳的效果，提供了3个测试账号，需要账号才能登陆哦，具体账号和密码下面有讲）
 
 ## 技术栈
 * **Vue2.0**：实现前端页面构建
@@ -24,6 +24,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 * **MySQL**：MySQL关系型数据库持久化数据（考虑到表与表之间关系复杂，需要多表查询，最复杂的时候是六张表联查，用MySQL会比Mongodb好得多）
 * **jsonp**：跨域请求数据
 * **pm2**：服务端使用pm2部署，常驻进程，比forever好用得多（https://github.com/Unitech/pm2）
+* **nginx**：服务端使用nginx代理端口转发
 
 ## 使用方式
 
@@ -77,7 +78,7 @@ require("babel-core/register")({
 require("babel-polyfill")
 ```
 
-上面的代码不可以使用import来导入，必须使用require，同时需要通过npm安装babel-core、babel-preset-es2015、babel-preset-stage-0、babel-polyfill等依赖。这样就可以愉快地使用import/export了。
+上面的模块不可以使用import来导入，必须使用require，同时需要通过npm安装babel-core、babel-preset-es2015、babel-preset-stage-0、babel-polyfill等依赖。这样就可以愉快地使用import/export了。
 
 服务端代码片段如下：
 

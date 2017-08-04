@@ -19,7 +19,8 @@ Vue.use(Vuex)
 
 // vueg 转场动画
 const options = {
-	forwardAnim: 'fadeInRight'
+	forwardAnim: 'fadeInRight',
+	duration:0.3
 }
 Vue.use(vueg, router, options)
 
