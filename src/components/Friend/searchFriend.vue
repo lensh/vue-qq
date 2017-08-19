@@ -4,8 +4,7 @@
 			<div class="search_input">
 				<input type="text" class="text" placeholder="QQ号/手机号/群/公众号"
 					v-model="search">	
-				<img src="/static/icon/4/cross.png" class="clear" 
-					@click="clear" v-show="search!=''">
+				<img src="./icon/cross.png" class="clear"@click="clear" v-show="search!=''">
 				<span class="btn" @click="$router.back()">取消</span>
 			</div>
 			<div class="search_choose" v-show="!hasSearch&&search!=''">
@@ -122,7 +121,7 @@ export default {
 		    line-height:30px;
 		    padding-left:40px;
 		    flex:12;
-		    background:#FFFDFD url(/static/icon/4/okh.png) no-repeat 6% center;
+		    background:#FFFDFD url(./icon/okh.png) no-repeat 6% center;
 		    background-size:16px;
 		    border-radius:6px;
 		    margin-top:4px;
@@ -153,15 +152,15 @@ export default {
 				border-bottom:1px solid #eee;
 				padding-left:13%;
 				&.first{
-					background:url(/static/icon/4/nwg.png) no-repeat 4% center;
+					background:url(./icon/nwg.png) no-repeat 4% center;
 					background-size:30px;
 				}
 				&.second{
-					background:url(/static/icon/4/ouk.png) no-repeat 4% center;
+					background:url(./icon/ouk.png) no-repeat 4% center;
 					background-size:30px;
 				}
 				&.third{
-					background:url(/static/icon/4/oug.png) no-repeat 4% center;
+					background:url(./icon/oug.png) no-repeat 4% center;
 					background-size:30px;
 				}
 			}
@@ -221,11 +220,11 @@ export default {
 			                border-radius:2px;
 			                background-size:10px;
 			                &.man{
-			                  background:#70D7FD url(/static/icon/4/rfk.png) no-repeat 14% center;
+			                  background:#70D7FD url(./icon/rfk.png) no-repeat 14% center;
 			                  background-size:10px;
 			                }
 			                &.woman{
-			                  background:#FE639B url(/static/icon/4/rfi.png) no-repeat 14% center;
+			                  background:#FE639B url(./icon/rfi.png) no-repeat 14% center;
 			                  background-size:10px;
 			                }
 			              }

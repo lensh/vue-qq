@@ -8,7 +8,7 @@ export default class socketHander {
 	 * @return {[type]}          [description]
 	 */
 	static async saveUserSocketId(userId, socketId) {
-		const sql=`update user set socketid=? where id=? limit 1`
+		const sql='update user set socketid=? where id=? limit 1 '
 		await query(sql,[socketId,userId])
 	}
 
@@ -18,7 +18,7 @@ export default class socketHander {
 	 * @return {[type]}          [description]
 	 */
 	static async getUserSocketId(toUserId) {
-		const sql=`select socketid from user where id=? limit 1`
+		const sql='select socketid from user where id=? limit 1 '
 		const row= await query(sql,[toUserId])
 		return row[0].socketid
 	}
@@ -31,10 +31,10 @@ export default class socketHander {
      * @return {[type]}               [description]
      */
 	static async changeUser(currentUserId,userId,socketId){
-		let sql=`update user set socketid='' where id=? limit 1`
+		let sql='update user set socketid='' where id=? limit 1 '
 		await query(sql,[currentUserId])
 		
-		sql=`update user set socketid=? where id=? limit 1`
+		sql='update user set socketid=? where id=? limit 1 '
 		await query(sql,[socketId,userId])
 	}
 }

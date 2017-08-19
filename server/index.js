@@ -35,7 +35,7 @@ app.use('/api', apiRouter)
 // 设置为全局数据库连接句柄
 global.query = query
 
-// socket事件
+// socket事件监听
 io.on('connection', (socket) => {
 	const socketId = socket.id
 

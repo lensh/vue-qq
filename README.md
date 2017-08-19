@@ -5,7 +5,15 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 ## 预览
 
 在线预览地址：https://qq.lenshen.com
-（为了体验到最佳的效果，提供了3个测试账号，需要账号才能登陆哦，具体账号和密码下面有讲）
+（尽量使用Chrome浏览器体验最佳效果，另外提供了3个测试账号，需要账号才能登录哦）
+
+三个测试账号如下:
+
+* qq:986992484  密码:111111
+
+* qq:986992483  密码:111111
+
+* qq:986992482  密码:111111
 
 ## 技术栈
 * **Vue2.0**：实现前端页面构建
@@ -31,16 +39,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 
 先将根目录下的qq.sql导入到你的MySQL数据库里(可以使用Navicat)，用户名为root，登录密码为空。启动MySQL服务。然后使用cnpm install 安装所有依赖(最好用cnpm安装，因为项目依赖很多，npm用的是国外的镜像，在网络不稳定的情况下很有可能会导致安装失败，而且下载速度远远慢于国内的cnpm)，最后运行npm run dev。服务器部署运行项目只需要npm run pm2，这样就可以常驻进程，不过前提是得先全局安装pm2。
 
-尽量使用Chrome浏览器体验最佳效果。另外提供了三个测试账号，默认用户的密码都是6个1:
-
-* qq:986992484  密码:111111
-
-* qq:986992483  密码:111111
-
-* qq:986992482  密码:111111
-
-目前已经实现了QQ的核心功能，如消息列表、好友列表、新朋友、好友申请、实时群聊、实时私聊、聊天设置、屏蔽对方聊天、特别关心、会员等级、个性名片、添加好友、删除好友、好友分组、查找用户、登录、注销、切换用户、右滑显示滑动侧栏等等。后期会考虑增加更多功能。
-如果你想体验实时聊天的酷炫效果，那么你可以打开两个浏览器，用上面不同的账号登录即可。
+目前已经实现了QQ的核心功能，如消息列表、好友列表、新朋友、好友申请、实时群聊、实时私聊、聊天设置、屏蔽对方聊天、特别关心、会员等级、个性名片、添加好友、删除好友、好友分组、查找用户、登录、注销、切换用户、右滑显示滑动侧栏等等。后期会考虑增加更多功能。如果你想体验实时聊天的酷炫效果，那么你可以打开两个浏览器，用上面不同的账号登录即可。
 
 ## 截图
 
@@ -59,10 +58,6 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 * 私聊
 
 ![](https://github.com/lensh/vue-qq/blob/master/screenshot/4.png)
-
-* 演示
-
-![](https://github.com/lensh/vue-qq/blob/master/screenshot/5.gif)
 
 ## 分析
 
@@ -84,28 +79,7 @@ require("babel-polyfill")
 服务端代码片段如下：
 
 ``` javascript
-// ES6 import/export
-import express from 'express'
-import loginRouter from './router/login'
-import registerRouter from './router/register'
-import friendRouter from './router/friend'
-import messageRouter from './router/message'
-import userRouter from './router/user'
-
-const apiRouter = express.Router()
-
-apiRouter
-	.use('/login', loginRouter)
-	.use('/register', registerRouter)
-	.use('/friend', friendRouter)
-	.use('/message', messageRouter)
-	.use('/user', userRouter)
-
-export default apiRouter
-```
-
-``` javascript
-// ES8 async/await
+// ES7 async/await
 import express from 'express'
 import login from '../../controller/login'
 
@@ -146,7 +120,6 @@ io.on('connection', (socket)=>{
 
 ```javascript
 // Client
-
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
   const socket = io.connect('http://localhost:3000')
@@ -182,6 +155,8 @@ socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端�
 
 `socket.on()`：监听服务端发来的信息
 
-## 最后
+## FAQ
+
+若使用的过程中遇到问题，可以加官方群交流：611212696。
 
 如果觉得不错，就毫不吝啬地给个star吧。后期项目还会继续更新和完善。

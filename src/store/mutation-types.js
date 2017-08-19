@@ -1,9 +1,9 @@
 export const SET_LOGIN = 'SET_LOGIN' //设置登录状态
 export const SHOW_SIDEBAR = 'SHOW_SIDEBAR' //显示侧栏
-export const SET_INIT = 'SET_INIT' //设置侧栏的初始值
 export const SHOW_WARN = 'SHOW_WARN' //显示警告框
 export const GET_ALL_MESSAGE = 'GET_ALL_MESSAGE' //得到用户所有的信息
 export const UPDATE_MESSAGE = 'UPDATE_MESSAGE' //socket更新消息
+export const UPDATE_UNREAD_MESSAGE = 'UPDATE_UNREAD_MESSAGE' //更新未读消息数
 export const GET_FRIEND_LIST = 'GET_FRIEND_LIST' //得到好友列表和群列表
 export const UPDATE_FRIEND_LIST = 'UPDATE_FRIEND_LIST' //更新好友列表
 export const GET_NEW_FRIENDS = 'GET_NEW_FRIENDS' //得到新朋友列表

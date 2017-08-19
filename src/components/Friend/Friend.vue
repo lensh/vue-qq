@@ -76,7 +76,7 @@
               <p class="create">创建多人聊天</p>
               <ul class="level-2">
                   <li v-for="item in chats">  
-                      <img :src="tabIndex==3?'/static/icon/4/qq_addfriend_search_group.png':'' " class="user">
+                      <img src="./icon/search_group.png" class="user">
                       <div class="info">
                          {{item.name}}<span> ({{item.members}})</span>
                       </div>
@@ -88,21 +88,21 @@
           <div class="device" v-show="tabIndex==4">
             <ul class="level-2">
                 <li>  
-                    <img :src="tabIndex==4?'/static/icon/4/feb.png':''" class="user">
+                    <img src="./icon/feb.png" class="user">
                     <div class="info">
                         <p> 我的电脑 </p>
                         <p class="intro">[在线] 无需数据线，手机轻松传文件到电脑</p>
                     </div>
                 </li>  
                 <li>  
-                    <img :src="tabIndex==4?'/static/icon/4/oxy.png':''" class="user">
+                    <img src="./icon/oxy.png" class="user">
                     <div class="info">
                         <p>我的打印机 </p>
                         <p class="intro">将手机或照片发到电脑连接的打印机里</p>
                     </div>
                 </li>  
                 <li>  
-                    <img :src="tabIndex==4?'/static/icon/4/nrg.png':''" class="user">
+                    <img src="./icon/nrg.png" class="user">
                     <div class="info">
                         <p> 发现新设备 </p>
                         <p class="intro"> 搜索附近的设备，用QQ轻松连接设备。</p>
@@ -163,7 +163,7 @@ export default {
           accounts:[
             {
               name:'部落冲突',
-              url:'/static/icon/4/iei.png'
+              url:require('./icon/iei.png')
             }
           ]
         },
@@ -172,7 +172,7 @@ export default {
           accounts:[
             {
               name:'地图',
-              url:'/static/icon/4/feu.png'
+              url:require('./icon/feu.png')
             }
           ]
         },
@@ -181,15 +181,15 @@ export default {
           accounts:[
             {
               name:'QQ红包',
-              url:'/static/icon/4/rdz.png'
+              url:require('./icon/rdz.png')
             },
             {
               name:'QQ购物',
-              url:'/static/icon/4/qfw.png'
+              url:require('./icon/qfw.png')
             },
             {
               name:'QQ Call',
-              url:'/static/icon/4/odv.png'
+              url:require('./icon/odv.png')
             }
           ]
         },
@@ -198,7 +198,7 @@ export default {
           accounts:[
             {
               name:'腾讯课堂',
-              url:'/static/icon/4/ewj.png'
+              url:require('./icon/ewj.png')
             }
           ]
         },
@@ -296,7 +296,7 @@ export default {
      padding:0 20px;
    }
    .newFriends{
-     background:#fff url(/static/icon/4/fai.png) no-repeat 97% center;
+     background:#fff url(../../common/icon/fai.png) no-repeat 97% center;
      background-size:14px 18px
    }
    .tab{
@@ -340,7 +340,7 @@ export default {
        padding-left:8%;
        height:36px;
        line-height:36px;
-       background:url(/static/icon/4/nqj.9.png) no-repeat 3% center;
+       background:url(./icon/nqj.9.png) no-repeat 3% center;
        background-size:14px 16px;
        span{
          float:right;
@@ -349,7 +349,7 @@ export default {
          font-size:14px
        }
        &.click{
-         background:url(/static/icon/4/nqi.9.png) no-repeat 3% center;
+         background:url(./icon/nqi.9.png) no-repeat 3% center;
          background-size:18px 14px;
        }
      }
@@ -411,7 +411,7 @@ export default {
     height:40px;
     line-height:40px;
     padding-left:8%;
-    background:url(/static/icon/4/nqf.png) no-repeat 3% center;
+    background:url(./icon/nqf.png) no-repeat 3% center;
     background-size:16px 16px;
   }
   .info{
@@ -428,13 +428,16 @@ export default {
     color:#666;
     font-size:14px;
     position:relative;
-    bottom:4px
+    bottom:4px;
   }
 }
 .official-account{
   p{
     background:#FFFDFD;
     margin-left:5%
+  }
+  div.info{
+    padding-top:14px
   }
 }
 </style>

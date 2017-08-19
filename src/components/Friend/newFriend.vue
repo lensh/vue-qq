@@ -118,7 +118,7 @@ export default {
     .item{
     	  flex:1;
         &.left{
-            background:url(/static/icon/4/flc.png) no-repeat left center;
+            background:url(./icon/flc.png) no-repeat left center;
             margin-left:-10px;
             padding-left:20px;
             background-size:26px 26px;
@@ -203,11 +203,11 @@ export default {
                 border-radius:2px;
                 background-size:10px;
                 &.man{
-                  background:#70D7FD url(/static/icon/4/rfk.png) no-repeat 14% center;
+                  background:#70D7FD url(./icon/rfk.png) no-repeat 14% center;
                   background-size:10px;
                 }
                 &.woman{
-                  background:#FE639B url(/static/icon/4/rfi.png) no-repeat 14% center;
+                  background:#FE639B url(./icon/rfi.png) no-repeat 14% center;
                   background-size:10px;
                 }
               }
@@ -225,6 +225,7 @@ export default {
             transform:translateY(-50%);
             right:50px;
             height:30px;
+            font-family: 'Microsoft Yahei' !important;
             &.agree{
                width:50px;         
                color:white;     

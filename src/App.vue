@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+      <router-view></router-view>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: 'Microsoft Yahei' !important
+  font-family: 'Microsoft Yahei' !important;
 }
 #app,.wrapper{
   width:100%;
@@ -127,7 +127,6 @@ ul{
 
 #vueg-background{
   opacity:1;
-  background:#fff;
+  background:#fff !important;
 }
-
 </style>

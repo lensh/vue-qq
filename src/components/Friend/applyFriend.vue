@@ -15,7 +15,7 @@
              <p class="message">
                 <span class="sex">{{dataList.sex}}</span><span>{{dataList.age}}岁</span><span>{{dataList.place}}</span>
              </p>
-             <img src="/static/icon/4/nqj.9.png" class="icon">
+             <img src="./icon/nqj.9.png" class="icon">
           </div>
         </li>
       </ul>
@@ -106,7 +106,7 @@ export default {
       flex:1;
     }
     .item.left{
-      background:url(/static/icon/4/flc.png) no-repeat left center;
+      background:url(./icon/flc.png) no-repeat left center;
       margin-left:-10px;
       padding-left:20px;
       background-size:26px 26px;
@@ -115,9 +115,6 @@ export default {
     .item.center{
       text-align:center
     }
-}
-#wrapper{
-  background:#FFFDFD;
 }
 .apply{
   margin-top:70px;
@@ -199,7 +196,8 @@ export default {
     background:#fff;
     border:1px solid #eee;
     margin-top:10px;
-    cursor:pointer
+    cursor:pointer;
+    font-family: 'Microsoft Yahei' !important;
   }
 }
 .apply .actions{

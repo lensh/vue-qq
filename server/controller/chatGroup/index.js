@@ -8,10 +8,7 @@ export default class chatGroup {
 	 */
 	static async getMessage(userId, groupId) {
 		//先把group_user表的unread置0, is_enter置1
-		let sql=`
-		    UPDATE group_user SET unread=0,is_enter=1
-			WHERE user_id = ? AND group_id = ?
-		`
+		let sql='UPDATE group_user SET unread=0,is_enter=1 WHERE user_id = ? AND group_id = ?'
 		await query(sql, [userId, groupId])
 
 		//查找消息

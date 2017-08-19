@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="sidemenu" @touchstart="touchStart" @touchmove="touchMove"
-    :class="{'show':isShowSideBar,'hide':!isShowSideBar&&!isInit}">
+    :class="{'show':isShowSideBar}">
        <div class="top" :style="style">
           <div class="userinfo">
             <img :src="userinfo.face" class="face">
@@ -9,16 +9,16 @@
             <div class="level">
                <ul>
                  <li v-for="n in userinfo.level.crown">
-                    <img src="/static/icon/2/hdr.png" class="level-1">
+                    <img src="../../../common/icon/hdr.png" class="level-1">
                  </li>
                  <li v-for="n in userinfo.level.sun">
-                    <img src="/static/icon/2/hdu.png" class="level-1">
+                    <img src="../../../common/icon/hdu.png" class="level-1">
                  </li>
                  <li v-for="n in userinfo.level.moon">
-                    <img src="/static/icon/2/hds.png" class="level-1">
+                    <img src="../../../common/icon/hds.png" class="level-1">
                  </li>
                  <li v-for="n in userinfo.level.star">
-                    <img src="/static/icon/2/hdt.png" class="level-1">
+                    <img src="../../../common/icon/hdt.png" class="level-1">
                  </li>
                </ul>
             </div>
@@ -28,23 +28,23 @@
        <div class="side">
           <ul>
             <li>
-               <img src="/static/icon/4/qq_setting_svip.png">
+               <img src="./qq_setting_svip.png">
                <span>了解会员特权</span>
             </li>
-            <li><img src="/static/icon/4/qq_setting_qianbao.png">
+            <li><img src="./qq_setting_qianbao.png">
                <span>QQ钱包</span>
             </li>
-            <li><img src="/static/icon/4/qq_setting_zhuangban.png">
+            <li><img src="./qq_setting_zhuangban.png">
                <span>个性装扮</span>
             </li>
-            <li><img src="/static/icon/4/qq_setting_shoucang.png">
+            <li><img src="./qq_setting_shoucang.png">
                <span>我的收藏</span>
             </li>
-            <li><img src="/static/icon/4/qq_setting_xiangce.png">
+            <li><img src="./qq_setting_xiangce.png">
                <span>我的相册</span>
             </li>
             <li>
-               <img src="/static/icon/4/qq_setting_wenjian.png">
+               <img src="./qq_setting_wenjian.png">
                <span>我的文件</span>
             </li>
           </ul>
@@ -52,10 +52,10 @@
        <div class="setting">
           <ul>
             <li @click="$router.push('/setting')">
-                <img src="/static/icon/4/qq_setting_setting.png">
+                <img src="./qq_setting_setting.png">
                 <span>设置</span>
             </li>
-            <li><img src="/static/icon/4/qq_setting_me_nightmode_on.png">
+            <li><img src="./qq_setting_me_nightmode_on.png">
                 <span>夜间</span>
             </li>
             <li></li>
@@ -99,13 +99,8 @@ export default {
     hideSidebar(){
       this.$store.commit('SHOW_SIDEBAR',{
         'isShowSideBar':false,
-        'isInit':false,
         'isShowMask':false
       })
-      //下面的一定不能省
-      setTimeout(()=>{
-        this.$store.commit('SET_INIT',{'isInit':true})
-      },600)
     },
     touchStart(e){
       this.startX = this.getTouchXY(e).X
@@ -139,30 +134,10 @@ export default {
    height:100%;
    box-shadow: 0 0 10px gray;
    cursor:pointer;
+   transition:width .2s;
    &.show{
-   	 width:80%;
-   	 animation:showMySidebar .4s;
+    width:80%;
    }
-   &.hide{
-   	 width:0;
-     animation:hideMySidebar .4s;
-   }
-   @keyframes showMySidebar{
-      from{
-        width:0
-      }
-      to{
-        width:80%
-      }
-    }
-   @keyframes hideMySidebar{
-      from{
-        width:80%
-      }
-      to{
-        width:0
-      }
-    }
 }
 .sidemenu .top{
   width:100%;

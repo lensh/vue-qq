@@ -110,6 +110,7 @@ export default class Friend {
 		// 数据结构：
 		// 1.别人加自己
 		// id:1,
+		// to_user:2
 		// source:'来自：QQ群-JS讨论群',
 		// apply_message:'大哥 想请教一个问题'
 		// status:1   // 1 待处理  2 已同意 3 已拒绝 4 等待验证	
@@ -123,8 +124,8 @@ export default class Friend {
 		// to_user:6
 		// status:1,  // 1 待处理  2 已同意 3 已拒绝
 		// time:15000000,
-		// info:'已发送验证消息',  // info根据status来动态改变
 		// face:'/static/user/face/9.jpg',
+		// info:'已发送验证消息',  // info根据status来动态改变
 		// nick_name:'阿里巴巴社招内推',
 
 		// 别人加自己

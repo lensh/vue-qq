@@ -37,7 +37,6 @@ export default {
     showSidebar(){
       this.$store.commit('SHOW_SIDEBAR',{
         'isShowSideBar':true,
-        'isInit':false,
         'isShowMask':true
       })
     }

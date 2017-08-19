@@ -14,7 +14,7 @@
             <div class="phone">
               <span>+86</span>
               <input type="text" class="text" v-model="phone" ref="phone"/>
-              <img src="/static/icon/4/fhz.png" @click="clearPhone" v-show="isClearPhone">
+              <img src="./fhz.png" @click="clearPhone" v-show="isClearPhone">
             </div>
             <div class="next">
              <input type="button" class="btn" value="下一步" @click="showSecondPage"  
@@ -73,7 +73,7 @@
             <p>建议填写你的真实名字,让你的朋友更容易认出你。此昵称以后可以随意修改。</p>
             <div class="nickname">
                <input type="text" class="text" v-model="nickname" ref="nickname"/>
-               <img src="/static/icon/4/fhz.png" @click="clearNickName" 
+               <img src="./fhz.png" @click="clearNickName" 
                v-show="isClearNickName">
                <input type="button" class="btn" value="注册" @click="register"  
              :class="{enable:nickname!=''}" :disabled="nickname==''">
@@ -331,7 +331,7 @@ export default {
   background:#fff !important;
 }
 .top{
-  background: url(/static/icon/4/fas.9.png) no-repeat left center;
+  background: url(./fas.png) no-repeat left center;
   width: 100%;
   line-height: 30px;
   margin:34px 0 10px 10px;
@@ -423,7 +423,7 @@ export default {
   .tip{
     margin-top:60px;
     p{
-      background: url(/static/icon/4/fzu.png) no-repeat;
+      background: url(./fzu.png) no-repeat;
       background-size: 20px 20px;
       padding-left: 22px;
       line-height: 20px;
@@ -469,7 +469,7 @@ export default {
 
 .fourth{
   h1{
-    background:url(/static/icon/4/hoy.png) no-repeat left center;
+    background:url(./hoy.png) no-repeat left center;
     background-size:36px 36px;
     padding-left:50px;
   }

@@ -4,7 +4,7 @@
     <VWarn></VWarn>
     <div class="login">
       <div class="top">
-          <img src="/static/icon/3/rqk.png"><span>QQ</span>
+          <img src="./rqk.png"><span>QQ</span>
       </div>
       <div class="form">
           <input type="text" v-model="userinfo.user" class="text" 
@@ -12,7 +12,7 @@
           <input type="password" v-model="userinfo.pwd" class="text" 
           placeholder="密码"><br/>
           <input type="button" @click="login" class="btn" value="登录">
-          <router-link to="/forget" class="left">忘记密码?</router-link>
+          <router-link to="" class="left">忘记密码?</router-link>
           <router-link to="/register" class="right">新用户注册</router-link>
       </div>
       <div class="footer">

@@ -54,16 +54,17 @@ export default class User {
 			status: 1,
 			device: ~~(Math.random() * 4 + 1)  //设备状态暂时取随机数 [1~5]
 		}
-	    sql = `update user set ? where id = ? `
+	    sql = 'update user set ? where id = ? '
 		await query(sql, [update,userId]).catch((err) => {
 			console.log(err)
 		})
 		    
         //获取新用户的信息
 		sql = `
-			select a.*,b.phone,b.status,b.qq from user_detail a 
-			join user b on a.user_id = ?
-			and b.id=a.user_id
+			select a.*,b.phone,b.status,b.qq,c.vip_type AS vip, c.accert
+			from user_detail a 
+			join user b on a.user_id = ? and b.id=a.user_id
+			join vip c on c.user_id=a.user_id
         `
 		const row = await query(sql, [userId]).catch((err) => {
 			console.log(err)

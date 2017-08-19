@@ -65,20 +65,20 @@ export const parseChatTime = (old_time) => {
 		format_minutes = old.getMinutes().toString().padStart(2, '0'),
 		dayArr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
 
-	if (now_year == old_year) {
-		if (now_date == old_date) {
-			return `${format_hour}:${format_minutes}`
-		} else if (now_date == old_date + 1) {
-			return `昨天 ${format_hour}:${format_minutes}`
-		} else if (now_date == old_date + 2) {
-			return `前天 ${format_hour}:${format_minutes}`
-		} else if (now_date - old_date < 7) {
-			return `${dayArr[old.getDay()]} ${format_hour}:${format_minutes}`
-		} else {
-			return `${format_month}-${format_date} ${format_hour}:${format_minutes}`
-		}
-	} else {
-		return `${old_year}-${format_month}-${format_date} 
-		${format_hour}:${format_minutes}`
+	if (now_year != old_year) {
+		return `${old_year}-${format_month}-${format_date} ${format_hour}:${format_minutes}`
 	}
+	if (now_month != old_month || (now_month == old_month && now_date - old_date >= 7)) {
+		return `${format_month}-${format_date} ${format_hour}:${format_minutes}`
+	}
+	if (now_date == old_date) {
+		return `${format_hour}:${format_minutes}`
+	}
+	if (now_date == old_date + 1) {
+		return `昨天 ${format_hour}:${format_minutes}`
+	}
+	if (now_date == old_date + 2) {
+		return `前天 ${format_hour}:${format_minutes}`
+	}
+	return `${dayArr[old.getDay()]} ${format_hour}:${format_minutes}`
 }

@@ -76,7 +76,6 @@ function clear(state) {
 
 	state.sidebar = {
 		'isShowSideBar': false,
-		'isInit': true,
 		'isShowMask': false
 	}
 	state.warn = {

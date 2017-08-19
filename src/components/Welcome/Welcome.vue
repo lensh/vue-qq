@@ -32,7 +32,7 @@ export default {
   position:absolute;
   width:100%;
   height:100%;
-  background: url(/static/splash.png) no-repeat center center;
+  background: url(./splash.png) no-repeat center center;
   background-size: contain;
   .actions{
     position: relative;

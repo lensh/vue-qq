@@ -8,8 +8,9 @@ import store from './store'
 import FastClick from 'fastclick'
 import vueg from 'vueg'
 import 'vueg/css/transition-min.css'
+import '@/common/js/hide-address'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false   //生产环境请用true
 
 // 用 axios 进行 Ajax 请求
 Vue.use(VueAxios, axios)
@@ -20,7 +21,7 @@ Vue.use(Vuex)
 // vueg 转场动画
 const options = {
 	forwardAnim: 'fadeInRight',
-	duration:0.3
+	duration:0.2
 }
 Vue.use(vueg, router, options)
 

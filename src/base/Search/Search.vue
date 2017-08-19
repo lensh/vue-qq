@@ -1,7 +1,7 @@
 <template>
    <!-- 搜索框 -->
    <div class="search">
-      <p><img src="/static/icon/4/okh.png">  {{placeholder}}</p>
+      <p><img src="./okh.png">  {{placeholder}}</p>
    </div> 
 </template>
 

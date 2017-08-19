@@ -1,16 +1,16 @@
 <template>
- <!--  一对一聊天(私聊) -->
+ <!-- 私聊 -->
  <div class="wrapper">
     <div class="header">
-      <div class="item left" @click="back"><span>11</span></div>
+      <div class="item left" @click="back"><span v-show="unread!=0">{{unread}}</span></div>
       <div class="item center">
       	<span class="name">{{dataList.chatWith}}</span>
       	<span class="status">{{dataList.status}}</span>
       </div>
       <div class="item right">
-      	<img src="/static/icon/4/skin_aio_head_twocall.png" class="phone">
-      	<img src="/static/icon/4/skin_header_icon_single.png" 
-        @click="$router.push(`/chat_one/${dataList.user_id}/set`)" class="person">
+      	<img src="./icon/skin_aio_head_twocall.png" class="phone">
+      	<img src="./icon/skin_header_icon_single.png" class="person"
+        @click="$router.push(`/chat_one/${dataList.user_id}/set`)" >
       </div>
     </div>
     
@@ -39,11 +39,11 @@
 
     <div class="footer">
     	 <div class="writeMessage">
-          <textarea v-model="writeMessage"></textarea>
+          <textarea v-model="writeMessage" @keydown.enter.prevent="sendMessage" ref="message"></textarea>
     	 	  <button class="btn" :class="{'enable':writeMessage!=''}"
-            @click="sendMessage">发送</button>
+            @click="sendMessage">{{btnInfo}}</button>
     	 </div>
-    	 <div class="other">
+    	 <div class="other" @click="focus">
           <div class="item" v-for="item in iconUrl">
             <img :src="item">
           </div>
@@ -64,6 +64,7 @@ export default {
      return {
         isScrollToBottom:true,
         writeMessage:'',
+        unread:0,
         dataList:{
           user_id:'',   //别人的id
           chatWith:'正在加载中...',  //自己对别人的备注
@@ -72,20 +73,23 @@ export default {
           beizhu:'',  //别人对自己的备注
           message:[]  //消息
         },
+        btnInfo:'发 送',
         iconName:['ptt','image','ptv','camera','hongbao','flash','emotion','plus']
     }
   },
   computed:{
     ...mapGetters([
       'userId',
-      'userInfo'
+      'userInfo',
+      'allMessage'
     ]),
     iconUrl(){
-      return this.iconName.map(item=>`/static/icon/4/skin_aio_panel_${item}_nor.png`)
-    }
+      return this.iconName.map(item=>require(`./icon/skin_aio_panel_${item}_nor.png`))
+    },
   },
   mounted(){
     this.dataList.user_id=this.$route.params.user_id
+    this.resetAndGetUnread(this.dataList.user_id)
     this.getMessage(this.userId,this.dataList.user_id)
     this.updateBySocket()
   },
@@ -93,6 +97,25 @@ export default {
     VScroll
   },
   methods:{
+    focus(){
+       this.$refs.message.focus()
+    },
+    //将他的未读消息数置0,并拉取未读消息条数
+    resetAndGetUnread(id){
+      this.$store.commit('UPDATE_UNREAD_MESSAGE',{
+          type:'single',
+          id
+      })
+      this.getUnread()
+    },
+    //获取未读消息数
+    getUnread(){
+      let unread=0
+      this.allMessage.forEach(item=>{
+          unread += item.unread
+      })
+      this.unread = unread
+    },
     //获取消息
     async getMessage(userId,otherUserId){
       const {data} = await api.get_message(userId,otherUserId) 
@@ -129,6 +152,9 @@ export default {
     //发送消息
     async sendMessage(){
       if(this.writeMessage.trim()=='') return
+
+      this.$refs.message.focus()
+      this.btnInfo='发送中'
       
       this.sendBySocket()  //先通过socket发送消息
 
@@ -151,14 +177,16 @@ export default {
             time:Date.parse(new Date())/1000  //时间
           } 
         }
-        this.writeMessage=''
         //本地追加自己发送的消息
-        this.addMessageLocal(data)
+        this.addMessageLocal(data) 
+        this.writeMessage=''
+        this.btnInfo='发 送'
       }else{
         this.dataList.message.push({
           type:'time',
           content:message
         })
+        this.btnInfo='发 送'
       }
     },
     // 本地追加消息
@@ -190,29 +218,57 @@ export default {
         })
       }
     },
-    // 返回时更新状态
+    //返回时更新状态
     back(){
       //这里不需要await，不然可能会卡
       api.update_enter_chat(this.userId,this.dataList.user_id) 
       this.$router.back()
     },
-    // socket更新消息
+    //socket更新消息
     updateBySocket(){
       socket.removeAllListeners()  //一定要先移除原来的事件，否则会有重复的监听器
       
       socket.on('receivePrivateMessage',(data)=>{
           if(data.from_user==this.userId) return
+          
+          if(this.dataList.user_id==data.from_user){
+              //本地追加别人通过socket发来的消息
+              this.addMessageLocal({
+                  type:'message',
+                  content:{
+                    user_id:data.from_user, // 发送方id
+                    from:'other',
+                    time:data.time, // 发送时间
+                    faceUrl:data.from_user_face, //发送方的头像
+                    message:data.message  //消息内容
+                  } 
+              })
+          }
+          
+          //提交到store里
+          this.$store.commit('UPDATE_MESSAGE',{
+            from_user:data.from_user_beizhu,
+            id:data.from_user,
+            imgUrl:data.from_user_face,
+            message:data.message,
+            time:data.time,
+            type:'single',
+            isEnterChat:this.dataList.user_id==data.from_user  //是否进入了聊天页面，进入了的话那么该条消息的unread就是0
+          })
+      })
 
-          //本地追加别人通过socket发来的消息
-          this.addMessageLocal({
-              type:'message',
-              content:{
-                user_id:data.from_user, // 发送方id
-                from:'other',
-                time:data.time, // 发送时间
-                faceUrl:data.from_user_face, //发送方的头像
-                message:data.message  //消息内容
-              } 
+      socket.on('receiveGroupMessage',(data)=>{
+          //如果不包含自己，则直接丢弃这个socket消息
+          if(!data.group_member.includes(this.userId-0))  return
+
+          this.$store.commit('UPDATE_MESSAGE',{
+            from_user:data.group_name,
+            id:data.group_id,
+            imgUrl:data.group_avator,
+            message:`${data.from_user_nick_name}:${data.message}`,
+            time:data.time,
+            type:'group',
+            isEnterChat:false
           })
       })
     },
@@ -226,6 +282,11 @@ export default {
         message:this.writeMessage,//消息内容
         time:Date.parse(new Date())/1000 //时间
       })
+    }
+  },
+  watch:{
+    allMessage(){  //监控到消息改变时，则自动拉取新的未读消息数
+       this.getUnread()
     }
   }
 }
@@ -251,7 +312,7 @@ export default {
     .item{
     	flex:1;
         &.left{
-            background:url(/static/icon/4/flc.png) no-repeat left center;
+            background:url(./icon/flc.png) no-repeat left center;
             margin-left:-10px;
             padding-left:20px;
             background-size:26px 26px;
@@ -369,13 +430,14 @@ export default {
     textarea{
       width:80%;
       margin:0 6px;
+      padding-top:7px;
       padding-left:6px;
       border-radius:2px;
       outline:none;
       resize:none;
       border:none;
       overflow-y:hidden;
-      font-family:'Microsoft Yahei';
+      font:16px/18px 'Microsoft Yahei';
     }
 		button.btn{
 			height:100%;

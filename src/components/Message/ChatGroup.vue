@@ -1,13 +1,13 @@
 <template>
- <!--  群聊 -->
+ <!-- 群聊 -->
  <div class="wrapper">
     <div class="header">
-      <div class="item left" @click="back"></div>
+      <div class="item left" @click="back"><span v-show="unread!=0">{{unread}}</span></div>
       <div class="item center">
       	<span class="name">{{dataList.groupName}}</span>
       </div>
       <div class="item right">
-      	<img src="/static/icon/4/skin_header_icon_group_selected.png" class="person">
+      	<img src="./icon/skin_header_icon_group.png" class="person">
       </div>
     </div>
     
@@ -35,13 +35,12 @@
 
     <div class="footer">
     	 <div class="writeMessage">
-    	 	 <textarea v-model="writeMessage"></textarea>
-    	 	 <button class="btn" :class="{'enable':writeMessage!=''}"
-            @click="sendMessage">发送</button>
+    	 	 <textarea v-model="writeMessage" @keydown.enter.prevent="sendMessage" ref="message"></textarea>
+    	 	 <button class="btn" :class="{'enable':writeMessage!=''}" @click="sendMessage">{{btnInfo}}</button>
     	 </div>
-    	 <div class="other">
+    	 <div class="other" @click="focus">
       	 	<div class="item" v-for="item in iconUrl">
-      	 		<img :src="item">
+          <img :src="item">
       	 	</div>
     	 </div>
     </div>
@@ -60,6 +59,7 @@ export default {
      return {
        isScrollToBottom:true,
        writeMessage:'',  //要发送的消息
+       unread:0,
        dataList:{
           groupId:'',  //群id
           groupName:'正在加载中...',  //群名称
@@ -68,20 +68,23 @@ export default {
           nick_name:'',  //自己的群昵称
           message:[]  //拉取到的消息
        },
+       btnInfo:'发 送',
        iconName:['ptt','image','ptv','camera','hongbao','flash','emotion','plus']
     }
   },
   computed:{
     ...mapGetters([
       'userId',
-      'userInfo'
+      'userInfo',
+      'allMessage'
     ]),
     iconUrl(){
-      return this.iconName.map(item=>`/static/icon/4/skin_aio_panel_${item}_nor.png`)
-    }
+      return this.iconName.map(item=>require(`./icon/skin_aio_panel_${item}_nor.png`))
+    },
   },
   mounted(){
     this.dataList.groupId=this.$route.params.group_id  //群id
+    this.resetAndGetUnread(this.dataList.groupId)
     this.getMessage(this.userId,this.dataList.groupId)  //拉取群聊天消息
     this.updateBySocket()  //通过socket来更新消息
   },
@@ -89,13 +92,32 @@ export default {
     VScroll
   },
   methods:{
+    focus(){
+      this.$refs.message.focus()
+    },
+    //将该群的未读消息数置0,并拉取未读消息条数
+    resetAndGetUnread(id){
+      this.$store.commit('UPDATE_UNREAD_MESSAGE',{
+          type:'group',
+          id
+      })
+      this.getUnread()
+    },
+    //获取未读消息数
+    getUnread(){
+      let unread=0
+      this.allMessage.forEach(item=>{
+          unread += item.unread
+      })
+      this.unread = unread
+    },
     //获取群消息
     async getMessage(userId,groupId){
       const {data} = await api.get_message(userId,groupId)
       const {info,message,groupMember} = data
       this.dataList.groupId=info.id  // 群id
       this.dataList.groupAvator=info.group_avator   // 群头像
-      this.dataList.groupName=info.group_name   // 群id
+      this.dataList.groupName=info.group_name   // 群名称
       this.dataList.nick_name=info.nick_name  // 自己的群昵称
       this.dataList.groupMember=groupMember  //其它群成员的id
 
@@ -126,6 +148,9 @@ export default {
     async sendMessage(){
       if(this.writeMessage.trim()=='') return
 
+      this.$refs.message.focus()
+      this.btnInfo='发送中'
+
       this.sendBySocket()  //先通过socket发送消息
     
       //持久化到服务器
@@ -149,9 +174,10 @@ export default {
             time:Date.parse(new Date())/1000 //发送时间
           } 
         }
-        this.writeMessage=''
         //本地追加自己发送的消息
         this.addMessageLocal(data)
+        this.writeMessage=''
+        this.btnInfo='发 送'
       }
     },
     // 本地追加消息
@@ -183,32 +209,10 @@ export default {
         })
       }
     },
-    // 返回时更新状态
+    // 按返回时更新状态
     back(){
       api.update_enter_chat(this.userId,this.dataList.groupId) 
       this.$router.back()
-    },
-    // socket更新消息
-    updateBySocket(){
-      socket.removeAllListeners()  //一定要先移除原来的事件，否则会有重复的监听器
-      
-      socket.on('receiveGroupMessage',(data)=>{
-          //如果不包含自己，则直接丢弃这个socket消息
-          if(!data.group_member.includes(this.userId))  return
-
-          //本地追加别人通过socket发来的消息
-          this.addMessageLocal({
-              type:'message',
-              content:{
-                user_id:data.from_user_id,  //发送方的id
-                from:'other',  //是别人发送的
-                name:data.from_user_nick_name, //发送方的群昵称
-                face:data.from_user_face, // 发送方的头像
-                message:data.message, //发送的消息
-                time:data.time  //发送方的发送时间
-              } 
-          })
-      })
     },
     // socket发送消息
     sendBySocket(){
@@ -223,6 +227,59 @@ export default {
           message:this.writeMessage,  //消息内容
           time:Date.parse(new Date())/1000  //时间
       })
+    },
+    // socket更新消息
+    updateBySocket(){
+      socket.removeAllListeners()  //一定要先移除原来的事件，否则会有重复的监听器
+      
+      socket.on('receiveGroupMessage',(data)=>{
+          //如果不包含自己，则直接丢弃这个socket消息
+          if(!data.group_member.includes(this.userId))  return
+          
+          if(this.dataList.groupId==data.from_user_id){
+              //本地追加别人通过socket发来的消息
+              this.addMessageLocal({
+                  type:'message',
+                  content:{
+                    user_id:data.from_user_id,  //发送方的id(群id)
+                    from:'other',  //是别人发送的
+                    name:data.from_user_nick_name, //发送方的群昵称
+                    face:data.from_user_face, // 发送方的头像
+                    message:data.message, //发送的消息
+                    time:data.time  //发送方的发送时间
+                  } 
+              })
+          }
+          
+          // 提交到store里
+          this.$store.commit('UPDATE_MESSAGE',{
+            from_user:data.group_name,
+            id:data.group_id,
+            imgUrl:data.group_avator,
+            message:`${data.from_user_nick_name}:${data.message}`,
+            time:data.time,
+            type:'group',
+            isEnterChat:this.dataList.groupId==data.group_id
+          })
+      })
+
+      socket.on('receivePrivateMessage',(data)=>{
+          //提交到store里
+          this.$store.commit('UPDATE_MESSAGE',{
+            from_user:data.from_user_beizhu,
+            id:data.from_user,
+            imgUrl:data.from_user_face,
+            message:data.message,
+            time:data.time,
+            type:'single',
+            isEnterChat:false
+          })
+      })
+    }
+  },
+  watch:{
+    allMessage(){  //监控到消息改变时，则自动修改未读消息数
+      this.getUnread()
     }
   }
 }
@@ -248,11 +305,21 @@ export default {
     .item{
     	flex:1;
         &.left{
-            background:url(/static/icon/4/flc.png) no-repeat left center;
+            background:url(./icon/flc.png) no-repeat left center;
             margin-left:-10px;
             padding-left:20px;
             background-size:26px 26px;
             cursor:pointer;
+            span{
+              display:inline-block;
+              background:rgba(255,255,255,0.5);
+              border-radius:50%;
+              width:24px;
+              height:24px;
+              line-height:24px;
+              text-align:center;
+              font-size:14px
+            }
         }
         &.center{
             text-align:center;
@@ -364,8 +431,7 @@ export default {
       resize:none;
       border:none;
       overflow-y:hidden;
-      font-size:14px;
-      font-family:'Microsoft Yahei';
+      font:16px/32px 'Microsoft Yahei';
     }
 		button.btn{
 			height:100%;

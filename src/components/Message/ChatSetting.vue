@@ -15,7 +15,7 @@
              <p class="message">
                 <span class="sex">{{dataList.sex}}</span><span>{{dataList.age}}岁</span><span>{{dataList.place}}</span>
              </p>
-             <img src="/static/icon/4/nqj.9.png" class="icon">
+             <img src="./icon/nqj.9.png" class="icon">
           </div>
         </li>
       </ul>
@@ -123,7 +123,7 @@ export default {
       flex:1;
     }
     .item.left{
-      background:url(/static/icon/4/flc.png) no-repeat left center;
+      background:url(./icon/flc.png) no-repeat left center;
       margin-left:-10px;
       padding-left:20px;
       background-size:26px 26px;
@@ -204,7 +204,7 @@ export default {
   	height:50px;
   	line-height:50px;
   	padding-left:10px;
-  	background:url(/static/icon/4/nqj.9.png) no-repeat 98% center;
+  	background:url(./icon/nqj.9.png) no-repeat 98% center;
   	background-size:14px;
   	span{
   		float:right;
@@ -249,9 +249,9 @@ p.addquick{
    	height:40px;
    	background:#F64059;
    	color:#fff;
-   	font-size:16px;
    	letter-spacing:2px;
-   	cursor:pointer
+   	cursor:pointer;
+    font:16px 'Microsoft Yahei' !important;
    }
 }
 </style>

@@ -25,7 +25,8 @@ export default class Register {
 				code: code
 			}
 		}
-
+        
+        // 调用阿里大于的API接口，但是apikey还没申请到，现在还用不了，但逻辑代码已经完成了
 		// const response= await sendMessage(code,phone).catch((err)=>{
 		// 	console.log(err)
 		// })
@@ -36,7 +37,7 @@ export default class Register {
 		// 		'data':{
 		// 			code:code
 		// 		}
-		//     })
+		//  })
 		// }
 	}
 
@@ -116,7 +117,7 @@ export default class Register {
 	 * @return {[type]}          [description]
 	 */
 	static async insert(user, nickname) {
-		const sql = `insert into user set ?`
+		const sql = 'insert into user set ?'
 		const res = await query(sql, user).catch((err) => {
 			console.log(err)
 		})

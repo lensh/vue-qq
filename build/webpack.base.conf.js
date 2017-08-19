@@ -41,7 +41,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 20000,  //大于20KB时，以url的形式存在
+          limit: 100000,  //限制为100KB，大于100KB时，以url的形式存在
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },

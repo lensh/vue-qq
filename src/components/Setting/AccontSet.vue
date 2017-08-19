@@ -29,10 +29,10 @@
 
           <div class="third">
           	  <p class="item" @click="changeStatus(1)">在线状态
-          	    <img src="/static/icon/4/gzb.png" :class="{'cur':userInfo.status==1}">
+          	    <img src="./icon/gzb.png" :class="{'cur':userInfo.status==1}">
           	  </p>
           	  <p class="item" @click="changeStatus(2)">隐身状态
-          	  	<img src="/static/icon/4/gzb.png" :class="{'cur':userInfo.status==2}">
+          	  	<img src="./icon/gzb.png" :class="{'cur':userInfo.status==2}">
           	  </p>
           </div>
           <div class="fourth">
@@ -54,7 +54,7 @@ export default {
     return {
        edit:{
           text:'编辑',
-          imgSrc:'/static/icon/4/gzb.png',
+          imgSrc:require('./icon/gzb.png'),
           status:0
        }
     }
@@ -73,11 +73,11 @@ export default {
   	editAccont(){
   		if(this.edit.status==0){
   			this.edit.text='完成'
-  			this.edit.imgSrc='/static/icon/4/osr.png'
+  			this.edit.imgSrc=require('./icon/osr.png')
   			this.edit.status=1
   		}else{
   			this.edit.text='编辑'
-  			this.edit.imgSrc='/static/icon/4/gzb.png'
+  			this.edit.imgSrc=require('./icon/gzb.png')
   			this.edit.status=0
   		}
   	},
@@ -146,7 +146,7 @@ export default {
 	    .item{
 	      flex:1;
 	      	&.left{
-		      background:url(/static/icon/4/flc.png) no-repeat left center;
+		      background:url(./icon/flc.png) no-repeat left center;
 		      margin-left:-10px;
 		      padding-left:20px;
 		      background-size:26px 26px;
@@ -163,20 +163,20 @@ export default {
     }
     .accontSet{
     	.first,.second,.third,.fourth{
-			background:white;
-			margin-top:6px;
-			border-top:1px solid #eee;
-			.item{
-				border-bottom:1px solid #eee;
-				height:2.7rem;
-				line-height:2.7rem;
-				padding-left:10px;
-				overflow:hidden;
-				&.relative{
-		 		   background:url(/static/icon/4/nqj.9.png) no-repeat 98% center;
-				   background-size:14px;
-				}
-			}
+  			background:white;
+  			margin-top:14px;
+  			border-top:1px solid #eee;
+  			.item{
+  				border-bottom:1px solid #eee;
+  				height:2.7rem;
+  				line-height:2.7rem;
+  				padding-left:10px;
+  				overflow:hidden;
+  				&.relative{
+  		 		   background:url(./icon/nqj.9.png) no-repeat 98% center;
+  				   background-size:14px;
+  				}
+  			}
     	}
     	.first{
 		    ul{
@@ -217,15 +217,15 @@ export default {
 		     }
 		    }
 		    p.addAccont{
-				line-height:50px;
-				padding-left:14%;
-				color:#1E90FF;
-				border-top:1px solid #eee;
-				border-bottom:1px solid #eee;
-				background:url('/static/icon/4/idz.png') no-repeat 2% center;
-				background-size:40px;
-		        cursor:pointer;
-        	}
+  				line-height:50px;
+  				padding-left:14%;
+  				color:#1E90FF;
+  				border-top:1px solid #eee;
+  				border-bottom:1px solid #eee;
+  				background:url(./icon/idz.png) no-repeat 2% center;
+  				background-size:40px;
+	        cursor:pointer;
+        }
     	}
     	.second{
     		.info{

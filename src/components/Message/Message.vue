@@ -5,18 +5,17 @@
 	  <VHeader :currentTab="currentTab"></VHeader>
     <VScroll :data="dataList" component="message">
         <ul>
-            <li><VSearch placeholder="搜索"></VSearch></li>
-            <li class="message" v-for="item in dataList" 
-                @click="goChat(item.type,item.id)"
-                @touchstart="touchStart" @touchmove="touchMove">
-                <img :src="item.imgUrl">
-                <div class="info">
-                   <p class="from">{{item.from_user}}<span>{{item.time}}</span></p>
-                   <p class="message">{{item.message}}
-                      <span v-if="item.unread!=0">{{item.unread}}</span>
-                   </p>
-                </div>
-            </li>        
+          <li><VSearch placeholder="搜索"></VSearch></li>
+          <li class="message" v-for="item in dataList" @click="goChat(item.type,item.id)"
+              @touchstart="touchStart" @touchmove="touchMove">
+              <img :src="item.imgUrl">
+              <div class="info">
+                 <p class="from">{{item.from_user}}<span>{{item.time}}</span></p>
+                 <p class="message">{{item.message}}
+                    <span v-if="item.unread!=0">{{item.unread}}</span>
+                 </p>
+              </div>
+          </li>        
         </ul>
     </VScroll>
   	<VFooter :currentTab="currentTab"></VFooter>
@@ -39,10 +38,8 @@ export default {
     }
   },
   computed:{
-    ...mapGetters([
-      'userId'
-    ]),
     ...mapGetters({
+      'userId':'userId',
       'dataList':'allMessage'
     })
   },
@@ -81,7 +78,6 @@ export default {
     showSidebar(e){
       this.$store.commit('SHOW_SIDEBAR',{
         'isShowSideBar':true,
-        'isInit':false,
         'isShowMask':true
       })
     },
@@ -100,7 +96,8 @@ export default {
             imgUrl:data.from_user_face,
             message:data.message,
             time:data.time,
-            type:'single'
+            type:'single',
+            isEnterChat:false  //是否进入了聊天页面，进入了的话那么该条消息的unread就是0
           })
       })
       socket.on('receiveGroupMessage',(data)=>{
@@ -113,7 +110,8 @@ export default {
             imgUrl:data.group_avator,
             message:`${data.from_user_nick_name}:${data.message}`,
             time:data.time,
-            type:'group'
+            type:'group',
+            isEnterChat:false
           })
       })
     }

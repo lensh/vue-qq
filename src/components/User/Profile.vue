@@ -8,7 +8,7 @@
         </div>
         <div class="item right">
           <template v-if="isMySelf">
-            <img src="/static/icon/4/qq_setting_me_qr_code_icon.png">
+            <img src="./icon/qq_setting_me_qr_code_icon.png">
           </template>
           <template v-else>
             更多
@@ -24,7 +24,7 @@
              </p>
              <p class="sign">
                {{dataList.signature}}
-              <img src="/static/icon/4/qq_profilecard_signature_more.png">
+              <img src="./icon/qq_profilecard_signature_more.png">
               </p>
           </div>
           <div class="profile_info">
@@ -37,26 +37,26 @@
                   <span>{{dataList.age}}岁</span>
                   <span>{{dataList.xingzuo}}</span>
                   <span>{{dataList.place}}</span>
-                  <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
+                  <img src="./icon/qq_profilecard_signature_more.png" class="right">
                </li>
                <li class="profession">{{dataList.favor==''?'TA还没有兴趣爱好':dataList.favor}}</li>
                <li class="rank">
-                  <img src="/static/icon/4/hni.png" class="vip" v-if="dataList.vip==0">
-                  <img src="/static/icon/4/vip.png" class="vip" v-if="dataList.vip==1">
-                  <img src="/static/icon/4/ewm.png" class="vip" v-if="dataList.vip==2">  
-                  <img src="/static/icon/2/hdr.png" class="level" v-for="n in level.crown">
-                  <img src="/static/icon/2/hdu.png" class="level" v-for="n in level.sun">
-                  <img src="/static/icon/2/hds.png" class="level" v-for="n in level.moon">
-                  <img src="/static/icon/2/hdt.png" class="level" v-for="n in level.star">
+                  <img src="./icon/hni.png" class="vip" v-if="dataList.vip==0">
+                  <img src="./icon/vip.png" class="vip" v-if="dataList.vip==1">
+                  <img src="./icon/ewm.png" class="vip" v-if="dataList.vip==2">  
+                  <img src="./icon/hdr.png" class="level" v-for="n in level.crown">
+                  <img src="./icon/hdu.png" class="level" v-for="n in level.sun">
+                  <img src="./icon/hds.png" class="level" v-for="n in level.moon">
+                  <img src="./icon/hdt.png" class="level" v-for="n in level.star">
                   <span>{{dataList.accert}}</span>
-                  <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
+                  <img src="./icon/qq_profilecard_signature_more.png" class="right">
                </li>
                <li class="privilege">
                   TA还未开通任何特权服务
-                  <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
+                  <img src="./icon/qq_profilecard_signature_more.png" class="right">
                </li>
                <li class="qzone">{{isMySelf?userInfo.nick_name:dataList.beizhu}}的空间
-                  <img src="/static/icon/4/qq_profilecard_signature_more.png" class="right">
+                  <img src="./icon/qq_profilecard_signature_more.png" class="right">
                </li>
              </ul>
           </div>
@@ -164,7 +164,7 @@ export default {
     .item{
     	 flex:1;
         &.left{
-            background:url(/static/icon/4/flc.png) no-repeat left center;
+            background:url(./icon/flc.png) no-repeat left center;
             margin-left:-10px;
             padding-left:20px;
             background-size:26px 26px;
@@ -242,20 +242,20 @@ export default {
       }
     }
     li.account{
-      background:url(/static/icon/4/qq_profilecard_item_account.png) no-repeat 4% center;
+      background:url(./icon/qq_profilecard_item_account.png) no-repeat 4% center;
       background-size:20px;
     }
     li.information{
-      background:url(/static/icon/4/qq_profilecard_item_information.png) no-repeat 4%  center;
+      background:url(./icon/qq_profilecard_item_information.png) no-repeat 4%  center;
       background-size:20px;
     }
     li.profession{
-      background:url(/static/icon/4/qq_profilecard_item_profession.png) no-repeat 4%  center;
+      background:url(./icon/qq_profilecard_item_profession.png) no-repeat 4%  center;
       background-size:20px;
       margin-bottom:10px;
     }
     li.rank{
-      background:url(/static/icon/4/qq_profilecard_item_rank.png) no-repeat 4% 88%;
+      background:url(./icon/qq_profilecard_item_rank.png) no-repeat 4% 88%;
       background-size:20px;   
       border-top:1px solid #eee;
       padding-top:6px;
@@ -277,11 +277,11 @@ export default {
       }
     }
     li.privilege{
-      background:url(/static/icon/4/qq_profilecard_item_privilege.png) no-repeat 4% center;
+      background:url(./icon/qq_profilecard_item_privilege.png) no-repeat 4% center;
       background-size:20px;
     }
     li.qzone{
-      background:url(/static/icon/4/qq_profilecard_item_qzone.png) no-repeat 4% center;
+      background:url(./icon/qq_profilecard_item_qzone.png) no-repeat 4% center;
       background-size:20px;
     }
   }

@@ -13,13 +13,12 @@
         <div class="setting">
           <span class="left">备注</span>
           <span class="middle"><input v-model="dataList.beizhu" class="text"/></span>
-          <img src="/static/icon/4/gyw.png" class="icon" 
-           v-show="dataList.beizhu!=''" @click="clear">
+          <img src="./icon/gyw.png"class="icon" v-show="dataList.beizhu!=''" @click="clear">
         </div>
         <div class="setting" @click="changeTab">
           <span class="left">分组</span>
           <span class="middle">{{dataList.defaulGroup}}</span>
-          <img src="/static/icon/4/nqj.9.png" class="icon">
+          <img src="./icon/nqj.9.png" class="icon">
         </div>
       </div>
     </div>
@@ -35,8 +34,7 @@
           <ul>
             <li v-for="item in dataList.groups" @click="changeGroup(item.zu_name)">
                {{item.zu_name}}
-               <img src="/static/icon/4/gzb.png" 
-                  v-show="item.zu_name==dataList.defaulGroup">
+               <img src="./icon/gzb.png" v-show="item.zu_name==dataList.defaulGroup">
             </li>
           </ul>
       </div>
@@ -148,7 +146,7 @@ export default {
         }
         &.second{
           cursor:pointer;
-          background:url(/static/icon/4/flc.png) no-repeat left center;
+          background:url(./icon/flc.png) no-repeat left center;
           margin-left:-10px;
           padding-left:20px;
           background-size:26px 26px;

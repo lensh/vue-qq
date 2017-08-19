@@ -15,7 +15,7 @@
           	  </p>
           	  <p class="item">手机号码<span class="phone">{{formatPhone}}</span></p>
           	  <p class="item">QQ达人
-          	    <span class="da"><img src="/static/icon/4/poa.png">{{dataList.time}}天</span></p>
+          	    <span class="da"><img src="./icon/poa.png">{{dataList.time}}天</span></p>
           </div>
           <div class="second">
           	  <p class="item">消息通知</p>
@@ -83,7 +83,7 @@ export default {
 	      flex:1;
 	    }
 	    .item.left{
-	      background:url(/static/icon/4/flc.png) no-repeat left center;
+	      background:url(./icon/flc.png) no-repeat left center;
 	      margin-left:-10px;
 	      padding-left:20px;
 	      background-size:26px 26px;
@@ -103,7 +103,7 @@ export default {
 				 height:2.7rem;
 				 line-height:2.7rem;
 				 padding-left:10px;
-				 background:url(/static/icon/4/nqj.9.png) no-repeat 98% center;
+				 background:url(./icon/nqj.9.png) no-repeat 98% center;
 				 background-size:14px;
 				 overflow:hidden;
 				 span{

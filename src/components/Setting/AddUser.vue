@@ -15,7 +15,7 @@
 					v-model="userinfo.pwd">	
 				<input type="button" class="btn" value="登录" @click="login">
 	    	</form>
-    	    <router-link to="/forget" class="left">忘记密码?</router-link>
+    	    <router-link to="" class="left">忘记密码?</router-link>
       		<router-link to="/register" class="right">新用户注册</router-link>
 		</div>
 	</div>
@@ -97,7 +97,7 @@ export default {
 	    .item{
 	      flex:1;
 	      	&.left{
-		      background:url(/static/icon/4/flc.png) no-repeat left center;
+		      background:url(./icon/flc.png) no-repeat left center;
 		      margin-left:-10px;
 		      padding-left:20px;
 		      background-size:26px 26px;

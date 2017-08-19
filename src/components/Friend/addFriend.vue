@@ -19,29 +19,29 @@
     <!--  找人 -->
     <div class="people" v-show="curTab==1">
         <div class="item">
-          <img src="/static/icon/4/conversation_options_addmember.png" class="left">
+          <img src="./icon/conversation_options_addmember.png" class="left">
           <span>添加手机联系人</span>
-          <img src="/static/icon/4/nqj.9.png" class="right">
+          <img src="./icon/nqj.9.png" class="right">
         </div>
         <div class="item">
-          <img src="/static/icon/4/conversation_options_qr.png" class="left">
+          <img src="./icon/conversation_options_qr.png" class="left">
           <span>扫一扫添加好友</span>
-          <img src="/static/icon/4/nqj.9.png" class="right">
+          <img src="./icon/nqj.9.png" class="right">
         </div>
         <div class="item">
-          <img src="/static/icon/4/conversation_options_multichat.png" class="left">
+          <img src="./icon/conversation_options_multichat.png" class="left">
           <span>面对面发起多人聊天</span>
-          <img src="/static/icon/4/nqj.9.png" class="right">
+          <img src="./icon/nqj.9.png" class="right">
         </div>
         <div class="item">
-          <img src="/static/icon/4/qb_group_menu_search_group.png" class="left">
+          <img src="./icon/qb_group_menu_search_group.png" class="left">
           <span>按条件查找陌生人</span>
-          <img src="/static/icon/4/nqj.9.png" class="right">
+          <img src="./icon/nqj.9.png" class="right">
         </div>
         <div class="item">
-          <img src="/static/icon/4/oui.png" class="left">
+          <img src="./icon/oui.png" class="left">
           <span>查看附近的人</span>
-          <img src="/static/icon/4/nqj.9.png" class="right">
+          <img src="./icon/nqj.9.png" class="right">
         </div>
     </div>
     
@@ -50,21 +50,21 @@
         <p class="title">精品推荐</p>
           <ul>
               <li>  
-                  <img :src="curTab==3?'/static/icon/4/qol.png':''" class="user">
+                  <img :src="curTab==3?'./icon/qol.png':''" class="user">
                   <div class="info">
                      <p class="name"> QQ音乐 </p>
                      <p class="intro">家事国事天下事,事事关心</p>
                   </div>
               </li>
               <li>
-                  <img :src="curTab==3?'/static/icon/4/phb.png':''" class="user">
+                  <img :src="curTab==3?'./icon/phb.png':''" class="user">
                   <div class="info">
                      <p class="name">QQ团队</p>
                      <p class="intro">QQ团队所有成员感谢您一路相伴</p>
                   </div>
               </li>
               <li>
-                  <img :src="curTab==3?'/static/icon/4/rfc.png':''" class="user">
+                  <img :src="curTab==3?'./icon/rfc.png':''" class="user">
                   <div class="info">
                      <p class="name">好友动态</p>
                      <p class="intro">好友动态为你每日推送QQ空间好友未读动态请求</p>
@@ -112,7 +112,7 @@ export default {
       flex:1;
     }
     .item.left{
-      background:url(/static/icon/4/flc.png) no-repeat left center;
+      background:url(./icon/flc.png) no-repeat left center;
       margin-left:-10px;
       padding-left:20px;
       background-size:26px 26px;
@@ -148,7 +148,7 @@ export default {
     cursor:pointer;
     border:none;
     padding-left:10%;
-    background:url(/static/icon/4/okh.png) no-repeat 6% center;
+    background:url(./icon/okh.png) no-repeat 6% center;
     background-size:16px;
     font-family:'Microsoft Yahei'
   }

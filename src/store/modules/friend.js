@@ -75,8 +75,8 @@ const actions = {
               id: value.id,
               name: value.name,
               face: value.face,
-              vipurl: value.vip == 0 ? '' : value.vip == 1 ? '/static/icon/4/vip.png' : 
-                      '/static/icon/4/ewm.png',
+              vipurl: value.vip == 0 ? '' : value.vip == 1 ? require('@/common/icon/vip.png') : 
+                      require('@/common/icon/ewm.png'),
               status: value.status == 0 ? '离线' : value.status == 1 ? '手机在线' : 
                       value.status == 2 ? '3G在线' : value.status == 3 ? '4G在线' : 
                       value.status == 4 ? 'WiFi在线' : '电脑在线',

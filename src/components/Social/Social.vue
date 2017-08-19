@@ -6,21 +6,21 @@
       <VSearch placeholder="大家都在搜:楚乔传"></VSearch>
       <div class="flex">
           <div class="item">
-              <img src="/static/icon/4/igs.png"><span>好友动态</span>
+              <img src="./igs.png"><span>好友动态</span>
           </div>
           <div class="item">
-              <img src="/static/icon/4/eqc.png"><span>附近</span>
+              <img src="./eqc.png"><span>附近</span>
           </div>
           <div class="item">
-              <img src="/static/icon/4/iei.png"><span>兴趣部落</span>
+              <img src="./iei.png"><span>兴趣部落</span>
           </div>
       </div>
 
       <div class="activity">
           <div class="item">
-            <img src="/static/icon/4/nhz.png" class="left">
+            <img src="./nhz.png" class="left">
             <span>游戏</span>
-            <img src="/static/icon/4/nqj.9.png" class="right">
+            <img src="./nqj.9.png" class="right">
           </div>
       </div>
       <VFooter :currentTab="currentTab"></VFooter>

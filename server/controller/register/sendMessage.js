@@ -1,5 +1,6 @@
 const TopClient = require('../../common/sdk-phone/topClient').TopClient
 
+//阿里大于的接口，目前的appkey还用不了
 export default (code, phone) => {
   return new Promise((resolve, reject) => {
     const client = new TopClient({
@@ -17,7 +18,7 @@ export default (code, phone) => {
       },
       'rec_num': phone,
       'sms_template_code': 'SMS_71025228'
-    }, function(error, response) {
+    }, (error, response)=>{
       if (!error)
         resolve(response)
       else
