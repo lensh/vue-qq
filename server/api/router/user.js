@@ -24,5 +24,9 @@ userRouter
 		const result = await user.getUserProfile(userId, targetUserId)
 		res.json(result)
 	})
+	.get('/weather',async(req, res) => { // 获取天气(必须放到ECS服务器上才有效)
+		const result = await user.getWeather(req.headers['x-real-ip']) //获取客户端真实ip，需要经过nginx代理
+		res.json(result)
+	})
 
 export default userRouter

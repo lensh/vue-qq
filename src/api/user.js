@@ -47,3 +47,12 @@ export const get_user_profile = (userId, targetUserId) => {
 	const url = `${API_CONFIG}/profile/${userId}/${targetUserId}`
 	return request_get(url)
 }
+
+/**
+ * [get_weather 获取天气]
+ * @return {[type]}  [description]
+ */
+export const get_weather = () => {
+	const url = `${API_CONFIG}/weather`
+	return request_get(url)
+}

@@ -31,7 +31,7 @@ export default class socketHander {
      * @return {[type]}               [description]
      */
 	static async changeUser(currentUserId,userId,socketId){
-		let sql='update user set socketid='' where id=? limit 1 '
+		let sql="update user set socketid='' where id=? limit 1"
 		await query(sql,[currentUserId])
 		
 		sql='update user set socketid=? where id=? limit 1 '

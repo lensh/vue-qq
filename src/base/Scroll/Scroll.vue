@@ -58,6 +58,7 @@ export default {
   methods:{
     initScroll(){
       this.scroll = new IScroll('#wrapper',{
+        mouseWheel: true,
         click:true
       })
       //滚动条滚动到指定位置

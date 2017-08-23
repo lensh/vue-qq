@@ -10,7 +10,6 @@ export const fenzu = state => state.friend.fenzu
 export const hasGetNewFriends = state => state.friend.hasGetNewFriends
 export const newFriends = state => state.friend.newFriends
 export const isShowSideBar = state => state.sidebar.isShowSideBar
-export const isInit = state => state.sidebar.isInit
 export const isShowMask = state => state.sidebar.isShowMask
 export const scrollPosition = state => state.scroll.position
 export const tabIndex = state => state.friend.tabIndex

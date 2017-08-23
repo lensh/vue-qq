@@ -11,7 +11,7 @@ import socketHander from './socket' //socket要实现的具体逻辑
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
-server.listen(3000)
+server.listen(3000,'0.0.0.0')
 
 // 解析表单post数据
 app.use(bodyParser.urlencoded({

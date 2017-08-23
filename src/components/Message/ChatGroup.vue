@@ -425,13 +425,14 @@ export default {
     textarea{
       width:80%;
       margin:0 6px;
+      padding-top:7px;
       padding-left:6px;
       border-radius:2px;
       outline:none;
       resize:none;
       border:none;
       overflow-y:hidden;
-      font:16px/32px 'Microsoft Yahei';
+      font:16px/18px 'Microsoft Yahei';
     }
 		button.btn{
 			height:100%;

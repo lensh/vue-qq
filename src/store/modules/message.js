@@ -1,8 +1,6 @@
 import * as types from '../mutation-types'
 import * as api from '@/api/message'
-import {
-  parseMessageTime
-} from '@/common/js/parse-time'
+import {parseMessageTime} from '@/common/js/parse-time'
 
 // state
 const state = {
@@ -52,14 +50,9 @@ const mutations = {
 
 // actions
 const actions = {
-  async getAllMessage({
-    commit
-  }, userId) {
+  async getAllMessage({commit}, userId) {
     const res = await api.get_all_message(userId)
-    const {
-      singleMessage,
-      groupMessage
-    } = res.data
+    const {singleMessage,groupMessage} = res.data
 
     for (let index of singleMessage.keys()) {
       singleMessage[index]['type'] = 'single'
@@ -75,9 +68,7 @@ const actions = {
       allMessage[index]['time'] = parseMessageTime(value.time) //解析时间
     }
 
-    const data = {
-      allMessage
-    }
+    const data = {allMessage}
     commit(types.GET_ALL_MESSAGE, data)
   }
 }

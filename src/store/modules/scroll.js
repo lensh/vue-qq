@@ -34,11 +34,7 @@ const state = {
 // mutations
 const mutations = {
 	[types.SAVE_SCROLL_POSITION](state, data) {
-		const {
-			component,
-			position,
-			tabIndex
-		} = data
+		const {component,position,tabIndex} = data
 
 		const indexOfComponent = state.position.findIndex((item) => {
 			return item.name == component

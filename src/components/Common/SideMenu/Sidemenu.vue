@@ -60,7 +60,7 @@
             </li>
             <li></li>
           </ul>
-          <p class="weather">南昌<span>25<sup>o</sup></span></p>
+          <p class="weather">{{city}}<span>{{temperature}}<sup>o</sup></span></p>
        </div>
     </div>
     <div class="mask" v-show="isShowMask" @click="hideSidebar"></div>
@@ -70,15 +70,35 @@
 <script>
 import calcLevel from '@/common/js/level'
 import {mapGetters} from 'vuex'
+import {get_weather} from '@/api/user'
 
 export default {
   name: 'sidebar',
+  data(){
+    return {
+      city:'南昌',
+      temperature:28
+    }
+  },
+  created(){
+    //获取天气信息
+    const weather = JSON.parse(localStorage.getItem('weather'))
+    const oldTime = weather? weather.time:Date.parse(new Date())/1000
+  
+    //时间差值
+    const diff = Date.parse(new Date())/1000 - oldTime
+    if(!weather||diff>4*60*60){ //超过四个小时(一般温度变化是4个小时),则重新获取数据
+      this.getWeather()  
+    }else{  //否则从本地读取数据
+      this.city=weather.city
+      this.temperature=weather.temperature
+    } 
+  },
   computed:{
     ...mapGetters([
       'userInfo',
       'isShowSideBar',
-      'isInit',
-      'isShowMask'
+      'isShowMask',
     ]),
     userinfo(){
       return{
@@ -109,8 +129,7 @@ export default {
     touchMove(e){
       const X = this.getTouchXY(e).X - this.startX
       const Y = this.getTouchXY(e).Y - this.startY
-      if ( Math.abs(X) > 3*Math.abs(Y) && X <-30) {
-         //限定只能是左滑，最大限度减小倾斜的角度
+      if ( Math.abs(X) > 3*Math.abs(Y) && X <-30) {//限定只能是左滑，最大限度减小倾斜的角度
 　　　　 this.hideSidebar()
       }
     },
@@ -119,6 +138,19 @@ export default {
         X:e.targetTouches[0].pageX,
         Y:e.targetTouches[0].pageY
       }
+    },
+    async getWeather(){
+      const {data} = await get_weather()
+      this.city=data.city
+      this.temperature=data.temperature
+
+      //持久化到本地
+      const weather={
+        city:data.city,
+        temperature:data.temperature,
+        time: Date.parse(new Date())/1000  //当前时间
+      }
+      localStorage.setItem('weather',JSON.stringify(weather))
     }
   }
 }
