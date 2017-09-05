@@ -32,7 +32,7 @@ Vue全家桶+Socket.io+Express/Koa2打造的网页版手机QQ(web app),高仿手
 * **IScroll**：模拟原生app的列表滚动效果(ListView)
 * **MySQL**：MySQL关系型数据库持久化数据（考虑到表与表之间关系复杂，需要多表查询，最复杂的时候是六张表联查，用MySQL会比Mongodb好得多）
 * **jsonp**：跨域请求数据
-* **pm2**：服务端使用pm2部署，常驻进程，比forever好用得多（https://github.com/Unitech/pm2）
+* **pm2**：服务端使用pm2部署，常驻进程，比forever好用得多[https://github.com/Unitech/pm2](https://github.com/Unitech/pm2)
 * **nginx**：服务端使用nginx代理端口转发
 
 ## 使用方式
