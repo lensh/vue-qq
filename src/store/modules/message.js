@@ -62,7 +62,7 @@ const actions = {
     }
     const allMessage = singleMessage.concat(groupMessage)
     allMessage.sort((prev, current) => { //按时间降序排列
-      return prev.time < current.time
+        return current.time - prev.time
     })
     for (let [index, value] of allMessage.entries()) {
       allMessage[index]['time'] = parseMessageTime(value.time) //解析时间

@@ -50,14 +50,14 @@ const actions = {
         //状态一样的情况下再按VIP级别排序
         if ((prev.status > 0 && current.status > 0) || (prev.status == 0 && 
           current.status == 0)){    
-          return prev.vip < current.vip
+          return  current.vip - prev.vip
         }
         //否则不排序
         return false
       })
       //按角色升序排列
       groupData.sort((prev, current) => {
-        return prev.role > current.role
+        return prev.role - current.role
       })
 
       //先将好友数据转换成指定格式
