@@ -135,7 +135,7 @@ export default class User {
 		}
 	}
 
-	/**
+   /**
 	 * [getWeather 获取天气]
 	 * @return {[type]} [description]
 	 */
@@ -143,11 +143,15 @@ export default class User {
 		//根据真实ip地址获取城市名称
 		const {data} = await request_get(`http://ip.taobao.com/service/getIpInfo.php?ip=${ip}`)
 		const city = data.city.substring(0, data.city.length - 1)
+
+		//获取温度
+		const weather = await request_get(`http://v.juhe.cn/weather/index?format=2&cityname=
+			${encodeURIComponent(city)}&key=0d8bba24af0b49ca3258f9c18377dc2b`)
 		return {
 			code: 200,
 			data: {
 				city,
-				temperature: 21
+				temperature: weather.result.sk.temp
 			}
 		}
 	}
