@@ -157,6 +157,9 @@ socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端�
 
 ## FAQ
 
-若使用的过程中遇到问题，可以加官方群交流：611212696。
+若使用的过程中遇到问题，可以加官方群交流：611212696。如果觉得不错，就毫不吝啬地给个star吧。后期项目还会继续更新和完善。
 
-如果觉得不错，就毫不吝啬地给个star吧。后期项目还会继续更新和完善。
+启动后如果报以下错误，请参考：https://github.com/lensh/vue-qq/issues/8
+```
+Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column \'qq.b.face\' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+```

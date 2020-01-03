@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 
 /**
  * [异步组件加载函数]
@@ -31,7 +31,7 @@ const Boot = asyncComponent('Welcome/Boot'),
     AccontSet = asyncComponent('Setting/AccontSet'),
     AddUser = asyncComponent('Setting/AddUser')
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
 //路由
 const routes = [{
@@ -126,7 +126,19 @@ const routes = [{
     component: AddUser
 }]
 
-export default new Router({
+const router = new VueRouter({
     mode: "history",
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    const path = to.path;
+    const loginStatus = localStorage.getItem("loginStatus")
+    const pathArr = ['/', '/welcome', '/register', '/login']  // 不需要验证登录态的组件
+    if (!pathArr.includes(path) && !loginStatus) {
+        next('/welcome')
+    } else {
+        next();
+    }
+})
+export default router

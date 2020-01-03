@@ -10,9 +10,7 @@
     "stage-3",
     "es2015"
   ],
-  "plugins": [
-    "transform-runtime"
-  ],
+  "plugins": ["transform-runtime","syntax-dynamic-import"],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],

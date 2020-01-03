@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>vue-qq</title>
-    <meta name="viewport" content="width=device-width,height=device-height,
+
+<head>
+  <meta charset="utf-8">
+  <title>vue-qq</title>
+  <meta name="viewport" content="width=device-width,height=device-height,
     initial-scale=1.0,user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <link rel="shortcut icon" href="/static/logo.png" type="image/x-icon" />
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-      const socket = io.connect('http://localhost:3000');
-      //解决用户手动刷新浏览器后，原来的socketid失效的问题
-      const loginStatus= JSON.parse(localStorage.getItem("loginStatus") || '{}');
-      loginStatus.isLogin && socket.emit('update',loginStatus.userId);
-    </script>
-  </body>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <link rel="shortcut icon" href="/static/logo.png" type="image/x-icon" />
+</head>
+
+<body>
+  <div id="app"></div>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    const socket = io.connect('http://localhost:3000');
+    //解决用户手动刷新浏览器后，原来的socketid失效的问题
+    const loginStatus = JSON.parse(localStorage.getItem("loginStatus") || '{}');
+    loginStatus.isLogin && socket.emit('update', loginStatus.userId);
+
+
+    // //屏幕适应
+    // (function (win, doc) {
+    //   if (!win.addEventListener) return;
+    //   var html = doc.documentElement;
+
+    //   function setFont() {
+    //     html.style.fontSize = html.clientWidth / 640 * 100 + "px";
+    //   }
+    //   doc.addEventListener('DOMContentLoaded', setFont, false);
+    //   win.addEventListener('resize', setFont, false);
+    // })(window, document);
+  </script>
+</body>
+
 </html>

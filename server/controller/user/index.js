@@ -1,4 +1,4 @@
-import {request_get} from './request'
+import { request_get } from './request'
 
 export default class User {
 
@@ -15,8 +15,8 @@ export default class User {
 		return res.affectedRows == 1 ? {
 			code: 1
 		} : {
-			code: 0
-		}
+				code: 0
+			}
 	}
 
 	/**
@@ -33,8 +33,8 @@ export default class User {
 		return res.affectedRows == 1 ? {
 			code: 1
 		} : {
-			code: 0
-		}
+				code: 0
+			}
 	}
 
 	/**
@@ -135,23 +135,29 @@ export default class User {
 		}
 	}
 
-   /**
-	 * [getWeather 获取天气]
-	 * @return {[type]} [description]
-	 */
+	/**
+	  * [getWeather 获取天气]
+	  * @return {[type]} [description]
+	  */
 	static async getWeather(ip) {
 		//根据真实ip地址获取城市名称
-		const {data} = await request_get(`http://ip.taobao.com/service/getIpInfo.php?ip=${ip}`)
+		const { data } = await request_get(`http://ip.taobao.com/service/getIpInfo.php?ip=${ip}`)
 		const city = data.city.substring(0, data.city.length - 1)
 
 		//获取温度
+		let temperature = 0
 		const weather = await request_get(`http://v.juhe.cn/weather/index?format=2&cityname=
 			${encodeURIComponent(city)}&key=0d8bba24af0b49ca3258f9c18377dc2b`)
+		if (weather.result == null) {
+			console.log(`获取天气数据失败:${weather.reason}`.red)
+		} else {
+			temperature = weather.result.sk.temp;
+		}
 		return {
 			code: 200,
 			data: {
 				city,
-				temperature: weather.result.sk.temp
+				temperature: temperature
 			}
 		}
 	}

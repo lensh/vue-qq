@@ -1,4 +1,5 @@
 import express from 'express'
+import 'colors'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import cookieParser from 'cookie-parser'

@@ -8,10 +8,10 @@ export default class Chat {
 	 */
 	static async getMessage(userId, otherUserId) {
 		//先把chat表的is_enter_chat置为1,把message_user表的is_read置为1，
-		let sql='UPDATE chat SET is_enter_chat =1 WHERE user_id = ? AND other_user_id = ?'
+		let sql = 'UPDATE chat SET is_enter_chat =1 WHERE user_id = ? AND other_user_id = ?'
 		await query(sql, [userId, otherUserId])
 
-		sql='UPDATE message_user SET is_read =1 WHERE to_user = ? AND from_user = ? AND is_read =0'
+		sql = 'UPDATE message_user SET is_read =1 WHERE to_user = ? AND from_user = ? AND is_read =0'
 		await query(sql, [userId, otherUserId])
 
 		//最后获取消息
@@ -26,25 +26,25 @@ export default class Chat {
 			)
 			AND b.user_id = a.from_user ORDER BY TIME ASC
 		`
-		const message = await query(sql, [userId,otherUserId,userId,otherUserId])
-        
-        //用户信息
-		sql=`SELECT a.device,b.beizhu,c.face FROM user a, friend b,user_detail c
+		const message = await query(sql, [userId, otherUserId, userId, otherUserId])
+
+		//用户信息
+		sql = `SELECT a.device,b.beizhu,c.face FROM user a, friend b,user_detail c
 			WHERE a.id=? AND b.user_id = ? AND b.other_user_id = a.id 
 			AND c.user_id=a.id limit 1
 		`
-		const info = await query(sql, [otherUserId,userId])
-        
-        //别人对自己的备注（socket时会用到）
-		sql='SELECT beizhu from friend WHERE user_id = ? AND other_user_id = ? limit 1 '
-		const info1 = await query(sql, [otherUserId,userId])
+		const info = await query(sql, [otherUserId, userId])
+
+		//别人对自己的备注（socket时会用到）
+		sql = 'SELECT beizhu from friend WHERE user_id = ? AND other_user_id = ? limit 1 '
+		const info1 = await query(sql, [otherUserId, userId])
 
 		return {
 			code: 1,
 			data: {
 				message,
-				info:info[0],
-				info1:info1[0]
+				info: info[0],
+				info1: info1[0]
 			}
 		}
 	}
@@ -58,7 +58,7 @@ export default class Chat {
 	static async updateEnterChat(userId, otherUserId) {
 		const sql = 'UPDATE chat SET is_enter_chat =0 WHERE user_id = ? AND other_user_id = ? '
 		const res = await query(sql, [userId, otherUserId])
-		return res.affectedRows==1? {code:1}:{code:0}
+		return res.affectedRows == 1 ? { code: 1 } : { code: 0 }
 	}
 
 	/**
@@ -70,8 +70,8 @@ export default class Chat {
 	 */
 	static async updatePingbi(userId, otherUserId, status) {
 		const sql = 'UPDATE chat SET is_pingbi =? WHERE user_id = ? AND other_user_id = ?'
-		const res=await query(sql, [status, userId, otherUserId])
-        return res.affectedRows==1? {code:1}:{code:0}
+		const res = await query(sql, [status, userId, otherUserId])
+		return res.affectedRows == 1 ? { code: 1 } : { code: 0 }
 	}
 
 	/**
@@ -87,39 +87,39 @@ export default class Chat {
 		await query(sql, [status, userId, otherUserId])
 
 		/***更改分组表***/
-		
+
 		//更改特别关心分组
-		sql="select zu_member from fenzu where user_id=? and zu_name='特别关心' limit 1"
-		let row= await query(sql, [userId])
-		let zu_member=row[0].zu_member.split(',').map(item=>item-0)
-		let index=zu_member.findIndex((item)=>{
-			return item==otherUserId
+		sql = "select zu_member from fenzu where user_id=? and zu_name='特别关心' limit 1"
+		let row = await query(sql, [userId])
+		let zu_member = row[0].zu_member.split(',').map(item => item - 0)
+		let index = zu_member.findIndex((item) => {
+			return item == otherUserId
 		})
-		if(status==0){  //取关
-			index!=-1 && zu_member.splice(index,1) //特别关心分组里移除该用户
-		}else{  //设关
-			index==-1 && zu_member.push(otherUserId) //特别关心分组里添加该用户
+		if (status == 0) {  //取关
+			index != -1 && zu_member.splice(index, 1) //特别关心分组里移除该用户
+		} else {  //设关
+			index == -1 && zu_member.push(otherUserId) //特别关心分组里添加该用户
 		}
 		zu_member = zu_member.join(',')
-		sql="update fenzu set zu_member=? where user_id=? and zu_name='特别关心' limit 1"
-		await query(sql, [zu_member,userId])
+		sql = "update fenzu set zu_member=? where user_id=? and zu_name='特别关心' limit 1"
+		await query(sql, [zu_member, userId])
 
 		//更改默认分组
-	    sql="select zu_member from fenzu where user_id=? and is_default=1 limit 1"
-		row= await query(sql, [userId])
-		zu_member=row[0].zu_member.split(',').map(item=>item-0)
-		index=zu_member.findIndex((item)=>{
-			return item==otherUserId
+		sql = "select zu_member from fenzu where user_id=? and is_default=1 limit 1"
+		row = await query(sql, [userId])
+		zu_member = row[0].zu_member.split(',').map(item => item - 0)
+		index = zu_member.findIndex((item) => {
+			return item == otherUserId
 		})
-	    if(status==1){   //设关
-			index!=-1 && zu_member.splice(index,1) //默认分组里移除该用户
-		}else{   //取关
-			index==-1 && zu_member.push(otherUserId) //默认分组里添加该用户
+		if (status == 1) {   //设关
+			index != -1 && zu_member.splice(index, 1) //默认分组里移除该用户
+		} else {   //取关
+			index == -1 && zu_member.push(otherUserId) //默认分组里添加该用户
 		}
 		zu_member = zu_member.join(',')
-		sql="update fenzu set zu_member=? where user_id=? and is_default=1 limit 1"
-		const res = await query(sql, [zu_member,userId])
-        return res.affectedRows==1? {code:1}:{code:0}
+		sql = "update fenzu set zu_member=? where user_id=? and is_default=1 limit 1"
+		const res = await query(sql, [zu_member, userId])
+		return res.affectedRows == 1 ? { code: 1 } : { code: 0 }
 	}
 
 	/**
@@ -131,9 +131,9 @@ export default class Chat {
 	static async getStatus(userId, otherUserId) {
 		const sql = 'select is_pingbi,is_enter_chat from chat where user_id = ? AND other_user_id = ? limit 1'
 		const row = await query(sql, [userId, otherUserId])
-		return row[0] 
+		return row[0]
 	}
-    
+
     /**
      * [sendMessage 发送消息]
 	 * @param  {[type]} userId      [用户id]
@@ -144,19 +144,22 @@ export default class Chat {
      */
 	static async sendMessage(userId, otherUserId, message, time) {
 		//先查一下状态
-		const {is_pingbi,is_enter_chat} = await this.getStatus(otherUserId, userId)
-		if (is_pingbi == 1) {
-			return {
-				code: 0,
-				message: '对方已屏蔽你的消息'
+		let data = await this.getStatus(otherUserId, userId);
+		if (data) {
+			const { is_pingbi, is_enter_chat } = data;
+			if (is_pingbi == 1) {
+				return {
+					code: 0,
+					message: '对方已屏蔽你的消息'
+				}
 			}
 		}
-		const data = {
+		data = {
 			from_user: userId,
 			to_user: otherUserId,
 			message,
 			time,
-			is_read: is_enter_chat
+			is_read: 0
 		}
 		const sql = 'insert into message_user set ? '
 		const res = await query(sql, [data]).catch((err) => {
@@ -164,20 +167,20 @@ export default class Chat {
 		})
 		return res.affectedRows > 0 ? {
 			code: 1,
-			message:'发送成功'
+			message: '发送成功'
 		} : {
-			code: 0,
-			message:'发送失败'
-		}
+				code: 0,
+				message: '发送失败'
+			}
 	}
-    
-  	/**
-  	 * [getUserInfo 得到用户的基本信息,聊天设置里用]
-	 * @param  {[type]} userId      [用户id]
-	 * @param  {[type]} otherUserId [另一个用户id]
-  	 * @return {[type]}             [description]
-  	 */
-    static async getUserInfo(userId,otherUserId){
+
+	/**
+	 * [getUserInfo 得到用户的基本信息,聊天设置里用]
+ * @param  {[type]} userId      [用户id]
+ * @param  {[type]} otherUserId [另一个用户id]
+	 * @return {[type]}             [description]
+	 */
+	static async getUserInfo(userId, otherUserId) {
 		const sql = `
 			SELECT a.user_id, a.other_user_id, a.is_pingbi, 
 			b.face, b.sex, b.age, b.place, c.special, c.beizhu
@@ -194,5 +197,5 @@ export default class Chat {
 			code: 1,
 			data: row[0]
 		}
-    }
+	}
 }
