@@ -11,7 +11,7 @@
     "pm2": "pm2 start build/dev-server.js"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.17.2",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.3",
